@@ -32,8 +32,8 @@ func main() {
 
 		}
 		// Handle connections in a new goroutine.
-		go handleRequest(conn)
-
+		user := User{connection: conn}
+		handleRequest(user.GetConn())
 	}
 
 }
