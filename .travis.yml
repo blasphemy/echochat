@@ -1,22 +1,18 @@
 language: go
 go:
-<<<<<<< HEAD
   - 1.0
   - 1.1
   - 1.2
   - 1.3
   - tip
-=======
- - 1.0
-- 1.1
-- 1.2
-- 1.3
-- tip
+
+before_install:
+  - go get github.com/axw/gocov/gocov
+  - go get github.com/mattn/goveralls
+  - go get code.google.com/p/go.tools/cmd/cover
 script:
   - go test -v ./...
-- cd echat
-- go build
+  - $HOME/gopath/bin/goveralls -repotoken $COVERALLS_TOKEN
 env:
   global:
     secure: ZfDRFZSD7DkyeCqeYgpiGQAs/1rCBm0P7ObgpTfmQthTU/CDIO+3Dqpa51315UvsP9Vcw8x5fwWZD71IreT/sBW1Y6pgYZ7ikD3g+zz9XKK7aXdtYnQ15ZlrFGc+kWAvvs75GCwyjuZwaYSUe0RxG5x9YxvkqHsaYGYKamM4G+0=
->>>>>>> add coveralls token
