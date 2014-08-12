@@ -6,3 +6,7 @@ go:
   - 1.2
   - 1.3
   - tip
+
+script: 
+  - go build echat
+  - go test -v echat
