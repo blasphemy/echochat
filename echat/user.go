@@ -26,7 +26,8 @@ func (user *User) Quit() {
 }
 
 func (user *User) FireNumeric(numeric int, args ...interface{}) {
-	user.SendLine(fmt.Sprintf(NUM[numeric], args...))
+  msg := strcat(fmt.Sprintf(":%s %.3d ", "test.net.local", numeric),fmt.Sprintf(NUM[numeric], args...))
+  user.SendLine(msg)
 }
 
 func NewUser(conn net.Conn) User {
