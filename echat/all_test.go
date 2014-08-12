@@ -32,7 +32,7 @@ func TestUserQuit(t *testing.T) {
 	if len(userlist) != 0 {
 		t.Errorf("Error, user was apparently not removed from list")
 	}
-  if testuser.dead != true {
-    t.Errorf("Error, user was not set to dead")
-  }
+	if testuser.dead != true {
+		t.Errorf("Error, user was not set to dead")
+	}
 }

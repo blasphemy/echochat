@@ -14,8 +14,9 @@ const (
 )
 
 var (
-	counter  int
-	userlist map[int]User
+	counter   int
+	userlist  map[int]User
+	max_users int
 )
 
 func main() {
@@ -40,12 +41,17 @@ func main() {
 
 		}
 		// Handle connections in a new goroutine.
-		counter = counter + 1
-		user := User{connection: conn, nick: "*", id: counter}
-		AddUserToList(user)
+		user := NewUser(conn)
+		go CheckMaxUsers()
 		go user.HandleRequests()
 	}
 
+}
+
+func CheckMaxUsers() {
+	if len(userlist) > max_users {
+		max_users = len(userlist)
+	}
 }
 
 func AddUserToList(user User) {
@@ -54,7 +60,9 @@ func AddUserToList(user User) {
 
 func PeriodicStatusUpdate() {
 	for {
-		fmt.Println("Status:", len(userlist), "users")
-		time.Sleep(5 * time.Second)
+		fmt.Println("Status:", len(userlist), "current users")
+		fmt.Println("Status:", counter, "total connections")
+		fmt.Println("Status:", max_users, "max users")
+    time.Sleep(5 * time.Second)
 	}
 }

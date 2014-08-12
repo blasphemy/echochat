@@ -25,6 +25,13 @@ func (user *User) Quit() {
 	delete(userlist, user.id)
 }
 
+func NewUser(conn net.Conn) User {
+	counter = counter + 1
+	user := User{id: counter, connection: conn}
+	AddUserToList(user)
+	return user
+}
+
 func (user *User) SendLine(msg string) {
 	msg = fmt.Sprintf("%s\n", msg)
 	user.connection.Write([]byte(msg))
