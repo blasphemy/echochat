@@ -63,6 +63,6 @@ func PeriodicStatusUpdate() {
 		fmt.Println("Status:", len(userlist), "current users")
 		fmt.Println("Status:", counter, "total connections")
 		fmt.Println("Status:", max_users, "max users")
-    time.Sleep(5 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }
