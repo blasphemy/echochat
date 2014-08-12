@@ -65,3 +65,13 @@ func TestCheckNickCollision3(t *testing.T) {
 		t.Errorf("Nick collision triggered even though there is no user")
 	}
 }
+
+func TestNickHandler(t *testing.T) {
+  SetupTest()
+  AddUserToList(testuser)
+  msg := []string{"NICK", "lol"}
+  testuser.NickHandler(msg)
+  if testuser.nick != "lol" {
+    t.Errorf("Nick handler broken, nick not changed")
+  }
+}

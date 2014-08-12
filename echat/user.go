@@ -60,6 +60,9 @@ func (user *User) HandleRequests() {
 	}
 }
 func (user *User) NickHandler(args []string) {
-	user.nick = args[1]
+  if CheckNickCollision(args[1]) != false {
+    return //TODO handle properly
+  }
+  user.nick = args[1]
 	fmt.Println("User changed name to", args[1])
 }
