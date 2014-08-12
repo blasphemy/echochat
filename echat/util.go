@@ -1,8 +1,8 @@
 package main
 
 import (
-  "bytes"
-  "strings"
+	"bytes"
+	"strings"
 )
 
 func strcat(s1 string, s2 string) string {
@@ -13,11 +13,11 @@ func strcat(s1 string, s2 string) string {
 }
 
 func CheckNickCollision(nick string) bool {
-  nick = strings.ToLower(nick)
-  for _, k := range userlist {
-    if strings.ToLower(k.nick) == nick {
-      return true
-    }
-  }
-  return false
+	nick = strings.ToLower(nick)
+	for _, k := range userlist {
+		if strings.ToLower(k.nick) == nick {
+			return true
+		}
+	}
+	return false
 }
