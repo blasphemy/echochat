@@ -15,6 +15,16 @@ type User struct {
 	connection net.Conn
 }
 
+//set a user's nick. Does not do any error checking
+func (user *User) SetNick(new string) {
+  user.nick = new
+}
+
+//returns a user's nick in string format
+func (user *User) GetNick() string {
+  return user.nick
+}
+
 func (user *User) SetConn(in net.Conn) {
 	user.connection = in
 }
