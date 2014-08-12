@@ -32,7 +32,7 @@ func main() {
 
 		}
 		// Handle connections in a new goroutine.
-		user := User{connection: conn}
+		user := User{connection: conn, nick: "*"}
 		go user.HandleRequests()
 	}
 

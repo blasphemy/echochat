@@ -36,13 +36,12 @@ func (user *User) HandleRequests() {
 		line, err := b.ReadString('\n')
 		if err != nil {
 			fmt.Println("Error reading:", err.Error())
-
+			break
 		}
 		line = strings.TrimSpace(line)
 		fmt.Println("Received Line: ", line)
 		// Send a response back to person contacting us.
 		go ProcessLine(user, line)
-		// Close the connection when you're done with it.
 
 	}
 	conn.Close()
