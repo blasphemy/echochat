@@ -86,3 +86,16 @@ func TestNickHandlerBool(t *testing.T) {
 		t.Errorf("Nick handler did not set bool")
 	}
 }
+
+func TestUserHandler(t *testing.T) {
+	SetupTest()
+	AddUserToList(testuser)
+	msg := []string{"USER", "daniel", "*", "*", ":lol"}
+	testuser.UserHandler(msg)
+	if testuser.ident != "daniel" {
+		t.Errorf("User handler did not set ident correctly. Expected daniel, got %s", testuser.ident)
+	}
+	if testuser.realname != "lol" {
+		t.Errorf("User handler did not properly set realname. Expected lol got %s", testuser.realname)
+	}
+}

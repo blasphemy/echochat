@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"runtime"
 	"time"
 )
 
@@ -62,6 +63,7 @@ func AddUserToList(user User) {
 func PeriodicStatusUpdate() {
 	for {
 		fmt.Println("Status:", len(userlist), "current users")
+		fmt.Println("Current GoRoutines:", runtime.NumGoroutine())
 		fmt.Println("Status:", counter, "total connections")
 		fmt.Println("Status:", max_users, "max users")
 		time.Sleep(5 * time.Second)
