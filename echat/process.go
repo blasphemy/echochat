@@ -12,5 +12,9 @@ func ProcessLine(user *User, msg string) {
 	case "quit":
 		user.SendLine("Lol QUIT!!!")
 		user.Quit()
+		break
+	case "nick":
+		user.NickHandler(args)
+		break
 	}
 }

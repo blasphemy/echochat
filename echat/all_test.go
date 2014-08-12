@@ -38,7 +38,7 @@ func TestUserQuit(t *testing.T) {
 }
 
 func TestStrCat(t *testing.T) {
-  if strcat("Hello", " World") != "Hello World" {
-    t.Errorf("String concatenation test failed")
-  }
+	if strcat("Hello", " World") != "Hello World" {
+		t.Errorf("String concatenation test failed")
+	}
 }
