@@ -48,12 +48,8 @@ func main() {
 
 }
 
-func AddUserToList (user User) {
-  userlist[user.id] = user
-}
-
-func RemoveUserFromList(user User) {
-  
+func AddUserToList(user User) {
+	userlist[user.id] = user
 }
 
 func PeriodicStatusUpdate() {

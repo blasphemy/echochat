@@ -2,31 +2,34 @@ package main
 
 import "testing"
 
+var (
+	testuser User
+)
+
 func SetupTest() {
-  userlist = make(map[int]User)
+	userlist = make(map[int]User)
+	testuser = User{id: 1, nick: "test"}
 }
 func TestSetupTest(t *testing.T) {
-SetupTest()
-  if userlist == nil {
-   t.Errorf("userlist is nil")
-  }
+	SetupTest()
+	if userlist == nil {
+		t.Errorf("userlist is nil")
+	}
 }
 
-func TestTest (t *testing.T) {
-  if 1 != 1  {
-    t.Errorf("Error: 1 does not equal 1")
-  }
-}
 func TestAddUserToList(t *testing.T) {
-  user := User{id: 1}
-  AddUserToList(user)
-  if len(userlist) != 1 {
-    t.Errorf("Error, adding user to list did not increse length")
-  }
+	AddUserToList(testuser)
+	if len(userlist) != 1 {
+		t.Errorf("Error, adding user to list did not increse length")
+	}
 }
 
-func TestRemoveUser(t *testing.T) {
-  if len(userlist) != 1 {
-    t.Errorf("Error, list has not been initialized")
-  }
+func TestUserQuit(t *testing.T) {
+	if len(userlist) != 1 {
+		t.Errorf("Error, list has not been initialized")
+	}
+	testuser.Quit()
+	if len(userlist) != 0 {
+		t.Errorf("Error, user was apparently not removed from list")
+	}
 }

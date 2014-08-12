@@ -19,7 +19,9 @@ type User struct {
 
 func (user *User) Quit() {
 	user.dead = true
-	user.connection.Close()
+	if user.connection != nil {
+		user.connection.Close()
+	}
 	delete(userlist, user.id)
 }
 
