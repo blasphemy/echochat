@@ -42,3 +42,26 @@ func TestStrCat(t *testing.T) {
 		t.Errorf("String concatenation test failed")
 	}
 }
+
+func TestCheckNickCollision(t *testing.T) {
+  SetupTest()
+  AddUserToList(testuser)
+  if CheckNickCollision("test") != true {
+    t.Errorf("Nick collision test failed")
+  }
+}
+
+func TestCheckNickCollisionCase(t *testing.T) {
+  SetupTest()
+  AddUserToList(testuser)
+  if CheckNickCollision("TEST") != true {
+    t.Errorf("Nick collision check is not case sensitive")
+  }
+}
+
+func TestCheckNickCollision3(t *testing.T) {
+  testuser.Quit()
+  if CheckNickCollision("test") != false {
+    t.Errorf("Nick collision triggered even though there is no user")
+  }
+}
