@@ -25,6 +25,10 @@ func (user *User) Quit() {
 	delete(userlist, user.id)
 }
 
+func (user *User) FireNumeric(numeric int, args ...string) {
+	user.SendLine(fmt.Sprintf(NUM[numeric], args))
+}
+
 func NewUser(conn net.Conn) User {
 	counter = counter + 1
 	user := User{id: counter, connection: conn}
