@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"net"
 	"strings"
@@ -13,8 +14,13 @@ type User struct {
 	ident      string
 	ip         string
 	dead       bool
+	nickset    bool
 	connection net.Conn
 	id         int
+	realname   string
+	userset    bool
+	registered bool
+	host       string
 }
 
 func (user *User) Quit() {
@@ -33,6 +39,7 @@ func (user *User) FireNumeric(numeric int, args ...interface{}) {
 func NewUser(conn net.Conn) User {
 	counter = counter + 1
 	user := User{id: counter, connection: conn}
+	user.host = "lol"
 	AddUserToList(user)
 	return user
 }
@@ -60,9 +67,42 @@ func (user *User) HandleRequests() {
 	}
 }
 func (user *User) NickHandler(args []string) {
-  if CheckNickCollision(args[1]) != false {
-    return //TODO handle properly
-  }
-  user.nick = args[1]
+	if CheckNickCollision(args[1]) != false {
+		return //TODO handle properly
+	}
+	if !user.nickset {
+		user.nickset = true
+	}
+	user.nick = args[1]
 	fmt.Println("User changed name to", args[1])
+	if !user.registered && user.userset {
+		user.UserRegistrationFinished()
+	}
+}
+
+func (user *User) UserHandler(args []string) {
+	if len(args) < 5 {
+		//ERR_NEEDMOREPARAMS
+		return
+	}
+	user.ident = args[1]
+	if strings.HasPrefix(args[4], ":") {
+		args[4] = strings.Replace(args[4], ":", "", 0)
+	}
+	var buffer bytes.Buffer
+	for i := 4; i < len(args); i++ {
+		buffer.WriteString(args[i])
+		buffer.WriteString(" ")
+	}
+	user.realname = strings.TrimSpace(buffer.String())
+	user.userset = true
+	if !user.registered && user.nickset {
+		user.UserRegistrationFinished()
+	}
+}
+
+func (user *User) UserRegistrationFinished() {
+	user.registered = true
+	fmt.Printf("User %d finished registration\n", user.id)
+	user.FireNumeric(RPL_WELCOME, user.nick, user.ident, user.host)
 }

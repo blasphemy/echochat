@@ -16,5 +16,8 @@ func ProcessLine(user *User, msg string) {
 	case "nick":
 		user.NickHandler(args)
 		break
+	case "user":
+		user.UserHandler(args)
+		break
 	}
 }

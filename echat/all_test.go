@@ -9,6 +9,7 @@ var (
 func SetupTest() {
 	userlist = make(map[int]User)
 	testuser = User{id: 1, nick: "test"}
+	counter = 1
 }
 func TestSetupTest(t *testing.T) {
 	SetupTest()
@@ -67,11 +68,21 @@ func TestCheckNickCollision3(t *testing.T) {
 }
 
 func TestNickHandler(t *testing.T) {
-  SetupTest()
-  AddUserToList(testuser)
-  msg := []string{"NICK", "lol"}
-  testuser.NickHandler(msg)
-  if testuser.nick != "lol" {
-    t.Errorf("Nick handler broken, nick not changed")
-  }
+	SetupTest()
+	AddUserToList(testuser)
+	msg := []string{"NICK", "lol"}
+	testuser.NickHandler(msg)
+	if testuser.nick != "lol" {
+		t.Errorf("Nick handler broken, nick not changed")
+	}
+}
+
+func TestNickHandlerBool(t *testing.T) {
+	SetupTest()
+	AddUserToList(testuser)
+	msg := []string{"Nick", "loltest"}
+	testuser.NickHandler(msg)
+	if !testuser.nickset {
+		t.Errorf("Nick handler did not set bool")
+	}
 }
