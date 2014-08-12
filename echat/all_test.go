@@ -36,3 +36,9 @@ func TestUserQuit(t *testing.T) {
 		t.Errorf("Error, user was not set to dead")
 	}
 }
+
+func TestStrCat(t *testing.T) {
+  if strcat("Hello", " World") != "Hello World" {
+    t.Errorf("String concatenation test failed")
+  }
+}
