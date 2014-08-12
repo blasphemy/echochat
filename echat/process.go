@@ -7,8 +7,9 @@ import "strings"
 func ProcessLine(user *User, msg string) {
 	user.SendLine(msg)
 	args := strings.Split(msg, " ")
-	switch args[0] {
-	case "QUIT":
+	checkme := strings.ToLower(args[0])
+	switch checkme {
+	case "quit":
 		user.SendLine("Lol QUIT!!!")
 		user.Quit()
 	}
