@@ -2,7 +2,15 @@ package main
 
 import "testing"
 
-var 
+func SetupTest() {
+  userlist = make(map[int]User)
+}
+func TestSetupTest(t *testing.T) {
+SetupTest()
+  if userlist == nil {
+   t.Errorf("userlist is nil")
+  }
+}
 
 func TestTest (t *testing.T) {
   if 1 != 1  {
@@ -10,7 +18,6 @@ func TestTest (t *testing.T) {
   }
 }
 func TestAddUserToList(t *testing.T) {
-  userlist = make(map[int]User)
   user := User{id: 1}
   AddUserToList(user)
   if len(userlist) != 1 {
