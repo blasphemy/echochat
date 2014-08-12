@@ -8,5 +8,6 @@ go:
   - tip
 
 script: 
-  - go build -v ./...
   - go test -v ./...
+  - cd echat
+  - go build
