@@ -23,33 +23,13 @@ func (user *User) Quit() {
 	delete(userlist, user.id)
 }
 
-//set a user's nick. Does not do any error checking
-func (user *User) SetNick(new string) {
-	user.nick = new
-}
-
-//returns a user's nick in string format
-func (user *User) GetNick() string {
-	return user.nick
-}
-
-func (user *User) SetConn(in net.Conn) {
-	user.connection = in
-}
-
-func (user *User) GetConn() net.Conn {
-	return user.connection
-}
-
 func (user *User) SendLine(msg string) {
-	conn := user.GetConn()
 	msg = fmt.Sprintf("%s\n", msg)
-	conn.Write([]byte(msg))
+	user.connection.Write([]byte(msg))
 }
 
 func (user *User) HandleRequests() {
-	conn := user.GetConn()
-	b := bufio.NewReader(conn)
+	b := bufio.NewReader(user.connection)
 	for {
 		if user.dead {
 			break
