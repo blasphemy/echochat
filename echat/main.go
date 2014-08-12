@@ -42,10 +42,18 @@ func main() {
 		// Handle connections in a new goroutine.
 		counter = counter + 1
 		user := User{connection: conn, nick: "*", id: counter}
-		userlist[counter] = user
+		AddUserToList(user)
 		go user.HandleRequests()
 	}
 
+}
+
+func AddUserToList (user User) {
+  userlist[user.id] = user
+}
+
+func RemoveUserFromList(user User) {
+  
 }
 
 func PeriodicStatusUpdate() {
