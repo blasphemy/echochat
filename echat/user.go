@@ -14,13 +14,13 @@ type User struct {
 	ip         string
 	dead       bool
 	connection net.Conn
-  id int
+	id         int
 }
 
 func (user *User) Quit() {
 	user.dead = true
 	user.connection.Close()
-  delete(userlist, user.id)
+	delete(userlist, user.id)
 }
 
 //set a user's nick. Does not do any error checking

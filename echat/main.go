@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
-  "time"
+	"time"
 )
 
 const (
@@ -14,13 +14,12 @@ const (
 )
 
 var (
-  counter int
-  userlist map[int]User
+	counter  int
+	userlist map[int]User
 )
 
-
 func main() {
-  userlist = make(map[int]User)
+	userlist = make(map[int]User)
 	// Listen for incoming connections.
 	l, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	if err != nil {
@@ -32,7 +31,7 @@ func main() {
 	defer l.Close()
 	fmt.Println("Listening on " + CONN_HOST + ":" + CONN_PORT)
 	go PeriodicStatusUpdate()
-  for {
+	for {
 		// Listen for an incoming connection.
 		conn, err := l.Accept()
 		if err != nil {
@@ -41,17 +40,17 @@ func main() {
 
 		}
 		// Handle connections in a new goroutine.
-    counter = counter + 1
-    user := User{connection: conn, nick: "*", id: counter}
-    userlist[counter] = user
-    go user.HandleRequests()
+		counter = counter + 1
+		user := User{connection: conn, nick: "*", id: counter}
+		userlist[counter] = user
+		go user.HandleRequests()
 	}
 
 }
 
 func PeriodicStatusUpdate() {
-  for {
-    fmt.Println("Status:", len(userlist), "users")
-    time.Sleep(5 * time.Second)
-  }
+	for {
+		fmt.Println("Status:", len(userlist), "users")
+		time.Sleep(5 * time.Second)
+	}
 }
