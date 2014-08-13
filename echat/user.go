@@ -154,3 +154,7 @@ func (user *User) UserHostLookup() {
 	}
 	user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick))
 }
+
+func (user *User) Sync() {
+	userlist[user.id] = *user
+}

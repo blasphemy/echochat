@@ -52,10 +52,6 @@ func CheckMaxUsers() {
 	}
 }
 
-func (user *User) Sync() {
-	userlist[user.id] = *user
-}
-
 func PeriodicStatusUpdate() {
 	for {
 		fmt.Println("Status:", len(userlist), "current users")
