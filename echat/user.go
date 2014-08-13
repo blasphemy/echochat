@@ -55,7 +55,12 @@ func (user *User) SendLine(msg string) {
 	if user.dead {
 		return
 	}
-	user.connection.Write([]byte(msg))
+  _, err := user.connection.Write([]byte(msg))
+  if err != nil {
+    user.Quit()
+    fmt.Printf("Error sending message to %s, disconnecting\n", user.nick)
+  }
+  fmt.Printf("Send to %s: %s", user.nick, msg)
 }
 
 func (user *User) HandleRequests() {
