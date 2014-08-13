@@ -87,7 +87,7 @@ func (user *User) UserHandler(args []string) {
 	}
 	user.ident = args[1]
 	if strings.HasPrefix(args[4], ":") {
-		args[4] = strings.Replace(args[4], ":", "", 999) //I guess 999 replacements is sensible....
+		args[4] = strings.Replace(args[4], ":", "", 1)
 	}
 	var buffer bytes.Buffer
 	for i := 4; i < len(args); i++ {
