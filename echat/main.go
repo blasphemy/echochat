@@ -10,7 +10,8 @@ import (
 
 var (
 	counter   int
-	userlist  map[int]User
+	userlist  map[int]*User
+	chanlist  map[string]Channel
 	max_users int
 	epoch     time.Time
 )
@@ -18,7 +19,8 @@ var (
 func main() {
 	epoch = time.Now()
 	SetupNumerics()
-	userlist = make(map[int]User)
+	userlist = make(map[int]*User)
+	chanlist = make(map[string]Channel)
 	// Listen for incoming connections.
 	l, err := net.Listen("tcp", CONN_HOST+":"+CONN_PORT)
 	if err != nil {

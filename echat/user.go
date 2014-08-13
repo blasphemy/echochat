@@ -35,7 +35,7 @@ func (user *User) Quit() {
 }
 
 func (user *User) FireNumeric(numeric int, args ...interface{}) {
-	msg := strcat(fmt.Sprintf(":%s %.3d ", "test.net.local", numeric), fmt.Sprintf(NUM[numeric], args...))
+	msg := strcat(fmt.Sprintf(":%s %.3d ", sname, numeric), fmt.Sprintf(NUM[numeric], args...))
 	user.SendLine(msg)
 }
 
@@ -160,9 +160,13 @@ func (user *User) UserHostLookup() {
 }
 
 func (user *User) Sync() {
-	userlist[user.id] = *user
+	userlist[user.id] = user
 }
 
 func (user *User) CommandNotFound(args []string) {
 	user.FireNumeric(ERR_UNKNOWNCOMMAND, args[0])
+}
+
+func (user *User) GetHostMask() string {
+	return fmt.Sprintf("%s!%s@%s", user.nick, user.ident, user.host)
 }
