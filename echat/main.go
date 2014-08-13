@@ -8,12 +8,6 @@ import (
 	"time"
 )
 
-const (
-	CONN_HOST = "127.0.0.1"
-	CONN_PORT = "6667"
-	CONN_TYPE = "tcp"
-)
-
 var (
 	counter   int
 	userlist  map[int]User
@@ -26,7 +20,7 @@ func main() {
 	SetupNumerics()
 	userlist = make(map[int]User)
 	// Listen for incoming connections.
-	l, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
+	l, err := net.Listen("tcp", CONN_HOST+":"+CONN_PORT)
 	if err != nil {
 		fmt.Println("Error listening:", err.Error())
 		os.Exit(1)
