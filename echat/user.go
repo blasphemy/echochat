@@ -84,6 +84,10 @@ func (user *User) HandleRequests() {
 	}
 }
 func (user *User) NickHandler(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NONICKNAMEGIVEN)
+		return
+	}
 	if CheckNickCollision(args[1]) != false {
 		return //TODO handle properly
 	}
