@@ -19,7 +19,7 @@ func TestSetupTest(t *testing.T) {
 }
 
 func TestAddUserToList(t *testing.T) {
-	AddUserToList(testuser)
+	testuser.Sync()
 	if len(userlist) != 1 {
 		t.Errorf("Error, adding user to list did not increse length")
 	}
@@ -46,7 +46,7 @@ func TestStrCat(t *testing.T) {
 
 func TestCheckNickCollision(t *testing.T) {
 	SetupTest()
-	AddUserToList(testuser)
+	testuser.Sync()
 	if CheckNickCollision("test") != true {
 		t.Errorf("Nick collision test failed")
 	}
@@ -54,7 +54,7 @@ func TestCheckNickCollision(t *testing.T) {
 
 func TestCheckNickCollisionCase(t *testing.T) {
 	SetupTest()
-	AddUserToList(testuser)
+	testuser.Sync()
 	if CheckNickCollision("TEST") != true {
 		t.Errorf("Nick collision check is not case sensitive")
 	}
@@ -69,7 +69,7 @@ func TestCheckNickCollision3(t *testing.T) {
 
 func TestNickHandler(t *testing.T) {
 	SetupTest()
-	AddUserToList(testuser)
+	testuser.Sync()
 	msg := []string{"NICK", "lol"}
 	testuser.NickHandler(msg)
 	if testuser.nick != "lol" {
@@ -79,7 +79,7 @@ func TestNickHandler(t *testing.T) {
 
 func TestNickHandlerBool(t *testing.T) {
 	SetupTest()
-	AddUserToList(testuser)
+	testuser.Sync()
 	msg := []string{"Nick", "loltest"}
 	testuser.NickHandler(msg)
 	if !testuser.nickset {
@@ -89,7 +89,7 @@ func TestNickHandlerBool(t *testing.T) {
 
 func TestUserHandler(t *testing.T) {
 	SetupTest()
-	AddUserToList(testuser)
+	testuser.Sync()
 	msg := []string{"USER", "daniel", "*", "*", ":lol"}
 	testuser.UserHandler(msg)
 	if testuser.ident != "daniel" {

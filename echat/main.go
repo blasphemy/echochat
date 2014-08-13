@@ -52,7 +52,7 @@ func CheckMaxUsers() {
 	}
 }
 
-func (user *User ) Sync() {
+func (user *User) Sync() {
 	userlist[user.id] = *user
 }
 

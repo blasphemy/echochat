@@ -46,7 +46,7 @@ func NewUser(conn net.Conn) User {
 	user.host = user.ip
 	user.epoch = time.Now()
 	user.Sync()
-  go user.UserHostLookup()
+	go user.UserHostLookup()
 	return user
 }
 
@@ -99,7 +99,7 @@ func (user *User) NickHandler(args []string) {
 	if !user.registered && user.userset {
 		user.UserRegistrationFinished()
 	}
-  user.Sync()
+	user.Sync()
 }
 
 func (user *User) UserHandler(args []string) {
