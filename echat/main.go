@@ -18,9 +18,11 @@ var (
 	counter   int
 	userlist  map[int]User
 	max_users int
+	epoch     time.Time
 )
 
 func main() {
+	epoch = time.Now()
 	SetupNumerics()
 	userlist = make(map[int]User)
 	// Listen for incoming connections.

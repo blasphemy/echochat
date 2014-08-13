@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"time"
 )
 
 type User struct {
@@ -21,6 +22,7 @@ type User struct {
 	registered bool
 	ip         string
 	host       string
+	epoch      time.Time
 }
 
 func (user *User) Quit() {
@@ -42,6 +44,7 @@ func NewUser(conn net.Conn) User {
 	counter = counter + 1
 	user := User{id: counter, connection: conn, ip: userip}
 	user.host = user.ip
+	user.epoch = time.Now()
 	AddUserToList(user)
 	return user
 }
