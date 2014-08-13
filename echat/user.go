@@ -12,7 +12,6 @@ type User struct {
 	nick       string
 	user       string
 	ident      string
-	ip         string
 	dead       bool
 	nickset    bool
 	connection net.Conn
@@ -20,6 +19,7 @@ type User struct {
 	realname   string
 	userset    bool
 	registered bool
+	ip         string
 	host       string
 }
 
@@ -38,14 +38,19 @@ func (user *User) FireNumeric(numeric int, args ...interface{}) {
 
 func NewUser(conn net.Conn) User {
 	counter = counter + 1
-	user := User{id: counter, connection: conn}
-	user.host = "lol"
+	newip := conn.RemoteAddr().String()
+	newip = strings.Split(newip, ":")[0]
+	user := User{id: counter, connection: conn, ip: newip}
+	user.host = user.ip
 	AddUserToList(user)
 	return user
 }
 
 func (user *User) SendLine(msg string) {
 	msg = fmt.Sprintf("%s\n", msg)
+	if user.dead {
+		return
+	}
 	user.connection.Write([]byte(msg))
 }
 
@@ -61,6 +66,10 @@ func (user *User) HandleRequests() {
 			user.Quit()
 		}
 		line = strings.TrimSpace(line)
+		if line == "" {
+			user.Quit()
+			break
+		}
 		fmt.Println("Received Line: ", line)
 		ProcessLine(user, line)
 	}
