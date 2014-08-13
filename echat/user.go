@@ -42,7 +42,7 @@ func NewUser(conn net.Conn) User {
 	userip := GetIpFromConn(conn)
 	fmt.Println("New connection from", userip)
 	counter = counter + 1
-	user := User{id: counter, connection: conn, ip: userip}
+  user := User{id: counter, connection: conn, ip: userip, nick: "*"}
 	user.host = user.ip
 	user.epoch = time.Now()
 	AddUserToList(user)
@@ -74,8 +74,8 @@ func (user *User) HandleRequests() {
 			break
 		}
     line = strings.TrimSpace(line)
-		fmt.Println("Received Line: ", line)
-		ProcessLine(user, line)
+    fmt.Println("Receive from",fmt.Sprintf("%s:",user.nick),line)
+    ProcessLine(user, line)
 	}
 }
 func (user *User) NickHandler(args []string) {
