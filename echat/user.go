@@ -62,8 +62,7 @@ func (user *User) HandleRequests() {
 		}
 		line = strings.TrimSpace(line)
 		fmt.Println("Received Line: ", line)
-		// Send a response back to person contacting us.
-		go ProcessLine(user, line)
+		ProcessLine(user, line)
 	}
 }
 func (user *User) NickHandler(args []string) {
