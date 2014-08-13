@@ -46,6 +46,7 @@ func NewUser(conn net.Conn) User {
 	user.host = user.ip
 	user.epoch = time.Now()
 	AddUserToList(user)
+  go user.UserHostLookup()
 	return user
 }
 
@@ -116,4 +117,30 @@ func (user *User) UserRegistrationFinished() {
 	user.registered = true
 	fmt.Printf("User %d finished registration\n", user.id)
 	user.FireNumeric(RPL_WELCOME, user.nick, user.ident, user.host)
+	user.FireNumeric(RPL_YOURHOST, sname, software, softwarev)
+	user.FireNumeric(RPL_CREATED, epoch)
+	//TODO fire RPL_MYINFO when we actually have enough stuff to do it
+}
+
+func (user *User) UserHostLookup() {
+  user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Looking up your hostname...", sname, user.nick))
+  adds, err := net.LookupAddr(user.ip)
+  if err != nil {
+    user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
+    return
+  }
+  addstring := adds[0]
+  adds, err = net.LookupHost(addstring)
+  if err != nil {
+    user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
+    return
+  }
+  for _, k := range adds {
+    if user.ip == k {
+      user.host = addstring
+      user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Found your hostname", sname, user.nick))
+      return
+    }
+  }
+  user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick))
 }
