@@ -7,7 +7,7 @@ var (
 )
 
 func SetupTest() {
-	userlist = make(map[int]User)
+	userlist = make(map[int]*User)
 	testuser = User{id: 1, nick: "test"}
 	counter = 1
 }
