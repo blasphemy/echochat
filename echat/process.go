@@ -17,5 +17,8 @@ func ProcessLine(user *User, msg string) {
 	case "user":
 		user.UserHandler(args)
 		break
+	default:
+		user.CommandNotFound(args)
+		break
 	}
 }
