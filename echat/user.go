@@ -69,11 +69,11 @@ func (user *User) HandleRequests() {
 			fmt.Println("Error reading:", err.Error())
 			user.Quit()
 		}
-		line = strings.TrimSpace(line)
 		if line == "" {
 			user.Quit()
 			break
 		}
+    line = strings.TrimSpace(line)
 		fmt.Println("Received Line: ", line)
 		ProcessLine(user, line)
 	}
