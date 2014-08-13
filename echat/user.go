@@ -27,6 +27,7 @@ type User struct {
 
 func (user *User) Quit() {
 	user.dead = true
+  user.Sync()
 	if user.connection != nil {
 		user.connection.Close()
 	}
@@ -118,7 +119,8 @@ func (user *User) UserHandler(args []string) {
 	}
 	user.realname = strings.TrimSpace(buffer.String())
 	user.userset = true
-	if !user.registered && user.nickset {
+	user.Sync()
+  if !user.registered && user.nickset {
 		user.UserRegistrationFinished()
 	}
 }
@@ -130,6 +132,7 @@ func (user *User) UserRegistrationFinished() {
 	user.FireNumeric(RPL_YOURHOST, sname, software, softwarev)
 	user.FireNumeric(RPL_CREATED, epoch)
 	//TODO fire RPL_MYINFO when we actually have enough stuff to do it
+user.Sync()
 }
 
 func (user *User) UserHostLookup() {
@@ -153,6 +156,7 @@ func (user *User) UserHostLookup() {
 		}
 	}
 	user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick))
+  user.Sync()
 }
 
 func (user *User) Sync() {
