@@ -52,8 +52,8 @@ func CheckMaxUsers() {
 	}
 }
 
-func AddUserToList(user User) {
-	userlist[user.id] = user
+func (user *User ) Sync() {
+	userlist[user.id] = *user
 }
 
 func PeriodicStatusUpdate() {
