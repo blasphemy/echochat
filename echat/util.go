@@ -28,3 +28,13 @@ func GetIpFromConn(conn net.Conn) string {
 	ip = strings.Split(ip, ":")[0]
 	return ip
 }
+
+func GetChannelByName(name string) (bool, Channel) {
+	for _, k := range chanlist {
+		if strings.ToLower(name) == strings.ToLower(k.name) {
+			return true, k
+		}
+	}
+	channel := NewChannel(name)
+	return false, channel
+}

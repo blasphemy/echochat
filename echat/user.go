@@ -170,3 +170,8 @@ func (user *User) CommandNotFound(args []string) {
 func (user *User) GetHostMask() string {
 	return fmt.Sprintf("%s!%s@%s", user.nick, user.ident, user.host)
 }
+
+func (user *User) JoinHandler(args []string) {
+	_, channel := GetChannelByName(args[1])
+	channel.JoinUser(user)
+}

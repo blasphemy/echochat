@@ -17,6 +17,9 @@ func ProcessLine(user *User, msg string) {
 	case "user":
 		user.UserHandler(args)
 		break
+	case "join":
+		user.JoinHandler(args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break

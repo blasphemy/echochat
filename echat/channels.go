@@ -17,8 +17,8 @@ type Channel struct {
 }
 
 func NewChannel(newname string) Channel {
-	userlist = make(map[int]*User)
 	chann := Channel{name: newname, epoch: time.Now()}
+	chann.userlist = make(map[int]*User)
 	chann.Sync()
 	return chann
 }
