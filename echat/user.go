@@ -42,11 +42,11 @@ func NewUser(conn net.Conn) User {
 	userip := GetIpFromConn(conn)
 	fmt.Println("New connection from", userip)
 	counter = counter + 1
-  user := User{id: counter, connection: conn, ip: userip, nick: "*"}
+	user := User{id: counter, connection: conn, ip: userip, nick: "*"}
 	user.host = user.ip
 	user.epoch = time.Now()
 	AddUserToList(user)
-  go user.UserHostLookup()
+	go user.UserHostLookup()
 	return user
 }
 
@@ -55,12 +55,12 @@ func (user *User) SendLine(msg string) {
 	if user.dead {
 		return
 	}
-  _, err := user.connection.Write([]byte(msg))
-  if err != nil {
-    user.Quit()
-    fmt.Printf("Error sending message to %s, disconnecting\n", user.nick)
-  }
-  fmt.Printf("Send to %s: %s", user.nick, msg)
+	_, err := user.connection.Write([]byte(msg))
+	if err != nil {
+		user.Quit()
+		fmt.Printf("Error sending message to %s, disconnecting\n", user.nick)
+	}
+	fmt.Printf("Send to %s: %s", user.nick, msg)
 }
 
 func (user *User) HandleRequests() {
@@ -78,9 +78,9 @@ func (user *User) HandleRequests() {
 			user.Quit()
 			break
 		}
-    line = strings.TrimSpace(line)
-    fmt.Println("Receive from",fmt.Sprintf("%s:",user.nick),line)
-    ProcessLine(user, line)
+		line = strings.TrimSpace(line)
+		fmt.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
+		ProcessLine(user, line)
 	}
 }
 func (user *User) NickHandler(args []string) {
@@ -128,24 +128,24 @@ func (user *User) UserRegistrationFinished() {
 }
 
 func (user *User) UserHostLookup() {
-  user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Looking up your hostname...", sname, user.nick))
-  adds, err := net.LookupAddr(user.ip)
-  if err != nil {
-    user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
-    return
-  }
-  addstring := adds[0]
-  adds, err = net.LookupHost(addstring)
-  if err != nil {
-    user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
-    return
-  }
-  for _, k := range adds {
-    if user.ip == k {
-      user.host = addstring
-      user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Found your hostname", sname, user.nick))
-      return
-    }
-  }
-  user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick))
+	user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Looking up your hostname...", sname, user.nick))
+	adds, err := net.LookupAddr(user.ip)
+	if err != nil {
+		user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
+		return
+	}
+	addstring := adds[0]
+	adds, err = net.LookupHost(addstring)
+	if err != nil {
+		user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
+		return
+	}
+	for _, k := range adds {
+		if user.ip == k {
+			user.host = addstring
+			user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Found your hostname", sname, user.nick))
+			return
+		}
+	}
+	user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick))
 }
