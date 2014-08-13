@@ -10,7 +10,6 @@ func ProcessLine(user *User, msg string) {
 	checkme := strings.ToLower(args[0])
 	switch checkme {
 	case "quit":
-		user.SendLine("Lol QUIT!!!")
 		user.Quit()
 		break
 	case "nick":

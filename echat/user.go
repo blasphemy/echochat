@@ -37,10 +37,10 @@ func (user *User) FireNumeric(numeric int, args ...interface{}) {
 }
 
 func NewUser(conn net.Conn) User {
+	userip := GetIpFromConn(conn)
+	fmt.Println("New connection from", userip)
 	counter = counter + 1
-	newip := conn.RemoteAddr().String()
-	newip = strings.Split(newip, ":")[0]
-	user := User{id: counter, connection: conn, ip: newip}
+	user := User{id: counter, connection: conn, ip: userip}
 	user.host = user.ip
 	AddUserToList(user)
 	return user

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"net"
 	"strings"
 )
 
@@ -20,4 +21,10 @@ func CheckNickCollision(nick string) bool {
 		}
 	}
 	return false
+}
+
+func GetIpFromConn(conn net.Conn) string {
+	ip := conn.RemoteAddr().String()
+	ip = strings.Split(ip, ":")[0]
+	return ip
 }
