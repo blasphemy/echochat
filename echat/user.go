@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"log"
 	"net"
 	"strings"
 	"time"
@@ -66,7 +67,7 @@ func (user *User) FireNumeric(numeric int, args ...interface{}) {
 
 func NewUser(conn net.Conn) *User {
 	userip := GetIpFromConn(conn)
-	fmt.Println("New connection from", userip)
+	log.Println("New connection from", userip)
 	counter = counter + 1
 	user := &User{id: counter, connection: conn, ip: userip, nick: "*"}
 	user.chanlist = make(map[string]*Channel)
@@ -86,9 +87,9 @@ func (user *User) SendLine(msg string) {
 	if err != nil {
 		user.dead = true
 		user.Quit("Error")
-		fmt.Printf("Error sending message to %s, disconnecting\n", user.nick)
+		log.Printf("Error sending message to %s, disconnecting\n", user.nick)
 	}
-	fmt.Printf("Send to %s: %s", user.nick, msg)
+	log.Printf("Send to %s: %s", user.nick, msg)
 }
 
 func (user *User) HandleRequests() {
@@ -99,7 +100,7 @@ func (user *User) HandleRequests() {
 		}
 		line, err := b.ReadString('\n')
 		if err != nil {
-			fmt.Println("Error reading:", err.Error())
+			log.Println("Error reading:", err.Error())
 			user.dead = true
 			user.Quit("Error")
 		}
@@ -109,7 +110,7 @@ func (user *User) HandleRequests() {
 			break
 		}
 		line = strings.TrimSpace(line)
-		fmt.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
+		log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
 		ProcessLine(user, line)
 	}
 }
@@ -133,7 +134,6 @@ func (user *User) NickHandler(args []string) {
 		SendToMany(fmt.Sprintf(":%s NICK %s", user.GetHostMask(), args[1]), targets)
 	}
 	user.nick = args[1]
-	fmt.Println("User changed name to", args[1])
 	if !user.registered && user.userset {
 		user.UserRegistrationFinished()
 	}
@@ -162,7 +162,7 @@ func (user *User) UserHandler(args []string) {
 
 func (user *User) UserRegistrationFinished() {
 	user.registered = true
-	fmt.Printf("User %d finished registration\n", user.id)
+	log.Printf("User %d finished registration\n", user.id)
 	user.FireNumeric(RPL_WELCOME, user.nick, user.ident, user.host)
 	user.FireNumeric(RPL_YOURHOST, sname, software, softwarev)
 	user.FireNumeric(RPL_CREATED, epoch)

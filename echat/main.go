@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net"
 	"os"
 	"runtime"
@@ -24,19 +24,19 @@ func main() {
 	// Listen for incoming connections.
 	l, err := net.Listen("tcp", CONN_HOST+":"+CONN_PORT)
 	if err != nil {
-		fmt.Println("Error listening:", err.Error())
+		log.Println("Error listening:", err.Error())
 		os.Exit(1)
 
 	}
 	// Close the listener when the application closes.
 	defer l.Close()
-	fmt.Println("Listening on " + CONN_HOST + ":" + CONN_PORT)
+	log.Println("Listening on " + CONN_HOST + ":" + CONN_PORT)
 	go PeriodicStatusUpdate()
 	for {
 		// Listen for an incoming connection.
 		conn, err := l.Accept()
 		if err != nil {
-			fmt.Println("Error accepting: ", err.Error())
+			log.Println("Error accepting: ", err.Error())
 			os.Exit(1)
 
 		}
@@ -56,9 +56,9 @@ func CheckMaxUsers() {
 
 func PeriodicStatusUpdate() {
 	for {
-		fmt.Println("Status:", len(userlist), "current users")
-		fmt.Println("Status:", len(chanlist), "current channels")
-		fmt.Println("Status:", runtime.NumGoroutine(), "current Goroutines")
+		log.Println("Status:", len(userlist), "current users")
+		log.Println("Status:", len(chanlist), "current channels")
+		log.Println("Status:", runtime.NumGoroutine(), "current Goroutines")
 		time.Sleep(5 * time.Second)
 
 	}
