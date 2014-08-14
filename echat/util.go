@@ -40,21 +40,20 @@ func GetChannelByName(name string) (bool, *Channel) {
 }
 
 func SendToMany(msg string, list []*User) {
-  list2 := []*User{}
-  for _, j := range list {
-    match := false
-    for _, k := range list2 {
-      if j == k {
-        match = true
-        break
-      }
-    }
-    if !match {
-      list2 = append(list2, j)
-    }
-  }
-  for _, j := range list2 {
-    j.SendLine(msg)
-  }
+	list2 := []*User{}
+	for _, j := range list {
+		match := false
+		for _, k := range list2 {
+			if j == k {
+				match = true
+				break
+			}
+		}
+		if !match {
+			list2 = append(list2, j)
+		}
+	}
+	for _, j := range list2 {
+		j.SendLine(msg)
+	}
 }
-

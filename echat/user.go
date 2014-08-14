@@ -23,7 +23,7 @@ type User struct {
 	ip         string
 	host       string
 	epoch      time.Time
-  chanlist   map[string]*Channel
+	chanlist   map[string]*Channel
 }
 
 func (user *User) Quit() {
@@ -45,10 +45,10 @@ func NewUser(conn net.Conn) *User {
 	counter = counter + 1
 	user := &User{id: counter, connection: conn, ip: userip, nick: "*"}
 	user.chanlist = make(map[string]*Channel)
-  user.host = user.ip
+	user.host = user.ip
 	user.epoch = time.Now()
 	userlist[user.id] = user
-  go user.UserHostLookup()
+	go user.UserHostLookup()
 	return user
 }
 
@@ -149,8 +149,8 @@ func (user *User) UserHostLookup() {
 	for _, k := range adds {
 		if user.ip == k {
 			user.host = addstring
-      user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Found your hostname", sname, user.nick))
-      return
+			user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Found your hostname", sname, user.nick))
+			return
 		}
 	}
 	user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick))
@@ -167,5 +167,5 @@ func (user *User) GetHostMask() string {
 func (user *User) JoinHandler(args []string) {
 	_, channel := GetChannelByName(args[1])
 	channel.JoinUser(user)
-  user.chanlist[channel.name] = channel
+	user.chanlist[channel.name] = channel
 }
