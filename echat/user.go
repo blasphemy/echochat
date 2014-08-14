@@ -84,6 +84,7 @@ func (user *User) SendLine(msg string) {
 	}
 	_, err := user.connection.Write([]byte(msg))
 	if err != nil {
+		user.dead = true
 		user.Quit("Error")
 		fmt.Printf("Error sending message to %s, disconnecting\n", user.nick)
 	}
@@ -99,9 +100,11 @@ func (user *User) HandleRequests() {
 		line, err := b.ReadString('\n')
 		if err != nil {
 			fmt.Println("Error reading:", err.Error())
+			user.dead = true
 			user.Quit("Error")
 		}
 		if line == "" {
+			user.dead = true
 			user.Quit("Error")
 			break
 		}
