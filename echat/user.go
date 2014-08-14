@@ -91,11 +91,19 @@ func (user *User) NickHandler(args []string) {
 		return
 	}
 	if CheckNickCollision(args[1]) != false {
-		return //TODO handle properly
+		user.FireNumeric(ERR_NICKNAMEINUSE, args[1])
+    return
 	}
 	if !user.nickset {
 		user.nickset = true
-	}
+  } else {
+    targets := []*User{}
+    targets = append(targets,user)
+    for _, k := range user.chanlist {
+      targets = append(targets,k.GetUserList()...)
+    }
+    SendToMany(fmt.Sprintf(":%s NICK %s", user.GetHostMask(), args[1]), targets)
+  }
 	user.nick = args[1]
 	fmt.Println("User changed name to", args[1])
 	if !user.registered && user.userset {
