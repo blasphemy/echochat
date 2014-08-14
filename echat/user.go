@@ -27,33 +27,33 @@ type User struct {
 }
 
 func (user *User) QuitCommandHandler(args []string) {
-  var reason string
-  if len(args) > 1 {
-    if strings.HasPrefix(args[1], ":") {
-      args[1] = strings.Replace(args[1], ":", "", 1)
-    }
-    var buffer bytes.Buffer
-    for i := 1; i < len(args); i++ {
-      buffer.WriteString(args[i])
-      buffer.WriteString(" ")
-    }
-    reason = strings.TrimSpace(buffer.String())
-  } else {
-    reason = "Leaving"
-  }
-  user.Quit(reason)
+	var reason string
+	if len(args) > 1 {
+		if strings.HasPrefix(args[1], ":") {
+			args[1] = strings.Replace(args[1], ":", "", 1)
+		}
+		var buffer bytes.Buffer
+		for i := 1; i < len(args); i++ {
+			buffer.WriteString(args[i])
+			buffer.WriteString(" ")
+		}
+		reason = strings.TrimSpace(buffer.String())
+	} else {
+		reason = "Leaving"
+	}
+	user.Quit(reason)
 }
 
 func (user *User) Quit(reason string) {
-  targets := []*User{user}
-  for _, k := range user.chanlist {
-    targets = append(targets, k.GetUserList()...)
-    delete(k.userlist, user.id)
-  }
-  SendToMany(fmt.Sprintf(":%s QUIT :%s", user.GetHostMask(), reason), targets)
-  user.SendLine(fmt.Sprintf("ERROR :Closing Link: %s (%s)", user.host, reason))
-  user.dead = true
-  if user.connection != nil {
+	targets := []*User{user}
+	for _, k := range user.chanlist {
+		targets = append(targets, k.GetUserList()...)
+		delete(k.userlist, user.id)
+	}
+	SendToMany(fmt.Sprintf(":%s QUIT :%s", user.GetHostMask(), reason), targets)
+	user.SendLine(fmt.Sprintf("ERROR :Closing Link: %s (%s)", user.host, reason))
+	user.dead = true
+	if user.connection != nil {
 		user.connection.Close()
 	}
 	delete(userlist, user.id)
@@ -117,18 +117,18 @@ func (user *User) NickHandler(args []string) {
 	}
 	if CheckNickCollision(args[1]) != false {
 		user.FireNumeric(ERR_NICKNAMEINUSE, args[1])
-    return
+		return
 	}
 	if !user.nickset {
 		user.nickset = true
-  } else {
-    targets := []*User{}
-    targets = append(targets,user)
-    for _, k := range user.chanlist {
-      targets = append(targets,k.GetUserList()...)
-    }
-    SendToMany(fmt.Sprintf(":%s NICK %s", user.GetHostMask(), args[1]), targets)
-  }
+	} else {
+		targets := []*User{}
+		targets = append(targets, user)
+		for _, k := range user.chanlist {
+			targets = append(targets, k.GetUserList()...)
+		}
+		SendToMany(fmt.Sprintf(":%s NICK %s", user.GetHostMask(), args[1]), targets)
+	}
 	user.nick = args[1]
 	fmt.Println("User changed name to", args[1])
 	if !user.registered && user.userset {
