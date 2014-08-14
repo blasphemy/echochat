@@ -50,6 +50,8 @@ func (user *User) Quit(reason string) {
 	for _, k := range user.chanlist {
 		targets = append(targets, k.GetUserList()...)
 		delete(k.userlist, user.id)
+		delete(user.chanlist, k.name)
+		k.ShouldIDie()
 	}
 	SendToMany(fmt.Sprintf(":%s QUIT :%s", user.GetHostMask(), reason), targets)
 	user.SendLine(fmt.Sprintf("ERROR :Closing Link: %s (%s)", user.host, reason))

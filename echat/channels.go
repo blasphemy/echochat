@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 )
@@ -20,6 +21,7 @@ func NewChannel(newname string) *Channel {
 	chann := &Channel{name: newname, epoch: time.Now()}
 	chann.userlist = make(map[int]*User)
 	chanlist[chann.name] = chann
+	log.Printf("Channel %s created\n", chann.name)
 	return chann
 }
 
@@ -50,4 +52,11 @@ func (channel *Channel) GetUserList() []*User {
 		list = append(list, k)
 	}
 	return list
+}
+
+func (channel *Channel) ShouldIDie() {
+	if len(channel.userlist) < 1 {
+		delete(chanlist, channel.name)
+		log.Printf("Channel %s has no users, destroying\n", channel.name)
+	}
 }
