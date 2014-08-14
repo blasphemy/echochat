@@ -121,7 +121,7 @@ func (user *User) NickHandler(args []string) {
 	}
 	if !user.nickset {
 		user.nickset = true
-	} else {
+	} else if user.registered {
 		targets := []*User{}
 		targets = append(targets, user)
 		for _, k := range user.chanlist {

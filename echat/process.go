@@ -18,7 +18,11 @@ func ProcessLine(user *User, msg string) {
 		user.UserHandler(args)
 		break
 	case "join":
-		user.JoinHandler(args)
+		if user.registered {
+			user.JoinHandler(args)
+		} else {
+			user.FireNumeric(ERR_NOTREGISTERED)
+		}
 		break
 	default:
 		user.CommandNotFound(args)
