@@ -198,6 +198,14 @@ func (user *User) GetHostMask() string {
 }
 
 func (user *User) JoinHandler(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "JOIN")
+		return
+	}
+	if !ValidChanName(args[1]) {
+		user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
+		return
+	}
 	_, channel := GetChannelByName(args[1])
 	channel.JoinUser(user)
 	user.chanlist[channel.name] = channel

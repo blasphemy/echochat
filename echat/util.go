@@ -57,3 +57,12 @@ func SendToMany(msg string, list []*User) {
 		j.SendLine(msg)
 	}
 }
+
+func ValidChanName(name string) bool {
+	for _, k := range valid_chan_prefix {
+		if strings.HasPrefix(name, k) {
+			return true
+		}
+	}
+	return false
+}
