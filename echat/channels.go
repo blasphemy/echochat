@@ -26,7 +26,7 @@ func NewChannel(newname string) *Channel {
 func (channel *Channel) JoinUser(user *User) {
 	channel.userlist[user.id] = user
 	SendToMany(fmt.Sprintf(":%s JOIN %s", user.GetHostMask(), channel.name), channel.GetUserList())
-	if len(channel.topic) < 1 {
+	if len(channel.topic) > 0 {
 		user.FireNumeric(RPL_TOPIC, channel.name, channel.topic)
 		user.FireNumeric(RPL_TOPICWHOTIME, channel.name, channel.topichost, channel.topictime)
 	}
