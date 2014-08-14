@@ -28,7 +28,10 @@ type User struct {
 
 func (user *User) Quit() {
 	user.dead = true
-	if user.connection != nil {
+  for _, k := range user.chanlist {
+    delete(k.userlist, user.id)
+  }
+  if user.connection != nil {
 		user.connection.Close()
 	}
 	delete(userlist, user.id)
