@@ -23,11 +23,11 @@ type User struct {
 	ip         string
 	host       string
 	epoch      time.Time
+  chanlist   map[string]*Channel
 }
 
 func (user *User) Quit() {
 	user.dead = true
-	user.Sync()
 	if user.connection != nil {
 		user.connection.Close()
 	}
@@ -35,19 +35,20 @@ func (user *User) Quit() {
 }
 
 func (user *User) FireNumeric(numeric int, args ...interface{}) {
-	msg := strcat(fmt.Sprintf(":%s %.3d ", sname, numeric), fmt.Sprintf(NUM[numeric], args...))
+	msg := strcat(fmt.Sprintf(":%s %.3d %s ", sname, numeric, user.nick), fmt.Sprintf(NUM[numeric], args...))
 	user.SendLine(msg)
 }
 
-func NewUser(conn net.Conn) User {
+func NewUser(conn net.Conn) *User {
 	userip := GetIpFromConn(conn)
 	fmt.Println("New connection from", userip)
 	counter = counter + 1
-	user := User{id: counter, connection: conn, ip: userip, nick: "*"}
-	user.host = user.ip
+	user := &User{id: counter, connection: conn, ip: userip, nick: "*"}
+	user.chanlist = make(map[string]*Channel)
+  user.host = user.ip
 	user.epoch = time.Now()
-	user.Sync()
-	go user.UserHostLookup()
+	userlist[user.id] = user
+  go user.UserHostLookup()
 	return user
 }
 
@@ -100,7 +101,6 @@ func (user *User) NickHandler(args []string) {
 	if !user.registered && user.userset {
 		user.UserRegistrationFinished()
 	}
-	user.Sync()
 }
 
 func (user *User) UserHandler(args []string) {
@@ -119,7 +119,6 @@ func (user *User) UserHandler(args []string) {
 	}
 	user.realname = strings.TrimSpace(buffer.String())
 	user.userset = true
-	user.Sync()
 	if !user.registered && user.nickset {
 		user.UserRegistrationFinished()
 	}
@@ -132,7 +131,6 @@ func (user *User) UserRegistrationFinished() {
 	user.FireNumeric(RPL_YOURHOST, sname, software, softwarev)
 	user.FireNumeric(RPL_CREATED, epoch)
 	//TODO fire RPL_MYINFO when we actually have enough stuff to do it
-	user.Sync()
 }
 
 func (user *User) UserHostLookup() {
@@ -151,16 +149,11 @@ func (user *User) UserHostLookup() {
 	for _, k := range adds {
 		if user.ip == k {
 			user.host = addstring
-			user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Found your hostname", sname, user.nick))
-			return
+      user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Found your hostname", sname, user.nick))
+      return
 		}
 	}
 	user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick))
-	user.Sync()
-}
-
-func (user *User) Sync() {
-	userlist[user.id] = user
 }
 
 func (user *User) CommandNotFound(args []string) {
@@ -174,4 +167,5 @@ func (user *User) GetHostMask() string {
 func (user *User) JoinHandler(args []string) {
 	_, channel := GetChannelByName(args[1])
 	channel.JoinUser(user)
+  user.chanlist[channel.name] = channel
 }

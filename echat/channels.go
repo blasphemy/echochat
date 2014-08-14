@@ -16,25 +16,20 @@ type Channel struct {
 	topictime int64
 }
 
-func NewChannel(newname string) Channel {
-	chann := Channel{name: newname, epoch: time.Now()}
+func NewChannel(newname string) *Channel {
+	chann := &Channel{name: newname, epoch: time.Now()}
 	chann.userlist = make(map[int]*User)
-	chann.Sync()
-	return chann
-}
-
-func (channel *Channel) Sync() {
-	chanlist[channel.name] = *channel
+	chanlist[chann.name] = chann
+  return chann
 }
 
 func (channel *Channel) JoinUser(user *User) {
 	channel.userlist[user.id] = user
-	for _, k := range userlist {
-		msg := fmt.Sprintf(":%s JOIN %s", k.GetHostMask(), channel.name)
-		user.SendLine(msg)
+  SendToMany(fmt.Sprintf(":%s JOIN %s", user.GetHostMask(), channel.name), channel.GetUserList())
+	if len(channel.topic) < 1 {
+		user.FireNumeric(RPL_TOPIC, channel.name, channel.topic)
+		user.FireNumeric(RPL_TOPICWHOTIME, channel.name, channel.topichost, channel.topictime)
 	}
-	user.FireNumeric(RPL_TOPIC, channel.name, channel.topic)
-	user.FireNumeric(RPL_TOPICWHOTIME, channel.name, channel.topichost, channel.topictime)
 	channel.FireNames(user)
 }
 
@@ -47,4 +42,12 @@ func (channel *Channel) FireNames(user *User) {
 	resp := strings.TrimSpace(buffer.String())
 	user.FireNumeric(RPL_NAMEPLY, channel.name, resp)
 	user.FireNumeric(RPL_ENDOFNAMES, channel.name)
+}
+
+func (channel *Channel) GetUserList() []*User {
+  list := []*User{}
+  for _, k := range channel.userlist {
+    list = append(list, k)
+  }
+  return list
 }
