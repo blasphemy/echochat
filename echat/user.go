@@ -26,11 +26,33 @@ type User struct {
 	chanlist   map[string]*Channel
 }
 
-func (user *User) Quit() {
-	user.dead = true
+func (user *User) QuitCommandHandler(args []string) {
+  var reason string
+  if len(args) > 1 {
+    if strings.HasPrefix(args[1], ":") {
+      args[1] = strings.Replace(args[1], ":", "", 1)
+    }
+    var buffer bytes.Buffer
+    for i := 1; i < len(args); i++ {
+      buffer.WriteString(args[i])
+      buffer.WriteString(" ")
+    }
+    reason = strings.TrimSpace(buffer.String())
+  } else {
+    reason = "Leaving"
+  }
+  user.Quit(reason)
+}
+
+func (user *User) Quit(reason string) {
+  targets := []*User{user}
   for _, k := range user.chanlist {
+    targets = append(targets, k.GetUserList()...)
     delete(k.userlist, user.id)
   }
+  SendToMany(fmt.Sprintf(":%s QUIT :%s", user.GetHostMask(), reason), targets)
+  user.SendLine(fmt.Sprintf("ERROR :Closing Link: %s (%s)", user.host, reason))
+  user.dead = true
   if user.connection != nil {
 		user.connection.Close()
 	}
@@ -62,7 +84,7 @@ func (user *User) SendLine(msg string) {
 	}
 	_, err := user.connection.Write([]byte(msg))
 	if err != nil {
-		user.Quit()
+		user.Quit("Error")
 		fmt.Printf("Error sending message to %s, disconnecting\n", user.nick)
 	}
 	fmt.Printf("Send to %s: %s", user.nick, msg)
@@ -77,10 +99,10 @@ func (user *User) HandleRequests() {
 		line, err := b.ReadString('\n')
 		if err != nil {
 			fmt.Println("Error reading:", err.Error())
-			user.Quit()
+			user.Quit("Error")
 		}
 		if line == "" {
-			user.Quit()
+			user.Quit("Error")
 			break
 		}
 		line = strings.TrimSpace(line)
