@@ -236,9 +236,12 @@ func (user *User) PrivmsgHandler(args []string) {
 					l.SendLine(fmt.Sprintf(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg))
 				}
 			}
+			return
 		} else {
 			//channel didnt exist but get channel by name makes one anyways, lets kill it...
+			user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
 			j.ShouldIDie()
+			return
 		}
 	} else {
 		//its a user
