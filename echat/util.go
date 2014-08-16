@@ -23,6 +23,17 @@ func CheckNickCollision(nick string) bool {
 	return false
 }
 
+//maybe this should replace CheckNickCollision
+func GetUserByNick(nick string) *User {
+	nick = strings.ToLower(nick)
+	for _, k := range userlist {
+		if strings.ToLower(k.nick) == nick {
+			return k
+		}
+	}
+	return nil
+}
+
 func GetIpFromConn(conn net.Conn) string {
 	ip := conn.RemoteAddr().String()
 	ip = strings.Split(ip, ":")[0]
@@ -65,4 +76,21 @@ func ValidChanName(name string) bool {
 		}
 	}
 	return false
+}
+
+//IMPORTANT: args must ABSOLUTELY be a valid privmsg command, or this will not work
+//validity does not depend on leading ":", I don't care that much
+func FormatMessageArgs(args []string) string {
+	msg := strings.Join(args[2:], " ")
+	msg = StripLeading(msg, ":")
+	return msg
+}
+
+//removes the first instance of toremove, only if it has it
+//r can be more than one char, but I wouldn't recommend it
+func StripLeading(msg string, r string) string {
+	if strings.HasPrefix(msg, r) {
+		msg = strings.Replace(msg, r, "", 1)
+	}
+	return msg
 }

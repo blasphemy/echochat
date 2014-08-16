@@ -30,9 +30,7 @@ type User struct {
 func (user *User) QuitCommandHandler(args []string) {
 	var reason string
 	if len(args) > 1 {
-		if strings.HasPrefix(args[1], ":") {
-			args[1] = strings.Replace(args[1], ":", "", 1)
-		}
+		args[1] = StripLeading(args[1], ":")
 		var buffer bytes.Buffer
 		for i := 1; i < len(args); i++ {
 			buffer.WriteString(args[i])
@@ -147,9 +145,7 @@ func (user *User) UserHandler(args []string) {
 		return
 	}
 	user.ident = args[1]
-	if strings.HasPrefix(args[4], ":") {
-		args[4] = strings.Replace(args[4], ":", "", 1)
-	}
+	args[4] = StripLeading(args[4], ":")
 	var buffer bytes.Buffer
 	for i := 4; i < len(args); i++ {
 		buffer.WriteString(args[i])
@@ -221,15 +217,12 @@ func (user *User) PrivmsgHandler(args []string) {
 		user.FireNumeric(ERR_NEEDMOREPARAMS, "PRIVMSG")
 		return
 	}
-	if ValidChanName(args[1]) {
+	if ValidChanName(args[1]) { //TODO part of this should be sent to the channel "object"
 		//presumably a channel
 		k, j := GetChannelByName(args[1])
 		if k {
 			//channel exists, send the message
-			msg := strings.Join(args[2:], " ") //?? idk
-			if strings.HasPrefix(msg, ":") {
-				msg = strings.Replace(msg, ":", "", 1)
-			}
+			msg := FormatMessageArgs(args)
 			list := j.GetUserList()
 			for _, l := range list {
 				if l != user {
@@ -244,7 +237,11 @@ func (user *User) PrivmsgHandler(args []string) {
 			return
 		}
 	} else {
-		//its a user
-		//TODO
+		//maybe its a user
+		target := GetUserByNick(args[1])
+		if target != nil {
+			msg := FormatMessageArgs(args)
+			target.SendLine(fmt.Sprint(":%s PRIVMSG %s :%s", user.GetHostMask(), target.nick, msg))
+		}
 	}
 }
