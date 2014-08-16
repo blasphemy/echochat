@@ -228,6 +228,7 @@ func (user *User) UserHostLookup() {
 }
 
 func (user *User) CommandNotFound(args []string) {
+	log.Printf("User %s attempted unknown command %s", user.nick, args[0])
 	user.FireNumeric(ERR_UNKNOWNCOMMAND, args[0])
 }
 
