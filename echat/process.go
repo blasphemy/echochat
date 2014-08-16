@@ -24,6 +24,13 @@ func ProcessLine(user *User, msg string) {
 			user.FireNumeric(ERR_NOTREGISTERED)
 		}
 		break
+	case "privmsg":
+		if user.registered {
+			user.PrivmsgHandler(args)
+		} else {
+			user.FireNumeric(ERR_NOTREGISTERED)
+		}
+		break
 	default:
 		user.CommandNotFound(args)
 		break

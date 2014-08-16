@@ -215,3 +215,33 @@ func (user *User) JoinHandler(args []string) {
 	channel.JoinUser(user)
 	user.chanlist[channel.name] = channel
 }
+
+func (user *User) PrivmsgHandler(args []string) {
+	if len(args) < 3 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "PRIVMSG")
+		return
+	}
+	if ValidChanName(args[1]) {
+		//presumably a channel
+		k, j := GetChannelByName(args[1])
+		if k {
+			//channel exists, send the message
+			msg := strings.Join(args[2:], " ") //?? idk
+			if strings.HasPrefix(msg, ":") {
+				msg = strings.Replace(msg, ":", "", 1)
+			}
+			list := j.GetUserList()
+			for _, l := range list {
+				if l != user {
+					l.SendLine(fmt.Sprintf(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg))
+				}
+			}
+		} else {
+			//channel didnt exist but get channel by name makes one anyways, lets kill it...
+			j.ShouldIDie()
+		}
+	} else {
+		//its a user
+		//TODO
+	}
+}

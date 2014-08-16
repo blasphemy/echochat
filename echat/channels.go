@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+//Channel...
+//represents an irc channel
 type Channel struct {
 	name      string
 	epoch     time.Time
