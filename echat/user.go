@@ -44,6 +44,7 @@ func (user *User) PingChecker() {
 				user.SendLine(fmt.Sprintf("PING :%s", sname))
 				user.waiting = true
 				user.nextcheck.Add(ping_time * time.Second)
+				log.Printf("Sent user %s ping", user.nick)
 			}
 		}
 		time.Sleep(ping_check_time * time.Second)
