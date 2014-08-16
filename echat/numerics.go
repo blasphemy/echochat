@@ -10,6 +10,11 @@ func SetupNumerics() {
 	NUM[RPL_YOURHOST] = "Your host is %s, running %s version %s"
 	NUM[RPL_CREATED] = "This server was created %s"
 	NUM[RPL_MYINFO] = "%s %s %s %s"
+	NUM[RPL_LUSERCLIENT] = ":There are %d users and %d services on %d servers"
+	NUM[RPL_LUSEROP] = "%d :operator(s) online"
+	NUM[RPL_LUSERUNKNOWN] = "%d :unknown connection(s)"
+	NUM[RPL_LUSERCHANNELS] = "%d :channels formed"
+	NUM[RPL_LUSERME] = ":I have %d clients and %d servers"
 	NUM[RPL_ENDOFWHO] = "%s :End of WHO list"
 	NUM[RPL_LISTSTART] = "Channel :Users Name"
 	NUM[RPL_LIST] = "%s %d :%s"
@@ -37,6 +42,11 @@ const (
 	RPL_YOURHOST          = 002
 	RPL_CREATED           = 003
 	RPL_MYINFO            = 004
+	RPL_LUSERCLIENT       = 251
+	RPL_LUSEROP           = 252
+	RPL_LUSERUNKNOWN      = 253
+	RPL_LUSERCHANNELS     = 254
+	RPL_LUSERME           = 255
 	RPL_ENDOFWHO          = 315
 	RPL_LISTSTART         = 321
 	RPL_LISTEND           = 323

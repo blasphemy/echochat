@@ -38,6 +38,9 @@ func ProcessLine(user *User, msg string) {
 		break
 	case "pong":
 		break //lol nothing
+	case "lusers":
+		user.FireLusers()
+		break
 	default:
 		user.CommandNotFound(args)
 		break

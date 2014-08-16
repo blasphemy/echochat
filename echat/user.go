@@ -195,6 +195,7 @@ func (user *User) UserRegistrationFinished() {
 	user.FireNumeric(RPL_YOURHOST, sname, software, softwarev)
 	user.FireNumeric(RPL_CREATED, epoch)
 	//TODO fire RPL_MYINFO when we actually have enough stuff to do it
+	user.FireLusers()
 }
 
 func (user *User) UserHostLookup() {
@@ -240,6 +241,14 @@ func (user *User) JoinHandler(args []string) {
 	_, channel := GetChannelByName(args[1])
 	channel.JoinUser(user)
 	user.chanlist[channel.name] = channel
+}
+
+func (user *User) FireLusers() {
+	user.FireNumeric(RPL_LUSERCLIENT, len(userlist), 0, 1) //0 services and 1 servers for now
+	user.FireNumeric(RPL_LUSEROP, 0)                       //also 0 for now
+	user.FireNumeric(RPL_LUSERUNKNOWN, 0)                  //also 0...
+	user.FireNumeric(RPL_LUSERCHANNELS, len(chanlist))
+	user.FireNumeric(RPL_LUSERME, len(userlist), 1)
 }
 
 func (user *User) PrivmsgHandler(args []string) {
