@@ -314,3 +314,21 @@ func (user *User) PrivmsgHandler(args []string) {
 		}
 	}
 }
+
+func (user *User) TopicHandler(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "TOPIC")
+		return
+	}
+	k := GetChannelByName(args[1])
+	if k == nil {
+		user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
+		return
+	}
+	if len(args) < 3 {
+		k.FireTopic(user)
+		return
+	}
+	msg := FormatMessageArgs(args)
+	k.SetTopic(msg, user.GetHostMask())
+}

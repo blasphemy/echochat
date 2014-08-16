@@ -45,6 +45,9 @@ func ProcessLine(user *User, msg string) {
 	case "part":
 		user.PartHandler(args)
 		break
+	case "topic":
+		user.TopicHandler(args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break

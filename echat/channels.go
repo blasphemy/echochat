@@ -19,6 +19,15 @@ type Channel struct {
 	topictime int64
 }
 
+func (channel *Channel) SetTopic(newtopic string, hostmask string) {
+	channel.topic = newtopic
+	channel.topichost = hostmask
+	channel.topictime = time.Now().Unix()
+	for _, k := range channel.userlist {
+		k.SendLine(fmt.Sprintf(":%s TOPIC %s :%s", hostmask, channel.name, newtopic))
+	}
+}
+
 func NewChannel(newname string) *Channel {
 	chann := &Channel{name: newname, epoch: time.Now()}
 	chann.userlist = make(map[int]*User)
@@ -31,10 +40,18 @@ func (channel *Channel) JoinUser(user *User) {
 	channel.userlist[user.id] = user
 	SendToMany(fmt.Sprintf(":%s JOIN %s", user.GetHostMask(), channel.name), channel.GetUserList())
 	if len(channel.topic) > 0 {
-		user.FireNumeric(RPL_TOPIC, channel.name, channel.topic)
-		user.FireNumeric(RPL_TOPICWHOTIME, channel.name, channel.topichost, channel.topictime)
+		channel.FireTopic(user)
 	}
 	channel.FireNames(user)
+}
+
+func (channel *Channel) FireTopic(user *User) {
+	if len(channel.topic) > 0 {
+		user.FireNumeric(RPL_TOPIC, channel.name, channel.topic)
+		user.FireNumeric(RPL_TOPICWHOTIME, channel.name, channel.topichost, channel.topictime)
+	} else {
+		user.FireNumeric(RPL_NOTOPIC, channel.name)
+	}
 }
 
 func (channel *Channel) FireNames(user *User) {
