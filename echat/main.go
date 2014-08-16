@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	counter   int
-	userlist  map[int]*User
-	chanlist  map[string]*Channel
-	max_users int
-	epoch     time.Time
+	counter  int
+	userlist map[int]*User
+	chanlist map[string]*Channel
+	maxUsers int
+	epoch    time.Time
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 	// Close the listener when the application closes.
 	defer l.Close()
 	log.Println("Listening on " + CONN_HOST + ":" + CONN_PORT)
-	go PeriodicStatusUpdate()
+	go periodicStatusUpdate()
 	for {
 		// Listen for an incoming connection.
 		conn, err := l.Accept()
@@ -42,19 +42,19 @@ func main() {
 		}
 		// Handle connections in a new goroutine.
 		user := NewUser(conn)
-		go CheckMaxUsers()
+		checkMaxUsers()
 		go user.HandleRequests()
 	}
 
 }
 
-func CheckMaxUsers() {
-	if len(userlist) > max_users {
-		max_users = len(userlist)
+func checkMaxUsers() {
+	if len(userlist) > maxUsers {
+		maxUsers = len(userlist)
 	}
 }
 
-func PeriodicStatusUpdate() {
+func periodicStatusUpdate() {
 	for {
 		log.Println("Status:", len(userlist), "current users")
 		log.Println("Status:", len(chanlist), "current channels")
