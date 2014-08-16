@@ -13,17 +13,6 @@ func strcat(s1 string, s2 string) string {
 	return buffer.String()
 }
 
-func CheckNickCollision(nick string) bool {
-	nick = strings.ToLower(nick)
-	for _, k := range userlist {
-		if strings.ToLower(k.nick) == nick {
-			return true
-		}
-	}
-	return false
-}
-
-//maybe this should replace CheckNickCollision
 func GetUserByNick(nick string) *User {
 	nick = strings.ToLower(nick)
 	for _, k := range userlist {

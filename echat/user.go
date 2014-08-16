@@ -119,7 +119,7 @@ func (user *User) NickHandler(args []string) {
 		user.FireNumeric(ERR_NONICKNAMEGIVEN)
 		return
 	}
-	if CheckNickCollision(args[1]) != false {
+	if GetUserByNick(args[1]) != nil {
 		user.FireNumeric(ERR_NICKNAMEINUSE, args[1])
 		return
 	}
