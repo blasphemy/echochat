@@ -101,7 +101,9 @@ func NewUser(conn net.Conn) *User {
 	user.lastrcv = time.Now()
 	user.nextcheck = time.Now().Add(ping_time * time.Second)
 	userlist[user.id] = user
-	go user.UserHostLookup()
+	if resolvehosts {
+		go user.UserHostLookup()
+	}
 	go user.PingChecker()
 	return user
 }

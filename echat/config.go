@@ -8,6 +8,7 @@ const (
 	CONN_PORT       = "6667"
 	ping_time       = 45 //something
 	ping_check_time = 20 // time between the user's ping checks
+	resolvehosts    = false
 )
 
 var (
