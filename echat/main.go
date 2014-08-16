@@ -37,8 +37,6 @@ func main() {
 		conn, err := l.Accept()
 		if err != nil {
 			log.Println("Error accepting: ", err.Error())
-			os.Exit(1)
-
 		}
 		// Handle connections in a new goroutine.
 		user := NewUser(conn)
