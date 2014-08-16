@@ -141,7 +141,7 @@ func (user *User) NickHandler(args []string) {
 
 func (user *User) UserHandler(args []string) {
 	if len(args) < 5 {
-		//ERR_NEEDMOREPARAMS
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "USER")
 		return
 	}
 	user.ident = args[1]
