@@ -308,7 +308,7 @@ func (user *User) PrivmsgHandler(args []string) {
 		target := GetUserByNick(args[1])
 		if target != nil {
 			msg := FormatMessageArgs(args)
-			target.SendLine(fmt.Sprint(":%s PRIVMSG %s :%s", user.GetHostMask(), target.nick, msg))
+			target.SendLine(fmt.Sprintf(":%s PRIVMSG %s :%s", user.GetHostMask(), target.nick, msg))
 			log.Printf("User %s PRIVMSG %s: %s", user.nick, target.nick, msg)
 		}
 	}
