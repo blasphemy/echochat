@@ -16,6 +16,7 @@ type User struct {
 	ident      string
 	dead       bool
 	nickset    bool
+	waiting    bool
 	connection net.Conn
 	id         int
 	realname   string
@@ -25,7 +26,28 @@ type User struct {
 	host       string
 	epoch      time.Time
 	lastrcv    time.Time
+	nextcheck  time.Time
 	chanlist   map[string]*Channel
+}
+
+func (user *User) PingChecker() {
+	for {
+		if user.dead {
+			break
+		}
+		if time.Now().After(user.nextcheck) {
+			if user.waiting {
+				since := time.Since(user.lastrcv).Seconds()
+				user.Quit(fmt.Sprintf("Ping Timeout: %.0f seconds", since))
+				break
+			} else {
+				user.SendLine(fmt.Sprintf("PING :%s", sname))
+				user.waiting = true
+				user.nextcheck.Add(ping_time * time.Second)
+			}
+		}
+		time.Sleep(ping_check_time * time.Second)
+	}
 }
 
 func (user *User) QuitCommandHandler(args []string) {
@@ -74,8 +96,11 @@ func NewUser(conn net.Conn) *User {
 	user.chanlist = make(map[string]*Channel)
 	user.host = user.ip
 	user.epoch = time.Now()
+	user.lastrcv = time.Now()
+	user.nextcheck = time.Now().Add(ping_time * time.Second)
 	userlist[user.id] = user
 	go user.UserHostLookup()
+	go user.PingChecker()
 	return user
 }
 

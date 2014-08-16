@@ -9,6 +9,7 @@ import (
 //takes a line and a user and processes it.
 func ProcessLine(user *User, msg string) {
 	user.lastrcv = time.Now()
+	user.waiting = false
 	args := strings.Split(msg, " ")
 	checkme := strings.ToLower(args[0])
 	switch checkme {
@@ -35,6 +36,8 @@ func ProcessLine(user *User, msg string) {
 			user.FireNumeric(ERR_NOTREGISTERED)
 		}
 		break
+	case "pong":
+		break //lol nothing
 	default:
 		user.CommandNotFound(args)
 		break
