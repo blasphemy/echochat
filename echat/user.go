@@ -64,6 +64,7 @@ func (user *User) QuitCommandHandler(args []string) {
 		reason = "Leaving"
 	}
 	user.Quit(reason)
+	log.Printf("User %s Quit (%s)", user.nick, reason)
 }
 
 func (user *User) Quit(reason string) {
@@ -115,7 +116,7 @@ func (user *User) SendLine(msg string) {
 		user.Quit("Error")
 		log.Printf("Error sending message to %s, disconnecting\n", user.nick)
 	}
-	log.Printf("Send to %s: %s", user.nick, msg)
+	//log.Printf("Send to %s: %s", user.nick, msg)
 }
 
 func (user *User) HandleRequests() {
@@ -136,11 +137,12 @@ func (user *User) HandleRequests() {
 			break
 		}
 		line = strings.TrimSpace(line)
-		log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
+		//log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
 		ProcessLine(user, line)
 	}
 }
 func (user *User) NickHandler(args []string) {
+	oldnick := user.nick
 	if len(args) < 2 {
 		user.FireNumeric(ERR_NONICKNAMEGIVEN)
 		return
@@ -164,6 +166,7 @@ func (user *User) NickHandler(args []string) {
 		SendToMany(fmt.Sprintf(":%s NICK %s", user.GetHostMask(), args[1]), targets)
 	}
 	user.nick = args[1]
+	log.Printf("User %s changed nick to %s", oldnick, user.nick)
 	if !user.registered && user.userset {
 		user.UserRegistrationFinished()
 	}
@@ -241,6 +244,7 @@ func (user *User) JoinHandler(args []string) {
 	_, channel := GetChannelByName(args[1])
 	channel.JoinUser(user)
 	user.chanlist[channel.name] = channel
+	log.Printf("User %s joined %s", user.nick, channel.name)
 }
 
 func (user *User) FireLusers() {
@@ -268,6 +272,7 @@ func (user *User) PrivmsgHandler(args []string) {
 					l.SendLine(fmt.Sprintf(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg))
 				}
 			}
+			log.Printf("User %s CHANMSG %s: %s", user.nick, j.name, msg)
 			return
 		} else {
 			//channel didnt exist but get channel by name makes one anyways, lets kill it...
@@ -281,6 +286,7 @@ func (user *User) PrivmsgHandler(args []string) {
 		if target != nil {
 			msg := FormatMessageArgs(args)
 			target.SendLine(fmt.Sprint(":%s PRIVMSG %s :%s", user.GetHostMask(), target.nick, msg))
+			log.Printf("User %s PRIVMSG %s: %s", user.nick, target.nick, msg)
 		}
 	}
 }
