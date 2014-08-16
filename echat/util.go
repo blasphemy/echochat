@@ -59,6 +59,9 @@ func SendToMany(msg string, list []*User) {
 }
 
 func ValidChanName(name string) bool {
+	if ChanHasBadChars(name) {
+		return false
+	}
 	for _, k := range valid_chan_prefix {
 		if strings.HasPrefix(name, k) {
 			return true
@@ -85,7 +88,21 @@ func StripLeading(msg string, r string) string {
 }
 
 func NickHasBadChars(nick string) bool {
-	for _, k := range forbidden_nick_chars {
+	for _, k := range global_bad_chars {
+		if strings.Contains(nick, k) {
+			return true
+		}
+	}
+	for _, k := range valid_chan_prefix {
+		if strings.Contains(nick, k) {
+			return true
+		}
+	}
+	return false
+}
+
+func ChanHasBadChars(nick string) bool {
+	for _, k := range global_bad_chars {
 		if strings.Contains(nick, k) {
 			return true
 		}
