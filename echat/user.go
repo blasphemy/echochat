@@ -113,7 +113,7 @@ func (user *User) HandleRequests() {
 		}
 		line = strings.TrimSpace(line)
 		log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
-		ProcessLine(user, line)
+		go ProcessLine(user, line)
 	}
 }
 func (user *User) NickHandler(args []string) {

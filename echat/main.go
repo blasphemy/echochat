@@ -9,11 +9,12 @@ import (
 )
 
 var (
-	counter  int
-	userlist map[int]*User
-	chanlist map[string]*Channel
-	maxUsers int
-	epoch    time.Time
+	counter     int
+	userlist    map[int]*User
+	chanlist    map[string]*Channel
+	maxUsers    int
+	maxRoutines int
+	epoch       time.Time
 )
 
 func main() {
@@ -54,9 +55,14 @@ func checkMaxUsers() {
 
 func periodicStatusUpdate() {
 	for {
+		gor := runtime.NumGoroutine()
+		if gor > maxRoutines {
+			maxRoutines = gor
+		}
 		log.Println("Status:", len(userlist), "current users")
 		log.Println("Status:", len(chanlist), "current channels")
-		log.Println("Status:", runtime.NumGoroutine(), "current Goroutines")
+		log.Println("Status:", gor, "current Goroutines")
+		log.Println("Status:", maxRoutines, "max Goroutines")
 		time.Sleep(5 * time.Second)
 
 	}
