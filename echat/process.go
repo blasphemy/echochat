@@ -1,10 +1,14 @@
 //process lines
 package main
 
-import "strings"
+import (
+	"strings"
+	"time"
+)
 
 //takes a line and a user and processes it.
 func ProcessLine(user *User, msg string) {
+	user.lastrcv = time.Now()
 	args := strings.Split(msg, " ")
 	checkme := strings.ToLower(args[0])
 	switch checkme {

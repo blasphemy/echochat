@@ -24,6 +24,7 @@ type User struct {
 	ip         string
 	host       string
 	epoch      time.Time
+	lastrcv    time.Time
 	chanlist   map[string]*Channel
 }
 
