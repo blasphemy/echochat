@@ -42,6 +42,9 @@ func ProcessLine(user *User, msg string) {
 	case "lusers":
 		user.FireLusers()
 		break
+	case "part":
+		user.PartHandler(args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break

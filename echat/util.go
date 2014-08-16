@@ -29,14 +29,13 @@ func GetIpFromConn(conn net.Conn) string {
 	return ip
 }
 
-func GetChannelByName(name string) (bool, *Channel) {
+func GetChannelByName(name string) *Channel {
 	for _, k := range chanlist {
 		if strings.ToLower(name) == strings.ToLower(k.name) {
-			return true, k
+			return k
 		}
 	}
-	channel := NewChannel(name)
-	return false, channel
+	return nil
 }
 
 func SendToMany(msg string, list []*User) {

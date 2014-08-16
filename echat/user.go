@@ -242,7 +242,10 @@ func (user *User) JoinHandler(args []string) {
 		user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
 		return
 	}
-	_, channel := GetChannelByName(args[1])
+	channel := GetChannelByName(args[1])
+	if channel == nil {
+		channel = NewChannel(args[1])
+	}
 	channel.JoinUser(user)
 	user.chanlist[channel.name] = channel
 	log.Printf("User %s joined %s", user.nick, channel.name)
@@ -256,6 +259,24 @@ func (user *User) FireLusers() {
 	user.FireNumeric(RPL_LUSERME, len(userlist), 1)
 }
 
+func (user *User) PartHandler(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "PART")
+		return
+	}
+	channel := GetChannelByName(args[1])
+	if channel != nil {
+		list := channel.GetUserList()
+		delete(channel.userlist, user.id)
+		delete(user.chanlist, channel.name)
+		for _, l := range list {
+			l.SendLine(fmt.Sprintf(":%s PART %s :%s", user.GetHostMask(), channel.name, "Leaving"))
+		}
+		log.Printf("User %s PART %s: %s", user.nick, channel.name, "Leaving")
+		channel.ShouldIDie()
+	} //else?
+}
+
 func (user *User) PrivmsgHandler(args []string) {
 	if len(args) < 3 {
 		user.FireNumeric(ERR_NEEDMOREPARAMS, "PRIVMSG")
@@ -263,8 +284,8 @@ func (user *User) PrivmsgHandler(args []string) {
 	}
 	if ValidChanName(args[1]) { //TODO part of this should be sent to the channel "object"
 		//presumably a channel
-		k, j := GetChannelByName(args[1])
-		if k {
+		j := GetChannelByName(args[1])
+		if j != nil {
 			//channel exists, send the message
 			msg := FormatMessageArgs(args)
 			list := j.GetUserList()
@@ -278,7 +299,6 @@ func (user *User) PrivmsgHandler(args []string) {
 		} else {
 			//channel didnt exist but get channel by name makes one anyways, lets kill it...
 			user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
-			j.ShouldIDie()
 			return
 		}
 	} else {
