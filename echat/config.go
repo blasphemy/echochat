@@ -11,5 +11,6 @@ const (
 )
 
 var (
-	valid_chan_prefix = []string{"#", "&"}
+	valid_chan_prefix    = []string{"#", "&"}
+	forbidden_nick_chars = []string{":", "!", "@", "#", "*", "(", ")", "<", ">", ",", "~"}
 )

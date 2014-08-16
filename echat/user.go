@@ -145,6 +145,10 @@ func (user *User) NickHandler(args []string) {
 		user.FireNumeric(ERR_NONICKNAMEGIVEN)
 		return
 	}
+	if NickHasBadChars(args[1]) {
+		user.FireNumeric(ERR_ERRONEOUSNICKNAME, args[1])
+		return
+	}
 	if GetUserByNick(args[1]) != nil {
 		user.FireNumeric(ERR_NICKNAMEINUSE, args[1])
 		return

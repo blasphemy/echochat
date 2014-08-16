@@ -83,3 +83,12 @@ func StripLeading(msg string, r string) string {
 	}
 	return msg
 }
+
+func NickHasBadChars(nick string) bool {
+	for _, k := range forbidden_nick_chars {
+		if strings.Contains(nick, k) {
+			return true
+		}
+	}
+	return false
+}
