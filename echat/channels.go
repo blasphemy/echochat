@@ -14,6 +14,7 @@ type Channel struct {
 	name      string
 	epoch     time.Time
 	userlist  map[int]*User
+	usermodes map[*User]string
 	topic     string
 	topichost string
 	topictime int64
@@ -31,6 +32,7 @@ func (channel *Channel) SetTopic(newtopic string, hostmask string) {
 func NewChannel(newname string) *Channel {
 	chann := &Channel{name: newname, epoch: time.Now()}
 	chann.userlist = make(map[int]*User)
+	chann.usermodes = make(map[*User]string)
 	chanlist[chann.name] = chann
 	log.Printf("Channel %s created\n", chann.name)
 	return chann
@@ -38,11 +40,21 @@ func NewChannel(newname string) *Channel {
 
 func (channel *Channel) JoinUser(user *User) {
 	channel.userlist[user.id] = user
+	if len(channel.userlist) == 1 {
+		channel.usermodes[user] = "o"
+	}
 	SendToMany(fmt.Sprintf(":%s JOIN %s", user.GetHostMask(), channel.name), channel.GetUserList())
 	if len(channel.topic) > 0 {
 		channel.FireTopic(user)
 	}
 	channel.FireNames(user)
+}
+
+func (channel *Channel) GetUserPrefix(user *User) string {
+	if strings.Contains(channel.usermodes[user], "o") {
+		return "@"
+	}
+	return ""
 }
 
 func (channel *Channel) FireTopic(user *User) {
@@ -57,10 +69,11 @@ func (channel *Channel) FireTopic(user *User) {
 func (channel *Channel) FireNames(user *User) {
 	var buffer bytes.Buffer
 	for _, k := range userlist {
-		if buffer.Len()+len(k.nick) > 500 {
+		if buffer.Len()+len(channel.GetUserPrefix(k))+len(user.nick) > 500 {
 			user.FireNumeric(RPL_NAMEPLY, channel.name, strings.TrimSpace(buffer.String()))
 			buffer.Reset()
 		}
+		buffer.WriteString(channel.GetUserPrefix(k))
 		buffer.WriteString(k.nick)
 		buffer.WriteString(" ")
 	}

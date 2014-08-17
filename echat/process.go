@@ -48,6 +48,8 @@ func ProcessLine(user *User, msg string) {
 	case "topic":
 		user.TopicHandler(args)
 		break
+	case "protoctl":
+		break
 	default:
 		user.CommandNotFound(args)
 		break

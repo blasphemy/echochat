@@ -10,6 +10,7 @@ func SetupNumerics() {
 	NUM[RPL_YOURHOST] = "Your host is %s, running %s version %s"
 	NUM[RPL_CREATED] = "This server was created %s"
 	NUM[RPL_MYINFO] = "%s %s %s %s"
+	NUM[RPL_ISUPPORT] = "%s :are supported by this server"
 	NUM[RPL_LUSERCLIENT] = ":There are %d users and %d services on %d servers"
 	NUM[RPL_LUSEROP] = "%d :operator(s) online"
 	NUM[RPL_LUSERUNKNOWN] = "%d :unknown connection(s)"
@@ -43,6 +44,7 @@ const (
 	RPL_YOURHOST          = 002
 	RPL_CREATED           = 003
 	RPL_MYINFO            = 004
+	RPL_ISUPPORT          = 005
 	RPL_LUSERCLIENT       = 251
 	RPL_LUSEROP           = 252
 	RPL_LUSERUNKNOWN      = 253

@@ -201,6 +201,7 @@ func (user *User) UserRegistrationFinished() {
 	user.FireNumeric(RPL_YOURHOST, sname, software, softwarev)
 	user.FireNumeric(RPL_CREATED, epoch)
 	//TODO fire RPL_MYINFO when we actually have enough stuff to do it
+	user.FireNumeric(RPL_ISUPPORT, isupport)
 	user.FireLusers()
 }
 
