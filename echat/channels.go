@@ -31,7 +31,7 @@ func NewChannel(newname string) *Channel {
 	chann := &Channel{name: newname, epoch: time.Now()}
 	chann.userlist = make(map[int]*User)
 	chann.usermodes = make(map[*User]string)
-	chanlist[chann.name] = chann
+	chanlist[strings.ToLower(chann.name)] = chann
 	chann.cmodes = default_cmode
 	log.Printf("Channel %s created\n", chann.name)
 	return chann
@@ -101,7 +101,7 @@ func (channel *Channel) GetUserPriv(user *User) int {
 
 func (channel *Channel) ShouldIDie() {
 	if len(channel.userlist) < 1 {
-		delete(chanlist, channel.name)
+		delete(chanlist, strings.ToLower(channel.name))
 		log.Printf("Channel %s has no users, destroying\n", channel.name)
 	}
 }

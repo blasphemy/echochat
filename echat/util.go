@@ -29,6 +29,7 @@ func GetIpFromConn(conn net.Conn) string {
 	return ip
 }
 
+/*
 func GetChannelByName(name string) *Channel {
 	for _, k := range chanlist {
 		if strings.ToLower(name) == strings.ToLower(k.name) {
@@ -36,6 +37,11 @@ func GetChannelByName(name string) *Channel {
 		}
 	}
 	return nil
+}
+*/
+
+func GetChannelByName(name string) *Channel {
+	return chanlist[strings.ToLower(name)]
 }
 
 //SendToMany() sends to a list of users, checking for duplicates. This is very inefficient, so should only be used for things like QUIT and NICK
