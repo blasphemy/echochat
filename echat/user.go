@@ -346,6 +346,7 @@ func (user *User) ModeHandler(args []string) {
 		if len(args) < 3 {
 			//just digging around...
 			channel.FireModes(user)
+			log.Printf("User %s requested modes for %s", user.nick, channel.name)
 		}
 	}
 }
