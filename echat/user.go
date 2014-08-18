@@ -293,8 +293,8 @@ func (user *User) PrivmsgHandler(args []string) {
 		j := GetChannelByName(args[1])
 		if j != nil {
 			if j.HasMode("n") && !user.IsIn(j) {
+				user.FireNumeric(ERR_CANNOTSENDTOCHAN, j.name)
 				return
-				//TODO handle this properly
 			}
 			//channel exists, send the message
 			msg := FormatMessageArgs(args)
