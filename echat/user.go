@@ -367,3 +367,12 @@ func (user *User) IsIn(channel *Channel) bool {
 	}
 	return false
 }
+
+func (user *User) PingCmd(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "PING")
+		return
+	}
+	args[1] = StripLeading(args[1], ":")
+	user.SendLinef(":%s PONG %s :%s", sname, sname, args[1])
+}
