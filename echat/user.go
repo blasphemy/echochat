@@ -122,6 +122,10 @@ func (user *User) SendLine(msg string) {
 	//log.Printf("Send to %s: %s", user.nick, msg)
 }
 
+func (user *User) SendLinef(msg string, args ...interface{}) {
+	user.SendLine(fmt.Sprintf(msg, args...))
+}
+
 func (user *User) HandleRequests() {
 	b := bufio.NewReader(user.connection)
 	for {
