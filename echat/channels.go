@@ -14,6 +14,7 @@ type Channel struct {
 	epoch     time.Time
 	userlist  map[int]*User
 	usermodes map[*User]string
+	cmodes    string
 	topic     string
 	topichost string
 	topictime int64
@@ -31,6 +32,7 @@ func NewChannel(newname string) *Channel {
 	chann.userlist = make(map[int]*User)
 	chann.usermodes = make(map[*User]string)
 	chanlist[chann.name] = chann
+	chann.cmodes = default_cmode
 	log.Printf("Channel %s created\n", chann.name)
 	return chann
 }
@@ -102,4 +104,9 @@ func (channel *Channel) ShouldIDie() {
 		delete(chanlist, channel.name)
 		log.Printf("Channel %s has no users, destroying\n", channel.name)
 	}
+}
+
+func (channel *Channel) FireModes(user *User) {
+	user.FireNumeric(RPL_CHANNELMODEIS, channel.name, channel.cmodes)
+	user.FireNumeric(RPL_CREATIONTIME, channel.name, channel.epoch.Unix())
 }

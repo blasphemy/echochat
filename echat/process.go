@@ -50,6 +50,9 @@ func ProcessLine(user *User, msg string) {
 		break
 	case "protoctl":
 		break
+	case "mode":
+		user.ModeHandler(args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break

@@ -116,3 +116,13 @@ func ChanHasBadChars(nick string) bool {
 	}
 	return false
 }
+
+func ChanUserNone(name string) int {
+	if GetChannelByName(name) != nil {
+		return 1
+	} else if GetUserByNick(name) != nil {
+		return 2
+	} else {
+		return 0
+	}
+}

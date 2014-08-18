@@ -335,3 +335,17 @@ func (user *User) TopicHandler(args []string) {
 	msg := FormatMessageArgs(args)
 	k.SetTopic(msg, user.GetHostMask())
 }
+
+func (user *User) ModeHandler(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "MODE")
+		return
+	}
+	if ChanUserNone(args[1]) == 1 {
+		channel := GetChannelByName(args[1])
+		if len(args) < 3 {
+			//just digging around...
+			channel.FireModes(user)
+		}
+	}
+}

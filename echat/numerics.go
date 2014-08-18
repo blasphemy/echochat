@@ -21,6 +21,8 @@ func SetupNumerics() {
 	NUM[RPL_LIST] = "%s %d :%s"
 	NUM[RPL_NOTOPIC] = "%s :No topic is set"
 	NUM[RPL_LISTEND] = ":End of channel list"
+	NUM[RPL_CHANNELMODEIS] = "%s +%s"
+	NUM[RPL_CREATIONTIME] = "%s %d"
 	NUM[RPL_TOPIC] = "%s :%s"
 	NUM[RPL_TOPICWHOTIME] = "%s %s %d"
 	NUM[RPL_WHOREPLY] = "%s %s %s %s %s %s %s %s"
@@ -52,8 +54,10 @@ const (
 	RPL_LUSERME           = 255
 	RPL_ENDOFWHO          = 315
 	RPL_LISTSTART         = 321
-	RPL_LISTEND           = 323
 	RPL_LIST              = 322
+	RPL_LISTEND           = 323
+	RPL_CHANNELMODEIS     = 324
+	RPL_CREATIONTIME      = 329
 	RPL_NOTOPIC           = 331
 	RPL_TOPIC             = 332
 	RPL_TOPICWHOTIME      = 333

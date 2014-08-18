@@ -10,6 +10,7 @@ const (
 	ping_check_time = 20   // time between the user's ping checks
 	resolvehosts    = true //Note: make forward confirmed reverse dns optional.
 	isupport        = "NAMESX CHANTYPES=#& PREFIX=(o)@"
+	default_cmode   = "nt"
 )
 
 var (
