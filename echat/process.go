@@ -41,16 +41,34 @@ func ProcessLine(user *User, msg string) {
 		break //lol nothing
 	case "lusers":
 		user.FireLusers()
+		if user.registered {
+			user.FireLusers()
+		} else {
+			user.FireNumeric(ERR_NOTREGISTERED)
+		}
 		break
 	case "part":
-		user.PartHandler(args)
+		if user.registered {
+			user.PartHandler(args)
+		} else {
+			user.FireNumeric(ERR_NOTREGISTERED)
+		}
 		break
 	case "topic":
-		user.TopicHandler(args)
+		if user.registered {
+			user.TopicHandler(args)
+		} else {
+			user.FireNumeric(ERR_NOTREGISTERED)
+		}
 		break
 	case "protoctl":
 		break
 	case "mode":
+		if user.registered {
+			user.ModeHandler(args)
+		} else {
+			user.FireNumeric(ERR_NOTREGISTERED)
+		}
 		user.ModeHandler(args)
 		break
 	case "ping":
