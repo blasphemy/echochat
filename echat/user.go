@@ -118,8 +118,11 @@ func (user *User) SendLine(msg string) {
 		user.dead = true
 		user.Quit("Error")
 		log.Printf("Error sending message to %s, disconnecting\n", user.nick)
+		return
 	}
-	//log.Printf("Send to %s: %s", user.nick, msg)
+	if debug {
+		log.Printf("Send to %s: %s", user.nick, msg)
+	}
 }
 
 func (user *User) SendLinef(msg string, args ...interface{}) {
@@ -144,7 +147,9 @@ func (user *User) HandleRequests() {
 			break
 		}
 		line = strings.TrimSpace(line)
-		//log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
+		if debug {
+			log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
+		}
 		ProcessLine(user, line)
 	}
 }
