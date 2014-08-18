@@ -382,3 +382,21 @@ func (user *User) PingCmd(args []string) {
 	args[1] = StripLeading(args[1], ":")
 	user.SendLinef(":%s PONG %s :%s", sname, sname, args[1])
 }
+
+func (user *User) WhoHandler(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "WHO")
+		return
+	}
+	whotype := ChanUserNone(args[1])
+	if whotype == 1 {
+		//its a channel
+		k := GetChannelByName(args[1])
+		for _, j := range k.userlist {
+			//fire numeric
+		}
+	} else if whotype == 2 {
+		//user
+	}
+	user.FireNumeric(RPL_ENDOFWHO, args[1])
+}
