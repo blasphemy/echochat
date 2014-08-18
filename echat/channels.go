@@ -92,6 +92,14 @@ func (channel *Channel) GetUserList() []*User {
 	return list
 }
 
+func (channel *Channel) GetUserPriv(user *User) int {
+	score := 0
+	if strings.Contains(channel.usermodes[user], "o") {
+		score += 100
+	}
+	return score
+}
+
 func (channel *Channel) ShouldIDie() {
 	if len(channel.userlist) < 1 {
 		delete(chanlist, channel.name)
