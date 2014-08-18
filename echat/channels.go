@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -24,9 +23,7 @@ func (channel *Channel) SetTopic(newtopic string, hostmask string) {
 	channel.topic = newtopic
 	channel.topichost = hostmask
 	channel.topictime = time.Now().Unix()
-	for _, k := range channel.userlist {
-		k.SendLine(fmt.Sprintf(":%s TOPIC %s :%s", hostmask, channel.name, newtopic))
-	}
+	SendToMany2f(channel.GetUserList(), ":%s TOPIC %s :%s", hostmask, channel.name, newtopic)
 }
 
 func NewChannel(newname string) *Channel {
@@ -43,7 +40,7 @@ func (channel *Channel) JoinUser(user *User) {
 	if len(channel.userlist) == 1 {
 		channel.usermodes[user] = "o"
 	}
-	SendToMany(fmt.Sprintf(":%s JOIN %s", user.GetHostMask(), channel.name), channel.GetUserList())
+	SendToMany2f(channel.GetUserList(), ":%s JOIN %s", user.GetHostMask(), channel.name)
 	if len(channel.topic) > 0 {
 		channel.FireTopic(user)
 	}

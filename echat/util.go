@@ -57,6 +57,13 @@ func SendToMany(msg string, list []*User) {
 	}
 }
 
+//SendToMany2f sends to all users in list ([]*User), does not check for dupes, accepts in printf format.
+func SendToMany2f(list []*User, msg string, args ...interface{}) {
+	for _, k := range list {
+		k.SendLinef(msg, args...)
+	}
+}
+
 func ValidChanName(name string) bool {
 	if ChanHasBadChars(name) {
 		return false
