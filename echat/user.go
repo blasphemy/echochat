@@ -210,7 +210,7 @@ func (user *User) UserRegistrationFinished() {
 }
 
 func (user *User) UserHostLookup() {
-	user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Looking up your hostname...", sname, user.nick))
+	user.SendLinef(":%s NOTICE %s :*** Looking up your hostname...", sname, user.nick)
 	adds, err := net.LookupAddr(user.ip)
 	if err != nil {
 		user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
