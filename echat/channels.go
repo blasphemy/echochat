@@ -110,3 +110,11 @@ func (channel *Channel) FireModes(user *User) {
 	user.FireNumeric(RPL_CHANNELMODEIS, channel.name, channel.cmodes)
 	user.FireNumeric(RPL_CREATIONTIME, channel.name, channel.epoch.Unix())
 }
+
+func (channel *Channel) HasMode(mode string) bool {
+	if strings.Contains(channel.cmodes, mode) {
+		return true
+	} else {
+		return false
+	}
+}

@@ -292,6 +292,10 @@ func (user *User) PrivmsgHandler(args []string) {
 		//presumably a channel
 		j := GetChannelByName(args[1])
 		if j != nil {
+			if j.HasMode("n") && !user.IsIn(j) {
+				return
+				//TODO handle this properly
+			}
 			//channel exists, send the message
 			msg := FormatMessageArgs(args)
 			list := j.GetUserList()
@@ -332,6 +336,10 @@ func (user *User) TopicHandler(args []string) {
 		k.FireTopic(user)
 		return
 	}
+	if k.GetUserPriv(user) < 100 && k.HasMode("t") {
+		return //doesn't have privs to change channel
+		// TODO fire the correct numeric
+	}
 	msg := FormatMessageArgs(args)
 	k.SetTopic(msg, user.GetHostMask())
 }
@@ -349,4 +357,13 @@ func (user *User) ModeHandler(args []string) {
 			log.Printf("User %s requested modes for %s", user.nick, channel.name)
 		}
 	}
+}
+
+func (user *User) IsIn(channel *Channel) bool {
+	for _, k := range user.chanlist {
+		if k == channel {
+			return true
+		}
+	}
+	return false
 }
