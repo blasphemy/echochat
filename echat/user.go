@@ -224,6 +224,7 @@ func (user *User) UserHostLookup() {
 	}
 	for _, k := range adds {
 		if user.ip == k {
+			addstring = strings.TrimSuffix(addstring, ".")
 			user.host = addstring
 			user.SendLinef(":%s NOTICE %s :*** Found your hostname", sname, user.nick)
 			return
