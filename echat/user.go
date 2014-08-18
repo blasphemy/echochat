@@ -77,7 +77,7 @@ func (user *User) Quit(reason string) {
 		k.ShouldIDie()
 	}
 	SendToMany(fmt.Sprintf(":%s QUIT :%s", user.GetHostMask(), reason), targets)
-	user.SendLine(fmt.Sprintf("ERROR :Closing Link: %s (%s)", user.host, reason))
+	user.SendLinef("ERROR :Closing Link: %s (%s)", user.host, reason)
 	user.dead = true
 	if user.connection != nil {
 		user.connection.Close()
@@ -213,23 +213,23 @@ func (user *User) UserHostLookup() {
 	user.SendLinef(":%s NOTICE %s :*** Looking up your hostname...", sname, user.nick)
 	adds, err := net.LookupAddr(user.ip)
 	if err != nil {
-		user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
+		user.SendLinef("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick)
 		return
 	}
 	addstring := adds[0]
 	adds, err = net.LookupHost(addstring)
 	if err != nil {
-		user.SendLine(fmt.Sprintf("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick))
+		user.SendLinef("%s NOTICE %s :*** Unable to resolve your hostname", sname, user.nick)
 		return
 	}
 	for _, k := range adds {
 		if user.ip == k {
 			user.host = addstring
-			user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Found your hostname", sname, user.nick))
+			user.SendLinef(":%s NOTICE %s :*** Found your hostname", sname, user.nick)
 			return
 		}
 	}
-	user.SendLine(fmt.Sprintf(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick))
+	user.SendLinef(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", sname, user.nick)
 }
 
 func (user *User) CommandNotFound(args []string) {
@@ -277,9 +277,7 @@ func (user *User) PartHandler(args []string) {
 		list := channel.GetUserList()
 		delete(channel.userlist, user.id)
 		delete(user.chanlist, channel.name)
-		for _, l := range list {
-			l.SendLine(fmt.Sprintf(":%s PART %s :%s", user.GetHostMask(), channel.name, "Leaving"))
-		}
+		SendToMany(fmt.Sprintf(":%s PART %s :%s", user.GetHostMask(), channel.name, "Leaving"), list)
 		log.Printf("User %s PART %s: %s", user.nick, channel.name, "Leaving")
 		channel.ShouldIDie()
 	} //else?
@@ -299,7 +297,7 @@ func (user *User) PrivmsgHandler(args []string) {
 			list := j.GetUserList()
 			for _, l := range list {
 				if l != user {
-					l.SendLine(fmt.Sprintf(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg))
+					l.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg)
 				}
 			}
 			log.Printf("User %s CHANMSG %s: %s", user.nick, j.name, msg)
@@ -314,7 +312,7 @@ func (user *User) PrivmsgHandler(args []string) {
 		target := GetUserByNick(args[1])
 		if target != nil {
 			msg := FormatMessageArgs(args)
-			target.SendLine(fmt.Sprintf(":%s PRIVMSG %s :%s", user.GetHostMask(), target.nick, msg))
+			target.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), target.nick, msg)
 			log.Printf("User %s PRIVMSG %s: %s", user.nick, target.nick, msg)
 		}
 	}
