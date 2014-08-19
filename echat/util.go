@@ -42,7 +42,7 @@ func GetChannelByName(name string) *Channel {
 
 func SendToMany(msg string, list []*User) {
 	users := make(map[*User]int)
-	for j, _ := range list {
+	for _, j := range list {
 		users[j] = 0
 	}
 	for j, _ := range users {
