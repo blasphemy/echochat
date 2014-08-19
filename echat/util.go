@@ -139,3 +139,15 @@ func ChanUserNone(name string) int {
 		return 0
 	}
 }
+
+func WildcardMatch(text string, pattern string) bool {
+	cards := strings.Split(pattern, "*")
+	for _, card := range cards {
+		index := strings.Index(text, card)
+		if index == -1 {
+			return false
+		}
+		text = text[index+len(card):]
+	}
+	return true
+}
