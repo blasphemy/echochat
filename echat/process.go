@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+type Handler func([]string)
+
 //takes a line and a user and processes it.
 func ProcessLine(user *User, msg string) {
 	user.lastrcv = time.Now()
@@ -24,18 +26,10 @@ func ProcessLine(user *User, msg string) {
 		user.UserHandler(args)
 		break
 	case "join":
-		if user.registered {
-			user.JoinHandler(args)
-		} else {
-			user.FireNumeric(ERR_NOTREGISTERED)
-		}
+		user.FireIfRegistered(user.JoinHandler, args)
 		break
 	case "privmsg":
-		if user.registered {
-			user.PrivmsgHandler(args)
-		} else {
-			user.FireNumeric(ERR_NOTREGISTERED)
-		}
+		user.FireIfRegistered(user.PrivmsgHandler, args)
 		break
 	case "pong":
 		break //lol nothing
@@ -48,50 +42,38 @@ func ProcessLine(user *User, msg string) {
 		}
 		break
 	case "part":
-		if user.registered {
-			user.PartHandler(args)
-		} else {
-			user.FireNumeric(ERR_NOTREGISTERED)
-		}
+		user.FireIfRegistered(user.PartHandler, args)
 		break
 	case "topic":
-		if user.registered {
-			user.TopicHandler(args)
-		} else {
-			user.FireNumeric(ERR_NOTREGISTERED)
-		}
+		user.FireIfRegistered(user.TopicHandler, args)
 		break
 	case "protoctl":
 		break
 	case "mode":
-		if user.registered {
-			user.ModeHandler(args)
-		} else {
-			user.FireNumeric(ERR_NOTREGISTERED)
-		}
+		user.FireIfRegistered(user.ModeHandler, args)
 		break
 	case "ping":
 		user.PingCmd(args)
 		break
 	case "who":
-		user.WhoHandler(args)
+		user.FireIfRegistered(user.WhoHandler, args)
 		break
 	case "kick":
-		if user.registered {
-			user.KickHandler(args)
-		} else {
-			user.FireNumeric(ERR_NOTREGISTERED)
-		}
+		user.FireIfRegistered(user.KickHandler, args)
 		break
 	case "list":
-		if user.registered {
-			user.ListHandler(args)
-		} else {
-			user.FireNumeric(ERR_NOTREGISTERED)
-		}
+		user.FireIfRegistered(user.ListHandler, args)
 		break
 	default:
 		user.CommandNotFound(args)
 		break
+	}
+}
+
+func (user *User) FireIfRegistered(handler Handler, args []string) {
+	if user.registered {
+		handler(args)
+	} else {
+		user.FireNumeric(ERR_NOTREGISTERED)
 	}
 }
