@@ -40,7 +40,8 @@ func main() {
 			log.Println("Error accepting: ", err.Error())
 		}
 		// Handle connections in a new goroutine.
-		user := NewUser(conn)
+		user := NewUser()
+		user.SetConn(conn)
 		go user.HandleRequests()
 	}
 }

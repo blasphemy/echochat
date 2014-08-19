@@ -91,22 +91,26 @@ func (user *User) FireNumeric(numeric int, args ...interface{}) {
 	user.SendLine(msg)
 }
 
-func NewUser(conn net.Conn) *User {
-	userip := GetIpFromConn(conn)
-	log.Println("New connection from", userip)
+func NewUser() *User {
 	counter = counter + 1
-	user := &User{id: counter, connection: conn, ip: userip, nick: "*"}
+	user := &User{id: counter, nick: "*"}
 	user.chanlist = make(map[string]*Channel)
-	user.host = user.ip
 	user.epoch = time.Now()
 	user.lastrcv = time.Now()
 	user.nextcheck = time.Now().Add(ping_time * time.Second)
 	userlist[user.id] = user
+	return user
+}
+
+func (user *User) SetConn(conn net.Conn) {
+	user.connection = conn
+	user.ip = GetIpFromConn(conn)
+	log.Println("New connection from", user.ip)
+	user.host = user.ip
 	if resolvehosts {
 		go user.UserHostLookup()
 	}
 	go user.PingChecker()
-	return user
 }
 
 func (user *User) SendLine(msg string) {
