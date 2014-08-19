@@ -280,10 +280,9 @@ func (user *User) PartHandler(args []string) {
 	}
 	channel := GetChannelByName(args[1])
 	if channel != nil {
-		list := channel.GetUserList()
 		delete(channel.userlist, user.id)
 		delete(user.chanlist, channel.name)
-		SendToMany2f(list, ":%s PART %s :%s", user.GetHostMask(), channel.name, "Leaving")
+		channel.SendLinef(":%s PART %s :%s", user.GetHostMask(), channel.name, "Leaving")
 		log.Printf("User %s PART %s: %s", user.nick, channel.name, "Leaving")
 		channel.ShouldIDie()
 	} //else?

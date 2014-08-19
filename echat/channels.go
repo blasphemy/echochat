@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -24,7 +25,7 @@ func (channel *Channel) SetTopic(newtopic string, hostmask string) {
 	channel.topic = newtopic
 	channel.topichost = hostmask
 	channel.topictime = time.Now().Unix()
-	SendToMany2f(channel.GetUserList(), ":%s TOPIC %s :%s", hostmask, channel.name, newtopic)
+	channel.SendLinef(":%s TOPIC %s :%s", hostmask, channel.name, newtopic)
 }
 
 func NewChannel(newname string) *Channel {
@@ -42,7 +43,7 @@ func (channel *Channel) JoinUser(user *User) {
 	if len(channel.userlist) == 1 {
 		channel.usermodes[user] = "o"
 	}
-	SendToMany2f(channel.GetUserList(), ":%s JOIN %s", user.GetHostMask(), channel.name)
+	channel.SendLinef(":%s JOIN %s", user.GetHostMask(), channel.name)
 	if len(channel.topic) > 0 {
 		channel.FireTopic(user)
 	}
@@ -122,28 +123,28 @@ func (channel *Channel) HasMode(mode string) bool {
 func (channel *Channel) OP(user *User, changing *User) {
 	if !strings.Contains(channel.usermodes[user], "o") {
 		channel.usermodes[user] = strcat(channel.usermodes[user], "o")
-		SendToMany2f(channel.GetUserList(), ":%s MODE %s +o %s", changing.GetHostMask(), channel.name, user.nick)
+		channel.SendLinef(":%s MODE %s +o %s", changing.GetHostMask(), channel.name, user.nick)
 	}
 }
 
 func (channel *Channel) DEOP(user *User, changing *User) {
 	if strings.Contains(channel.usermodes[user], "o") {
 		channel.usermodes[user] = strings.Replace(channel.usermodes[user], "o", "", 1)
-		SendToMany2f(channel.GetUserList(), ":%s MODE %s -o %s", changing.GetHostMask(), channel.name, user.nick)
+		channel.SendLinef(":%s MODE %s -o %s", changing.GetHostMask(), channel.name, user.nick)
 	}
 }
 
 func (channel *Channel) SetMode(mode string, changing *User) {
 	if !strings.Contains(channel.cmodes, mode) {
 		channel.cmodes = strcat(channel.cmodes, mode)
-		SendToMany2f(channel.GetUserList(), ":%s MODE %s +%s", changing.GetHostMask(), channel.name, mode)
+		channel.SendLinef(":%s MODE %s +%s", changing.GetHostMask(), channel.name, mode)
 	}
 }
 
 func (channel *Channel) UnsetMode(mode string, changing *User) {
 	if strings.Contains(channel.cmodes, mode) {
 		channel.cmodes = strings.Replace(channel.cmodes, mode, "", 1)
-		SendToMany2f(channel.GetUserList(), ":%s MODE %s -%s", changing.GetHostMask(), channel.name, mode)
+		channel.SendLinef(":%s MODE %s -%s", changing.GetHostMask(), channel.name, mode)
 	}
 }
 
@@ -152,5 +153,11 @@ func (channel *Channel) HasUser(user *User) bool {
 		return true
 	} else {
 		return false
+	}
+}
+
+func (channel *Channel) SendLinef(msg string, args ...interface{}) {
+	for _, k := range channel.userlist {
+		k.SendLine(fmt.Sprintf(msg, args...))
 	}
 }
