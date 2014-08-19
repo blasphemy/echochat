@@ -69,7 +69,6 @@ func ProcessLine(user *User, msg string) {
 		} else {
 			user.FireNumeric(ERR_NOTREGISTERED)
 		}
-		user.ModeHandler(args)
 		break
 	case "ping":
 		user.PingCmd(args)

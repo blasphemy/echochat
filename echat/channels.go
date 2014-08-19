@@ -118,3 +118,17 @@ func (channel *Channel) HasMode(mode string) bool {
 		return false
 	}
 }
+
+func (channel *Channel) OP(user *User, changing *User) {
+	if !strings.Contains(channel.usermodes[user], "o") {
+		channel.usermodes[user] = strcat(channel.usermodes[user], "o")
+		SendToMany2f(channel.GetUserList(), ":%s MODE %s +o %s", changing.GetHostMask(), channel.name, user.nick)
+	}
+}
+
+func (channel *Channel) DEOP(user *User, changing *User) {
+	if strings.Contains(channel.usermodes[user], "o") {
+		channel.usermodes[user] = strings.Replace(channel.usermodes[user], "o", "", 1)
+		SendToMany2f(channel.GetUserList(), ":%s MODE %s -o %s", changing.GetHostMask(), channel.name, user.nick)
+	}
+}

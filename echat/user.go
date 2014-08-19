@@ -361,6 +361,31 @@ func (user *User) ModeHandler(args []string) {
 			//just digging around...
 			channel.FireModes(user)
 			log.Printf("User %s requested modes for %s", user.nick, channel.name)
+		} else {
+			s := args[2]
+			mode := 0
+			counter := 3
+			for _, k := range s {
+				//iterate over chars in mode line
+				switch k {
+				case '+':
+					mode = 2
+					break
+				case '-':
+					mode = 1
+					break
+				case 'o':
+					if mode == 2 && len(args) > counter {
+						channel.OP(GetUserByNick(args[counter]), user)
+						counter = counter + 1
+					}
+					if mode == 1 && len(args) > counter {
+						channel.DEOP(GetUserByNick(args[counter]), user)
+						counter = counter + 1
+					}
+					break
+				}
+			}
 		}
 	}
 }
