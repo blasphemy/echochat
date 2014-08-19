@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha1"
+	"fmt"
 	"net"
 	"strings"
 )
@@ -113,4 +115,29 @@ func WildcardMatch(text string, pattern string) bool {
 		text = text[index+len(card):]
 	}
 	return true
+}
+
+func CloakString(text string, salt string) string {
+	var r string
+	r = Sha1String(strcat(text, salt))
+	for len(r) < len(text) {
+		r = strcat(r, Sha1String(r))
+	}
+	side := true
+	for len(r) > len(text) {
+		if side {
+			r = r[1:]
+			side = false
+		} else {
+			r = r[:len(r)-1]
+			side = true
+		}
+	}
+	return r
+}
+
+func Sha1String(text string) string {
+	data := []byte(text)
+	result := fmt.Sprintf("%x", sha1.Sum(data))
+	return result
 }
