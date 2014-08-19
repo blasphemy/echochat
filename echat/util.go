@@ -40,22 +40,12 @@ func GetChannelByName(name string) *Channel {
 	return chanlist[strings.ToLower(name)]
 }
 
-//SendToMany() sends to a list of users, checking for duplicates. This is very inefficient, so should only be used for things like QUIT and NICK
 func SendToMany(msg string, list []*User) {
-	list2 := []*User{}
-	for _, j := range list {
-		match := false
-		for _, k := range list2 {
-			if j == k {
-				match = true
-				break
-			}
-		}
-		if !match {
-			list2 = append(list2, j)
-		}
+	users := make(map[*User]int)
+	for j, _ := range list {
+		users[j] = 0
 	}
-	for _, j := range list2 {
+	for j, _ := range users {
 		j.SendLine(msg)
 	}
 }
