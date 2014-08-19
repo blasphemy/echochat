@@ -146,3 +146,11 @@ func (channel *Channel) UnsetMode(mode string, changing *User) {
 		SendToMany2f(channel.GetUserList(), ":%s MODE %s -%s", changing.GetHostMask(), channel.name, mode)
 	}
 }
+
+func (channel *Channel) HasUser(user *User) bool {
+	if channel.userlist[user.id] == user {
+		return true
+	} else {
+		return false
+	}
+}

@@ -32,14 +32,17 @@ func SetupNumerics() {
 	NUM[RPL_MOTDSTART] = ":- %s Message of the day -"
 	NUM[RPL_ENDOFMOTD] = ":End of /MOTD command."
 	NUM[ERR_NOSUCHCHANNEL] = "%s :No such channel"
+	NUM[ERR_NOSUCHNICK] = "%s :No such nick"
 	NUM[ERR_CANNOTSENDTOCHAN] = "%s: Cannot send to channel."
 	NUM[ERR_UNKNOWNCOMMAND] = "%s :Unkown command"
 	NUM[ERR_NONICKNAMEGIVEN] = "No nickname given"
 	NUM[ERR_NICKNAMEINUSE] = "%s :Nickname is already in use"
+	NUM[ERR_USERNOTINCHANNEL] = "%s %s :isn't on that channel"
 	NUM[ERR_ERRONEOUSNICKNAME] = "%s :Erroneous nickname"
 	NUM[ERR_NOTREGISTERED] = ":You have not registered"
 	NUM[ERR_NEEDMOREPARAMS] = "%s :Not enough parameters"
 	NUM[ERR_ALREADYREGISTRED] = "You may not reregister"
+	NUM[ERR_CHANOPRIVSNEEDED] = "%s :You do not have the required status to perform this action"
 }
 
 const (
@@ -74,7 +77,10 @@ const (
 	ERR_NONICKNAMEGIVEN   = 431
 	ERR_ERRONEOUSNICKNAME = 432
 	ERR_NICKNAMEINUSE     = 433
+	ERR_USERNOTINCHANNEL  = 441
 	ERR_NOTREGISTERED     = 451
 	ERR_NEEDMOREPARAMS    = 461
 	ERR_ALREADYREGISTRED  = 462
+	ERR_CHANOPRIVSNEEDED  = 482
+	ERR_NOSUCHNICK        = 401
 )

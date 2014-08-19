@@ -362,6 +362,10 @@ func (user *User) ModeHandler(args []string) {
 			channel.FireModes(user)
 			log.Printf("User %s requested modes for %s", user.nick, channel.name)
 		} else {
+			if channel.GetUserPriv(user) < 100 {
+				user.FireNumeric(ERR_CHANOPRIVSNEEDED, channel.name)
+				return
+			}
 			s := args[2]
 			mode := 0
 			counter := 3
@@ -375,12 +379,21 @@ func (user *User) ModeHandler(args []string) {
 					mode = 1
 					break
 				case 'o':
+					target := GetUserByNick(args[counter])
+					if target == nil {
+						user.FireNumeric(ERR_NOSUCHNICK, args[counter])
+						break
+					}
+					if !channel.HasUser(target) {
+						user.FireNumeric(ERR_USERNOTINCHANNEL, target.nick, channel.name)
+						break
+					}
 					if mode == 2 && len(args) > counter {
-						channel.OP(GetUserByNick(args[counter]), user)
+						channel.OP(target, user)
 						counter = counter + 1
 					}
 					if mode == 1 && len(args) > counter {
-						channel.DEOP(GetUserByNick(args[counter]), user)
+						channel.DEOP(target, user)
 						counter = counter + 1
 					}
 					break
