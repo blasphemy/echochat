@@ -132,3 +132,17 @@ func (channel *Channel) DEOP(user *User, changing *User) {
 		SendToMany2f(channel.GetUserList(), ":%s MODE %s -o %s", changing.GetHostMask(), channel.name, user.nick)
 	}
 }
+
+func (channel *Channel) SetMode(mode string, changing *User) {
+	if !strings.Contains(channel.cmodes, mode) {
+		channel.cmodes = strcat(channel.cmodes, mode)
+		SendToMany2f(channel.GetUserList(), ":%s MODE %s +%s", changing.GetHostMask(), channel.name, mode)
+	}
+}
+
+func (channel *Channel) UnsetMode(mode string, changing *User) {
+	if strings.Contains(channel.cmodes, mode) {
+		channel.cmodes = strings.Replace(channel.cmodes, mode, "", 1)
+		SendToMany2f(channel.GetUserList(), ":%s MODE %s -%s", changing.GetHostMask(), channel.name, mode)
+	}
+}

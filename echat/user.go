@@ -384,6 +384,13 @@ func (user *User) ModeHandler(args []string) {
 						counter = counter + 1
 					}
 					break
+				case 't', 'n':
+					if mode == 2 {
+						channel.SetMode(string(k), user)
+					} else if mode == 1 {
+						channel.UnsetMode(string(k), user)
+					}
+					break
 				}
 			}
 		}
