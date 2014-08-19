@@ -17,7 +17,7 @@ func SetupNumerics() {
 	NUM[RPL_LUSERCHANNELS] = "%d :channels formed"
 	NUM[RPL_LUSERME] = ":I have %d clients and %d servers"
 	NUM[RPL_ENDOFWHO] = "%s :End of WHO list"
-	NUM[RPL_LISTSTART] = "Channel :Users Name"
+	NUM[RPL_LISTSTART] = "Channels :Users Name"
 	NUM[RPL_LIST] = "%s %d :%s"
 	NUM[RPL_NOTOPIC] = "%s :No topic is set"
 	NUM[RPL_LISTEND] = ":End of channel list"

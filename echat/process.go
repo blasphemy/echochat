@@ -83,6 +83,13 @@ func ProcessLine(user *User, msg string) {
 			user.FireNumeric(ERR_NOTREGISTERED)
 		}
 		break
+	case "list":
+		if user.registered {
+			user.ListHandler(args)
+		} else {
+			user.FireNumeric(ERR_NOTREGISTERED)
+		}
+		break
 	default:
 		user.CommandNotFound(args)
 		break

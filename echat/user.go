@@ -494,3 +494,11 @@ func (user *User) KickHandler(args []string) {
 	delete(channel.usermodes, target)
 	log.Printf("%s kicked %s from %s", user.nick, target.nick, channel.name)
 }
+
+func (user *User) ListHandler(args []string) {
+	user.FireNumeric(RPL_LISTSTART)
+	for _, k := range chanlist {
+		user.FireNumeric(RPL_LIST, k.name, len(k.userlist), k.topic)
+	}
+	user.FireNumeric(RPL_LISTEND)
+}
