@@ -265,6 +265,9 @@ func (user *User) JoinHandler(args []string) {
 	if channel == nil {
 		channel = NewChannel(args[1])
 	}
+  if channel.HasUser(user) {
+    return //should this silently fail?
+  }
 	channel.JoinUser(user)
 	user.chanlist[channel.name] = channel
 	log.Printf("User %s joined %s", user.nick, channel.name)
