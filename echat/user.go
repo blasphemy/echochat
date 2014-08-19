@@ -392,11 +392,16 @@ func (user *User) WhoHandler(args []string) {
 	if whotype == 1 {
 		//its a channel
 		k := GetChannelByName(args[1])
+		args[1] = k.name
 		for _, j := range k.userlist {
-			//fire numeric
+			h := strcat("H", k.GetUserPrefix(j))
+			user.FireNumeric(RPL_WHOREPLY, k.name, j.ident, j.host, sname, j.nick, h, ":0", j.realname)
 		}
 	} else if whotype == 2 {
 		//user
+		k := GetUserByNick(args[1])
+		args[1] = k.nick
+		user.FireNumeric(RPL_WHOREPLY, "*", k.ident, k.host, sname, k.nick, "H", ":0", k.realname)
 	}
 	user.FireNumeric(RPL_ENDOFWHO, args[1])
 }

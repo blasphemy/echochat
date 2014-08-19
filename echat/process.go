@@ -74,6 +74,9 @@ func ProcessLine(user *User, msg string) {
 	case "ping":
 		user.PingCmd(args)
 		break
+	case "who":
+		user.WhoHandler(args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break
