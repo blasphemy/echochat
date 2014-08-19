@@ -386,7 +386,7 @@ func (user *User) ModeHandler(args []string) {
 				case '-':
 					mode = 1
 					break
-				case 'o':
+				case 'o', 'v':
 					target := GetUserByNick(args[counter])
 					if target == nil {
 						user.FireNumeric(ERR_NOSUCHNICK, args[counter])
@@ -397,11 +397,11 @@ func (user *User) ModeHandler(args []string) {
 						break
 					}
 					if mode == 2 && len(args) > counter {
-						channel.OP(target, user)
+						channel.SetUmode(target, user, string(k))
 						counter = counter + 1
 					}
 					if mode == 1 && len(args) > counter {
-						channel.DEOP(target, user)
+						channel.UnsetUmode(target, user, string(k))
 						counter = counter + 1
 					}
 					break
@@ -493,6 +493,7 @@ func (user *User) KickHandler(args []string) {
 	delete(target.chanlist, channel.name)
 	delete(channel.usermodes, target)
 	log.Printf("%s kicked %s from %s", user.nick, target.nick, channel.name)
+	channel.ShouldIDie()
 }
 
 func (user *User) ListHandler(args []string) {

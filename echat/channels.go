@@ -54,6 +54,9 @@ func (channel *Channel) GetUserPrefix(user *User) string {
 	if strings.Contains(channel.usermodes[user], "o") {
 		return "@"
 	}
+	if strings.Contains(channel.usermodes[user], "v") {
+		return "+"
+	}
 	return ""
 }
 
@@ -97,6 +100,9 @@ func (channel *Channel) GetUserPriv(user *User) int {
 	if strings.Contains(channel.usermodes[user], "o") {
 		score += 100
 	}
+	if strings.Contains(channel.usermodes[user], "v") {
+		score += 10
+	}
 	return score
 }
 
@@ -120,17 +126,17 @@ func (channel *Channel) HasMode(mode string) bool {
 	}
 }
 
-func (channel *Channel) OP(user *User, changing *User) {
-	if !strings.Contains(channel.usermodes[user], "o") {
-		channel.usermodes[user] = strcat(channel.usermodes[user], "o")
-		channel.SendLinef(":%s MODE %s +o %s", changing.GetHostMask(), channel.name, user.nick)
+func (channel *Channel) SetUmode(user *User, changing *User, mode string) {
+	if !strings.Contains(channel.usermodes[user], mode) {
+		channel.usermodes[user] = strcat(channel.usermodes[user], mode)
+		channel.SendLinef(":%s MODE %s +%s %s", changing.GetHostMask(), channel.name, mode, user.nick)
 	}
 }
 
-func (channel *Channel) DEOP(user *User, changing *User) {
-	if strings.Contains(channel.usermodes[user], "o") {
-		channel.usermodes[user] = strings.Replace(channel.usermodes[user], "o", "", 1)
-		channel.SendLinef(":%s MODE %s -o %s", changing.GetHostMask(), channel.name, user.nick)
+func (channel *Channel) UnsetUmode(user *User, changing *User, mode string) {
+	if strings.Contains(channel.usermodes[user], mode) {
+		channel.usermodes[user] = strings.Replace(channel.usermodes[user], mode, "", 1)
+		channel.SendLinef(":%s MODE %s -%s %s", changing.GetHostMask(), channel.name, mode, user.nick)
 	}
 }
 
