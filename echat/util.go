@@ -36,17 +36,6 @@ func GetIpFromConn(conn net.Conn) string {
 	}
 }
 
-/*
-func GetChannelByName(name string) *Channel {
-	for _, k := range chanlist {
-		if strings.ToLower(name) == strings.ToLower(k.name) {
-			return k
-		}
-	}
-	return nil
-}
-*/
-
 func GetChannelByName(name string) *Channel {
 	return chanlist[strings.ToLower(name)]
 }
