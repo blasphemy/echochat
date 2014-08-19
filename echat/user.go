@@ -54,7 +54,7 @@ func (user *User) PingChecker() {
 func (user *User) QuitCommandHandler(args []string) {
 	var reason string
 	if len(args) > 1 {
-		args[1] = StripLeading(args[1], ":")
+		args[1] = strings.TrimPrefix(args[1], ":")
 		var buffer bytes.Buffer
 		for i := 1; i < len(args); i++ {
 			buffer.WriteString(args[i])
@@ -190,7 +190,7 @@ func (user *User) UserHandler(args []string) {
 		return
 	}
 	user.ident = args[1]
-	args[4] = StripLeading(args[4], ":")
+	args[4] = strings.TrimPrefix(args[4], ":")
 	var buffer bytes.Buffer
 	for i := 4; i < len(args); i++ {
 		buffer.WriteString(args[i])
@@ -424,7 +424,7 @@ func (user *User) PingCmd(args []string) {
 		user.FireNumeric(ERR_NEEDMOREPARAMS, "PING")
 		return
 	}
-	args[1] = StripLeading(args[1], ":")
+	args[1] = strings.TrimPrefix(args[1], ":")
 	user.SendLinef(":%s PONG %s :%s", sname, sname, args[1])
 }
 

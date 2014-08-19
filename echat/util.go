@@ -31,7 +31,7 @@ func GetIpFromConn(conn net.Conn) string {
 	} else {
 		//IPV6
 		ip = strings.Split(ip, "]")[0]
-		ip = StripLeading(ip, "[")
+		ip = strings.TrimPrefix(ip, "[")
 		return ip
 	}
 }
@@ -83,16 +83,7 @@ func ValidChanName(name string) bool {
 //validity does not depend on leading ":", I don't care that much
 func FormatMessageArgs(args []string) string {
 	msg := strings.Join(args[2:], " ")
-	msg = StripLeading(msg, ":")
-	return msg
-}
-
-//removes the first instance of toremove, only if it has it
-//r can be more than one char, but I wouldn't recommend it
-func StripLeading(msg string, r string) string {
-	if strings.HasPrefix(msg, r) {
-		msg = strings.Replace(msg, r, "", 1)
-	}
+	msg = strings.TrimPrefix(msg, ":")
 	return msg
 }
 
