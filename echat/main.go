@@ -38,11 +38,11 @@ func main() {
 		conn, err := l.Accept()
 		if err != nil {
 			log.Println("Error accepting: ", err.Error())
+		} else {
+			user := NewUser()
+			user.SetConn(conn)
+			go user.HandleRequests()
 		}
-		// Handle connections in a new goroutine.
-		user := NewUser()
-		user.SetConn(conn)
-		go user.HandleRequests()
 	}
 }
 

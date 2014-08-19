@@ -33,13 +33,13 @@ type User struct {
 func (user *User) PingChecker() {
 	for {
 		if user.dead {
-			break
+			return
 		}
 		if time.Now().After(user.nextcheck) {
 			if user.waiting {
 				since := time.Since(user.lastrcv).Seconds()
 				user.Quit(fmt.Sprintf("Ping Timeout: %.0f seconds", since))
-				break
+				return
 			} else {
 				user.SendLine(fmt.Sprintf("PING :%s", sname))
 				user.waiting = true
@@ -138,18 +138,19 @@ func (user *User) HandleRequests() {
 	b := bufio.NewReader(user.connection)
 	for {
 		if user.dead {
-			break
+			return
 		}
 		line, err := b.ReadString('\n')
 		if err != nil {
 			log.Println("Error reading:", err.Error())
 			user.dead = true
 			user.Quit("Error")
+			return
 		}
 		if line == "" {
 			user.dead = true
 			user.Quit("Error")
-			break
+			return
 		}
 		line = strings.TrimSpace(line)
 		if debug {
