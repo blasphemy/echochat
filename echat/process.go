@@ -76,6 +76,13 @@ func ProcessLine(user *User, msg string) {
 	case "who":
 		user.WhoHandler(args)
 		break
+	case "kick":
+		if user.registered {
+			user.KickHandler(args)
+		} else {
+			user.FireNumeric(ERR_NOTREGISTERED)
+		}
+		break
 	default:
 		user.CommandNotFound(args)
 		break

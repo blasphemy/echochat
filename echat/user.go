@@ -458,3 +458,39 @@ func (user *User) WhoHandler(args []string) {
 	}
 	user.FireNumeric(RPL_ENDOFWHO, args[1])
 }
+
+func (user *User) KickHandler(args []string) {
+	if len(args) < 3 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "KICK")
+	}
+	channel := GetChannelByName(args[1])
+	if channel == nil {
+		user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
+		return
+	}
+	target := GetUserByNick(args[2])
+	if target == nil {
+		user.FireNumeric(ERR_NOSUCHNICK, args[2])
+		return
+	}
+	if channel.GetUserPriv(user) < 100 {
+		user.FireNumeric(ERR_CHANOPRIVSNEEDED, channel.name)
+		return
+	}
+	if !channel.HasUser(target) {
+		user.FireNumeric(ERR_USERNOTINCHANNEL, target.nick, channel.name)
+		return
+	}
+	var reason string
+	if len(args) > 3 {
+		reason = strings.Join(args[3:], " ")
+		reason = strings.TrimPrefix(reason, ":")
+	} else {
+		reason = default_kick_reason
+	}
+	channel.SendLinef(":%s KICK %s %s :%s", user.GetHostMask(), channel.name, target.nick, reason)
+	delete(channel.userlist, target.id)
+	delete(target.chanlist, channel.name)
+	delete(channel.usermodes, target)
+	log.Printf("%s kicked %s from %s", user.nick, target.nick, channel.name)
+}
