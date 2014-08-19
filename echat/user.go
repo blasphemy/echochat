@@ -74,6 +74,7 @@ func (user *User) Quit(reason string) {
 		targets = append(targets, k.GetUserList()...)
 		delete(k.userlist, user.id)
 		delete(user.chanlist, k.name)
+		delete(k.usermodes, user)
 		k.ShouldIDie()
 	}
 	SendToMany(fmt.Sprintf(":%s QUIT :%s", user.GetHostMask(), reason), targets)
@@ -280,9 +281,10 @@ func (user *User) PartHandler(args []string) {
 	}
 	channel := GetChannelByName(args[1])
 	if channel != nil {
+		channel.SendLinef(":%s PART %s :%s", user.GetHostMask(), channel.name, "Leaving")
 		delete(channel.userlist, user.id)
 		delete(user.chanlist, channel.name)
-		channel.SendLinef(":%s PART %s :%s", user.GetHostMask(), channel.name, "Leaving")
+		delete(channel.usermodes, user)
 		log.Printf("User %s PART %s: %s", user.nick, channel.name, "Leaving")
 		channel.ShouldIDie()
 	} //else?
