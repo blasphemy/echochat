@@ -24,6 +24,7 @@ type User struct {
 	registered bool
 	ip         string
 	host       string
+	realhost   string
 	epoch      time.Time
 	lastrcv    time.Time
 	nextcheck  time.Time

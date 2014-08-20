@@ -14,6 +14,7 @@ const (
 	default_cmode       = "nt"
 	stattime            = 30
 	debug               = true
+	configsalt          = "testing"
 )
 
 var (

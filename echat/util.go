@@ -117,6 +117,30 @@ func WildcardMatch(text string, pattern string) bool {
 	return true
 }
 
+func CloakIP6(text string) string {
+	stuff := strings.Split(text, ":")
+	stuff[len(stuff)-1] = CloakString(stuff[len(stuff)-1], configsalt)
+	stuff[len(stuff)-2] = CloakString(stuff[len(stuff)-2], configsalt)
+	text = strings.Join(stuff, ":")
+	return text
+}
+
+func CloakIP4(text string) string {
+	stuff := strings.Split(text, ".")
+	stuff[len(stuff)-1] = CloakString(stuff[len(stuff)-1], configsalt)
+	stuff[len(stuff)-2] = CloakString(stuff[len(stuff)-2], configsalt)
+	text = strings.Join(stuff, ".")
+	return text
+}
+
+func CloakHost(text string) string {
+	//hostname mode
+	stuff := strings.Split(text, ".")
+	stuff[0] = CloakString(stuff[0], configsalt)
+	text = strings.Join(stuff, ".")
+	return text
+}
+
 func CloakString(text string, salt string) string {
 	var r string
 	r = Sha1String(strcat(text, salt))
