@@ -311,6 +311,10 @@ func (user *User) PrivmsgHandler(args []string) {
 				user.FireNumeric(ERR_CANNOTSENDTOCHAN, j.name)
 				return
 			}
+			if j.HasMode("m") && j.GetUserPriv(user) < 10 {
+				user.FireNumeric(ERR_CANNOTSENDTOCHAN, j.name)
+				return
+			}
 			//channel exists, send the message
 			msg := FormatMessageArgs(args)
 			list := j.GetUserList()
@@ -377,9 +381,12 @@ func (user *User) ModeHandler(args []string) {
 			}
 			s := args[2]
 			mode := 0
-			counter := 3
+			mcounter := 0
+			var targs []string
+			if len(args) > 3 {
+				targs = args[3:]
+			}
 			for _, k := range s {
-				//iterate over chars in mode line
 				switch k {
 				case '+':
 					mode = 2
@@ -388,25 +395,33 @@ func (user *User) ModeHandler(args []string) {
 					mode = 1
 					break
 				case 'o', 'v':
-					target := GetUserByNick(args[counter])
+					if len(targs)-1 < mcounter {
+						user.FireNumeric(ERR_NEEDMOREPARAMS, "MODE")
+						break
+					}
+					target := GetUserByNick(targs[mcounter])
 					if target == nil {
-						user.FireNumeric(ERR_NOSUCHNICK, args[counter])
+						user.FireNumeric(ERR_NOSUCHNICK, args[mcounter])
+						mcounter = +1
 						break
 					}
 					if !channel.HasUser(target) {
 						user.FireNumeric(ERR_USERNOTINCHANNEL, target.nick, channel.name)
+						mcounter = +1
 						break
 					}
-					if mode == 2 && len(args) > counter {
+					if mode == 2 {
 						channel.SetUmode(target, user, string(k))
-						counter = counter + 1
+						mcounter = +1
+						break
 					}
-					if mode == 1 && len(args) > counter {
+					if mode == 1 {
 						channel.UnsetUmode(target, user, string(k))
-						counter = counter + 1
+						mcounter = +1
+						break
 					}
 					break
-				case 't', 'n':
+				case 't', 'n', 'm':
 					if mode == 2 {
 						channel.SetMode(string(k), user)
 					} else if mode == 1 {

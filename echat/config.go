@@ -13,7 +13,7 @@ const (
 	isupport            = "NAMESX CHANTYPES=#& PREFIX=(ov)@+"
 	default_cmode       = "nt"
 	stattime            = 30
-	debug               = false
+	debug               = true
 )
 
 var (
