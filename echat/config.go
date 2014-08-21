@@ -1,36 +1,44 @@
 package main
 
 import (
+	"encoding/json"
+	"log"
 	"time"
 )
 
 type configuration struct {
-	server_name         string
-	default_kick_reason string
-	ping_time           time.Duration
-	ping_check_time     time.Duration
-	resolve_hosts       bool
-	default_cmode       string
-	stat_time           time.Duration
-	debug               bool
-	salt                string
-	listen_ips          []string
-	listen_ports        []string
+	ServerName        string
+	DefaultKickReason string
+	PingTime          time.Duration
+	PingCheckTime     time.Duration
+	ResolveHosts      bool
+	DefaultCmode      string
+	StatTime          time.Duration
+	Debug             bool
+	Salt              string
+	ListenIps         []string
+	ListenPorts       []string
 }
 
 func SetupConfig() {
-	config = configuration{}
-	config.server_name = "test.net.local"
-	config.default_kick_reason = "Your behavior is not conductive of the desired environment."
-	config.ping_time = 45
-	config.ping_check_time = 20
-	config.resolve_hosts = true
-	config.default_cmode = "nt"
-	config.stat_time = 30
-	config.debug = true
-	config.salt = "testing"
-	config.listen_ips = []string{"0.0.0.0"}
-	config.listen_ports = []string{"6667", "6668"}
+	config = configuration{
+		ServerName:        "test.net.local",
+		DefaultKickReason: "Your behavior is not conductive of the desired environment.",
+		PingTime:          45,
+		PingCheckTime:     20,
+		ResolveHosts:      true,
+		DefaultCmode:      "nt",
+		StatTime:          30,
+		Debug:             true,
+		Salt:              "testing",
+		ListenIps:         []string{"0.0.0.0"},
+		ListenPorts:       []string{"6667", "6668"},
+	}
+	k, err := json.Marshal(config)
+	if err != nil {
+		log.Print(err.Error())
+	}
+	log.Print(string(k))
 }
 
 const (

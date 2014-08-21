@@ -26,8 +26,8 @@ func main() {
 	chanlist = make(map[string]*Channel)
 	var listeners []net.Listener
 	// Listen for incoming connections.
-	for _, LISTENING_IP := range config.listen_ips {
-		for _, LISTENING_PORT := range config.listen_ports {
+	for _, LISTENING_IP := range config.ListenIps {
+		for _, LISTENING_PORT := range config.ListenPorts {
 			l, err := net.Listen("tcp", LISTENING_IP+":"+LISTENING_PORT)
 			if err != nil {
 				log.Println("Error listening:", err.Error())
@@ -81,7 +81,7 @@ func periodicStatusUpdate() {
 		log.Println("Status:", len(chanlist), "current channels")
 		log.Println("Status:", gor, "current Goroutines")
 		log.Println("Status:", maxRoutines, "max Goroutines")
-		time.Sleep(config.stat_time * time.Second)
+		time.Sleep(config.StatTime * time.Second)
 
 	}
 }

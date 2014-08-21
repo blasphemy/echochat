@@ -43,13 +43,13 @@ func (user *User) PingChecker() {
 				user.Quit(fmt.Sprintf("Ping Timeout: %.0f seconds", since))
 				return
 			} else {
-				user.SendLine(fmt.Sprintf("PING :%s", config.server_name))
+				user.SendLine(fmt.Sprintf("PING :%s", config.ServerName))
 				user.waiting = true
-				user.nextcheck.Add(config.ping_time * time.Second)
+				user.nextcheck.Add(config.PingTime * time.Second)
 				log.Printf("Sent user %s ping", user.nick)
 			}
 		}
-		time.Sleep(config.ping_check_time * time.Second)
+		time.Sleep(config.PingCheckTime * time.Second)
 	}
 }
 
@@ -89,7 +89,7 @@ func (user *User) Quit(reason string) {
 }
 
 func (user *User) FireNumeric(numeric int, args ...interface{}) {
-	msg := strcat(fmt.Sprintf(":%s %.3d %s ", config.server_name, numeric, user.nick), fmt.Sprintf(NUM[numeric], args...))
+	msg := strcat(fmt.Sprintf(":%s %.3d %s ", config.ServerName, numeric, user.nick), fmt.Sprintf(NUM[numeric], args...))
 	user.SendLine(msg)
 }
 
@@ -99,7 +99,7 @@ func NewUser() *User {
 	user.chanlist = make(map[string]*Channel)
 	user.epoch = time.Now()
 	user.lastrcv = time.Now()
-	user.nextcheck = time.Now().Add(config.ping_time * time.Second)
+	user.nextcheck = time.Now().Add(config.PingTime * time.Second)
 	userlist[user.id] = user
 	return user
 }
@@ -109,7 +109,7 @@ func (user *User) SetConn(conn net.Conn) {
 	user.ip = GetIpFromConn(conn)
 	log.Println("New connection from", user.ip)
 	user.host = user.ip
-	if config.resolve_hosts {
+	if config.ResolveHosts {
 		go user.UserHostLookup()
 	}
 	go user.PingChecker()
@@ -127,7 +127,7 @@ func (user *User) SendLine(msg string) {
 		log.Printf("Error sending message to %s, disconnecting\n", user.nick)
 		return
 	}
-	if config.debug {
+	if config.Debug {
 		log.Printf("Send to %s: %s", user.nick, msg)
 	}
 }
@@ -155,7 +155,7 @@ func (user *User) HandleRequests() {
 			return
 		}
 		line = strings.TrimSpace(line)
-		if config.debug {
+		if config.Debug {
 			log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
 		}
 		ProcessLine(user, line)
@@ -215,7 +215,7 @@ func (user *User) UserRegistrationFinished() {
 	user.registered = true
 	log.Printf("User %d finished registration\n", user.id)
 	user.FireNumeric(RPL_WELCOME, user.nick, user.ident, user.host)
-	user.FireNumeric(RPL_YOURHOST, config.server_name, software, softwarev)
+	user.FireNumeric(RPL_YOURHOST, config.ServerName, software, softwarev)
 	user.FireNumeric(RPL_CREATED, epoch)
 	//TODO fire RPL_MYINFO when we actually have enough stuff to do it
 	user.FireNumeric(RPL_ISUPPORT, isupport)
@@ -223,27 +223,27 @@ func (user *User) UserRegistrationFinished() {
 }
 
 func (user *User) UserHostLookup() {
-	user.SendLinef(":%s NOTICE %s :*** Looking up your hostname...", config.server_name, user.nick)
+	user.SendLinef(":%s NOTICE %s :*** Looking up your hostname...", config.ServerName, user.nick)
 	adds, err := net.LookupAddr(user.ip)
 	if err != nil {
-		user.SendLinef("%s NOTICE %s :*** Unable to resolve your hostname", config.server_name, user.nick)
+		user.SendLinef("%s NOTICE %s :*** Unable to resolve your hostname", config.ServerName, user.nick)
 		return
 	}
 	addstring := adds[0]
 	adds, err = net.LookupHost(addstring)
 	if err != nil {
-		user.SendLinef("%s NOTICE %s :*** Unable to resolve your hostname", config.server_name, user.nick)
+		user.SendLinef("%s NOTICE %s :*** Unable to resolve your hostname", config.ServerName, user.nick)
 		return
 	}
 	for _, k := range adds {
 		if user.ip == k {
 			addstring = strings.TrimSuffix(addstring, ".")
 			user.host = addstring
-			user.SendLinef(":%s NOTICE %s :*** Found your hostname", config.server_name, user.nick)
+			user.SendLinef(":%s NOTICE %s :*** Found your hostname", config.ServerName, user.nick)
 			return
 		}
 	}
-	user.SendLinef(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", config.server_name, user.nick)
+	user.SendLinef(":%s NOTICE %s :*** Your forward and reverse DNS do not match, ignoring hostname", config.ServerName, user.nick)
 }
 
 func (user *User) CommandNotFound(args []string) {
@@ -455,7 +455,7 @@ func (user *User) PingCmd(args []string) {
 		return
 	}
 	args[1] = strings.TrimPrefix(args[1], ":")
-	user.SendLinef(":%s PONG %s :%s", config.server_name, config.server_name, args[1])
+	user.SendLinef(":%s PONG %s :%s", config.ServerName, config.ServerName, args[1])
 }
 
 func (user *User) WhoHandler(args []string) {
@@ -470,13 +470,13 @@ func (user *User) WhoHandler(args []string) {
 		args[1] = k.name
 		for _, j := range k.userlist {
 			h := strcat("H", k.GetUserPrefix(j))
-			user.FireNumeric(RPL_WHOREPLY, k.name, j.ident, j.host, config.server_name, j.nick, h, ":0", j.realname)
+			user.FireNumeric(RPL_WHOREPLY, k.name, j.ident, j.host, config.ServerName, j.nick, h, ":0", j.realname)
 		}
 	} else if whotype == 2 {
 		//user
 		k := GetUserByNick(args[1])
 		args[1] = k.nick
-		user.FireNumeric(RPL_WHOREPLY, "*", k.ident, k.host, config.server_name, k.nick, "H", ":0", k.realname)
+		user.FireNumeric(RPL_WHOREPLY, "*", k.ident, k.host, config.ServerName, k.nick, "H", ":0", k.realname)
 	}
 	user.FireNumeric(RPL_ENDOFWHO, args[1])
 }
@@ -508,7 +508,7 @@ func (user *User) KickHandler(args []string) {
 		reason = strings.Join(args[3:], " ")
 		reason = strings.TrimPrefix(reason, ":")
 	} else {
-		reason = config.default_kick_reason
+		reason = config.DefaultKickReason
 	}
 	channel.SendLinef(":%s KICK %s %s :%s", user.GetHostMask(), channel.name, target.nick, reason)
 	delete(channel.userlist, target.id)
