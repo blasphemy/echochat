@@ -1,20 +1,40 @@
 package main
 
+import (
+	"time"
+)
+
+type configuration struct {
+	server_name         string
+	default_kick_reason string
+	ping_time           time.Duration
+	ping_check_time     time.Duration
+	resolve_hosts       bool
+	default_cmode       string
+	stat_time           int
+	debug               bool
+	salt                string
+	listen_ips          string
+	listen_ports        string
+}
+
+func SetupConfig() {
+	config = configuration{}
+	config.server_name = "test.net.local"
+	config.default_kick_reason = "Your behavior is not conductive of the desired environment."
+	config.ping_time = 45
+	config.ping_check_time = 20
+}
+
 const (
-	sname     = "test.net.local"
-	software  = "echochat"
-	softwarev = "v0.1"
-	//CONN_HOST           = "0.0.0.0"
-	//CONN_PORT           = "6667"
-	default_kick_reason = "Your behavior is not conductive of the desired environment."
-	ping_time           = 45   //something
-	ping_check_time     = 20   // time between the user's ping checks
-	resolvehosts        = true //Note: make forward confirmed reverse dns optional.
-	isupport            = "NAMESX CHANTYPES=#& PREFIX=(ov)@+"
-	default_cmode       = "nt"
-	stattime            = 30
-	debug               = true
-	configsalt          = "testing"
+	software      = "echochat"
+	softwarev     = "v0.1"
+	resolvehosts  = true //Note: make forward confirmed reverse dns optional.
+	isupport      = "NAMESX CHANTYPES=#& PREFIX=(ov)@+"
+	default_cmode = "nt"
+	stattime      = 30
+	debug         = true
+	configsalt    = "testing"
 )
 
 var (
@@ -22,4 +42,5 @@ var (
 	global_bad_chars  = []string{":", "!", "@", "*", "(", ")", "<", ">", ",", "~", "/", "\\"}
 	listen_ports      = []string{"6667", "6668"}
 	listen_ips        = []string{"0.0.0.0"}
+	config            configuration
 )
