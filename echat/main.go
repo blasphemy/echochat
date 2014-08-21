@@ -40,10 +40,10 @@ func main() {
 	for _, l := range listeners {
 		defer l.Close()
 	}
-	go periodicStatusUpdate()
 	for _, l := range listeners {
 		go listenerthing(l)
 	}
+	periodicStatusUpdate()
 }
 
 func listenerthing(l net.Listener) {
