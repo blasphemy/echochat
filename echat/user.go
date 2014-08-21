@@ -29,6 +29,7 @@ type User struct {
 	lastrcv    time.Time
 	nextcheck  time.Time
 	chanlist   map[string]*Channel
+	oper       bool
 }
 
 func (user *User) PingChecker() {
@@ -267,6 +268,10 @@ func (user *User) JoinHandler(args []string) {
 	if channel == nil {
 		channel = NewChannel(args[1])
 	}
+	if channel.HasMode("A") && !user.oper {
+		//TODO fire numeric for this
+		return
+	}
 	if channel.HasUser(user) {
 		return //should this silently fail?
 	}
@@ -422,7 +427,7 @@ func (user *User) ModeHandler(args []string) {
 						break
 					}
 					break
-				case 't', 'n', 'm':
+				case 't', 'n', 'm', 'A':
 					if mode == 2 {
 						channel.SetMode(string(k), user)
 					} else if mode == 1 {

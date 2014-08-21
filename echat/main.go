@@ -15,6 +15,7 @@ var (
 	maxUsers    int
 	maxRoutines int
 	epoch       time.Time
+	listeners   []net.Listener
 )
 
 func main() {
@@ -23,18 +24,30 @@ func main() {
 	userlist = make(map[int]*User)
 	chanlist = make(map[string]*Channel)
 	// Listen for incoming connections.
-	l, err := net.Listen("tcp", CONN_HOST+":"+CONN_PORT)
-	if err != nil {
-		log.Println("Error listening:", err.Error())
-		os.Exit(1)
-
+	for _, LISTENING_IP := range listen_ips {
+		for _, LISTENING_PORT := range listen_ports {
+			l, err := net.Listen("tcp", LISTENING_IP+":"+LISTENING_PORT)
+			if err != nil {
+				log.Println("Error listening:", err.Error())
+				os.Exit(1)
+			} else {
+				listeners = append(listeners, l)
+				log.Println("Listening on " + LISTENING_IP + ":" + LISTENING_PORT)
+			}
+		}
 	}
 	// Close the listener when the application closes.
-	defer l.Close()
-	log.Println("Listening on " + CONN_HOST + ":" + CONN_PORT)
+	for _, l := range listeners {
+		defer l.Close()
+	}
 	go periodicStatusUpdate()
+	for _, l := range listeners {
+		go listenerthing(l)
+	}
+}
+
+func listenerthing(l net.Listener) {
 	for {
-		// Listen for an incoming connection.
 		conn, err := l.Accept()
 		if err != nil {
 			log.Println("Error accepting: ", err.Error())
