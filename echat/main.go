@@ -18,6 +18,7 @@ var (
 )
 
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	epoch = time.Now()
 	SetupNumerics()
 	userlist = make(map[int]*User)
