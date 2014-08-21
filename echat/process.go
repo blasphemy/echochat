@@ -64,6 +64,9 @@ func ProcessLine(user *User, msg string) {
 	case "list":
 		user.FireIfRegistered(user.ListHandler, args)
 		break
+	case "names":
+		user.FireIfRegistered(user.NamesHandler, args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break

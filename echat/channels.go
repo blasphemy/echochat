@@ -71,7 +71,7 @@ func (channel *Channel) FireTopic(user *User) {
 
 func (channel *Channel) FireNames(user *User) {
 	var buffer bytes.Buffer
-	for _, k := range userlist {
+	for _, k := range channel.userlist {
 		if buffer.Len()+len(channel.GetUserPrefix(k))+len(user.nick) > 500 {
 			user.FireNumeric(RPL_NAMEPLY, channel.name, strings.TrimSpace(buffer.String()))
 			buffer.Reset()

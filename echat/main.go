@@ -18,9 +18,6 @@ var (
 )
 
 func main() {
-	log.Print(CloakHost(sname))
-	log.Print(CloakIP4("127.0.0.1"))
-	log.Print(CloakIP6("2604:180::d8f:be0e"))
 	epoch = time.Now()
 	SetupNumerics()
 	userlist = make(map[int]*User)

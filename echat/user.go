@@ -520,3 +520,16 @@ func (user *User) ListHandler(args []string) {
 	}
 	user.FireNumeric(RPL_LISTEND)
 }
+
+func (user *User) NamesHandler(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "NAMES")
+		return
+	}
+	channel := GetChannelByName(args[1])
+	if channel == nil {
+		user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
+		return
+	}
+	channel.FireNames(user)
+}
