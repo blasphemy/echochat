@@ -33,7 +33,7 @@ func NewChannel(newname string) *Channel {
 	chann.userlist = make(map[int]*User)
 	chann.usermodes = make(map[*User]string)
 	chanlist[strings.ToLower(chann.name)] = chann
-	chann.cmodes = default_cmode
+	chann.cmodes = config.default_cmode
 	log.Printf("Channel %s created\n", chann.name)
 	return chann
 }

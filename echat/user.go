@@ -109,7 +109,7 @@ func (user *User) SetConn(conn net.Conn) {
 	user.ip = GetIpFromConn(conn)
 	log.Println("New connection from", user.ip)
 	user.host = user.ip
-	if resolvehosts {
+	if config.resolve_hosts {
 		go user.UserHostLookup()
 	}
 	go user.PingChecker()
@@ -127,7 +127,7 @@ func (user *User) SendLine(msg string) {
 		log.Printf("Error sending message to %s, disconnecting\n", user.nick)
 		return
 	}
-	if debug {
+	if config.debug {
 		log.Printf("Send to %s: %s", user.nick, msg)
 	}
 }
@@ -155,7 +155,7 @@ func (user *User) HandleRequests() {
 			return
 		}
 		line = strings.TrimSpace(line)
-		if debug {
+		if config.debug {
 			log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
 		}
 		ProcessLine(user, line)
