@@ -17,7 +17,7 @@ type configuration struct {
 	Debug             bool
 	Salt              string
 	ListenIps         []string
-	ListenPorts       []string
+	ListenPorts       []int
 }
 
 func SetupConfig() {
@@ -32,7 +32,7 @@ func SetupConfig() {
 		Debug:             true,
 		Salt:              "testing",
 		ListenIps:         []string{"0.0.0.0"},
-		ListenPorts:       []string{"6667", "6668"},
+		ListenPorts:       []int{6667, 6668},
 	}
 	k, err := json.Marshal(config)
 	if err != nil {

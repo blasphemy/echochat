@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -28,13 +29,13 @@ func main() {
 	// Listen for incoming connections.
 	for _, LISTENING_IP := range config.ListenIps {
 		for _, LISTENING_PORT := range config.ListenPorts {
-			l, err := net.Listen("tcp", LISTENING_IP+":"+LISTENING_PORT)
+			l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", LISTENING_IP, LISTENING_PORT))
 			if err != nil {
 				log.Println("Error listening:", err.Error())
 				os.Exit(1)
 			} else {
 				listeners = append(listeners, l)
-				log.Println("Listening on " + LISTENING_IP + ":" + LISTENING_PORT)
+				log.Printf("Listening on %s:%d", LISTENING_IP, LISTENING_PORT)
 			}
 		}
 	}
