@@ -15,7 +15,6 @@ var (
 	maxUsers    int
 	maxRoutines int
 	epoch       time.Time
-	listeners   []net.Listener
 )
 
 func main() {
@@ -23,6 +22,7 @@ func main() {
 	SetupNumerics()
 	userlist = make(map[int]*User)
 	chanlist = make(map[string]*Channel)
+	var listeners []net.Listener
 	// Listen for incoming connections.
 	for _, LISTENING_IP := range listen_ips {
 		for _, LISTENING_PORT := range listen_ports {
