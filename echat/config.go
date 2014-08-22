@@ -21,6 +21,7 @@ type configuration struct {
 	Salt              string
 	ListenIps         []string
 	ListenPorts       []int
+	Opers             map[string]string
 }
 
 func SetupConfig() {
@@ -53,6 +54,7 @@ func SetupConfigDefault() {
 		Salt:              "default",
 		ListenIps:         []string{"0.0.0.0"},
 		ListenPorts:       []int{6667, 6668, 6669},
+		Opers:             map[string]string{"default": "password"},
 	}
 	k, err := json.MarshalIndent(config, "", "\t")
 	if err != nil {
