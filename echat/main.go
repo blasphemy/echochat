@@ -9,22 +9,10 @@ import (
 	"time"
 )
 
-var (
-	counter     int
-	userlist    map[int]*User
-	chanlist    map[string]*Channel
-	maxUsers    int
-	maxRoutines int
-	epoch       time.Time
-)
-
 func main() {
 	SetupConfig()
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	epoch = time.Now()
 	SetupNumerics()
-	userlist = make(map[int]*User)
-	chanlist = make(map[string]*Channel)
 	var listeners []net.Listener
 	// Listen for incoming connections.
 	for _, LISTENING_IP := range config.ListenIps {
