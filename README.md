@@ -5,13 +5,32 @@ echochat
 
 A simple ircd written in Go.
 
+requirements
+============
+
+* Go
+
+No really, that's all. It only depends on the Go standard library. It can run anywhere that go runs. I even got it to handle a few thousand users an an android tablet.
+
+Building
+========
+
+This part probably really goes against the go workflow, but oh well. Here's the short version.
+```bash
+git clone https://github.com/blasphemy/echochat.git
+cd echochat/echat
+go build
+```
+
+That's it. You should also be able to do it the normal way using ```go get```. To run it, just do ```./echat```, or ```echat.exe``` on windows. Configuration explained below.
+
 configuration
 =============
 compile and run echochat to make a sample config file. It will be saved as echochat.json.
 
 Here's an explanation
 
-```json
+```javascript
 {
   "ServerName": "test.net.local",
   "DefaultKickReason": "Your behavior is not conductive of the desired environment.",
