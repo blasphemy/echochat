@@ -103,6 +103,9 @@ func (channel *Channel) GetUserPriv(user *User) int {
 	if strings.Contains(channel.usermodes[user], "v") {
 		score += 10
 	}
+	if user.oper {
+		score += 1000
+	}
 	return score
 }
 

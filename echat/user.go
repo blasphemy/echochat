@@ -540,6 +540,17 @@ func (user *User) ListHandler(args []string) {
 	user.FireNumeric(RPL_LISTEND)
 }
 
+func (user *User) OperHandler(args []string) {
+	if len(args) < 3 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "OPER")
+		return
+	}
+	if config.Opers[args[1]] == args[2] {
+		user.oper = true
+		user.FireNumeric(RPL_YOUREOPER)
+	}
+}
+
 func (user *User) NamesHandler(args []string) {
 	if len(args) < 2 {
 		user.FireNumeric(ERR_NEEDMOREPARAMS, "NAMES")

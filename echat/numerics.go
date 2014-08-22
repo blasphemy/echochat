@@ -43,6 +43,7 @@ func SetupNumerics() {
 	NUM[ERR_NEEDMOREPARAMS] = "%s :Not enough parameters"
 	NUM[ERR_ALREADYREGISTRED] = "You may not reregister"
 	NUM[ERR_CHANOPRIVSNEEDED] = "%s :You do not have the required status to perform this action"
+	NUM[RPL_YOUREOPER] = ":You are now an IRC operator"
 }
 
 const (
@@ -83,4 +84,5 @@ const (
 	ERR_ALREADYREGISTRED  = 462
 	ERR_CHANOPRIVSNEEDED  = 482
 	ERR_NOSUCHNICK        = 401
+	RPL_YOUREOPER         = 381
 )
