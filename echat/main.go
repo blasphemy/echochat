@@ -71,6 +71,5 @@ func periodicStatusUpdate() {
 		log.Println("Status:", gor, "current Goroutines")
 		log.Println("Status:", maxRoutines, "max Goroutines")
 		time.Sleep(config.StatTime * time.Second)
-
 	}
 }
