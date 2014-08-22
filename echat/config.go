@@ -47,10 +47,10 @@ func SetupConfigDefault() {
 		ResolveHosts:      true,
 		DefaultCmode:      "nt",
 		StatTime:          30,
-		Debug:             true,
-		Salt:              "testing",
+		Debug:             false,
+		Salt:              "default",
 		ListenIps:         []string{"0.0.0.0"},
-		ListenPorts:       []int{6667, 6668},
+		ListenPorts:       []int{6667, 6668, 6669},
 	}
 	k, err := json.MarshalIndent(config, "", "\t")
 	if err != nil {
