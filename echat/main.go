@@ -15,7 +15,7 @@ func main() {
 	SetupNumerics()
 	var listeners []net.Listener
 	// Listen for incoming connections.
-	for _, LISTENING_IP := range config.ListenIps {
+	for _, LISTENING_IP := range config.ListenIPs {
 		for _, LISTENING_PORT := range config.ListenPorts {
 			l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", LISTENING_IP, LISTENING_PORT))
 			if err != nil {

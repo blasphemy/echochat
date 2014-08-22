@@ -19,7 +19,7 @@ type configuration struct {
 	Debug             bool
 	Cloaking          bool
 	Salt              string
-	ListenIps         []string
+	ListenIPs         []string
 	ListenPorts       []int
 	Opers             map[string]string
 }
@@ -52,7 +52,7 @@ func SetupConfigDefault() {
 		Debug:             false,
 		Cloaking:          false,
 		Salt:              "default",
-		ListenIps:         []string{"0.0.0.0"},
+		ListenIPs:         []string{"0.0.0.0"},
 		ListenPorts:       []int{6667, 6668, 6669},
 		Opers:             map[string]string{"default": "password"},
 	}
