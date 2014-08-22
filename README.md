@@ -5,7 +5,7 @@ echochat
 
 A simple ircd written in Go.
 
-requirements
+Requirements
 ============
 
 * Go
@@ -24,7 +24,7 @@ go build
 
 That's it. You should also be able to do it the normal way using ```go get```. To run it, just do ```./echat```, or ```echat.exe``` on windows. Configuration explained below.
 
-configuration
+Configuration
 =============
 compile and run echochat to make a sample config file. It will be saved as echochat.json.
 
