@@ -15,7 +15,7 @@ Here's an explanation
 {
   "ServerName": "test.net.local",
   "DefaultKickReason": "Your behavior is not conductive of the desired environment.",
-  "PingTime": 45, #Time between pings and disconnects due to ping timeouts.
+  "PingTime": 45, //Time between pings and disconnects due to ping timeouts.
   "PingCheckTime": 20, //Even though there is a ping time, it is only checked at this invertal
   "ResolveHosts": true, // Hostname resolving (localhost.localdomain vs 127.0.0.1)
   "DefaultCmode": "nt", // Default modes set on a channel upon creation
