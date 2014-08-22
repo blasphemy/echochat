@@ -11,7 +11,7 @@ type Handler func([]string)
 //takes a line and a user and processes it.
 func ProcessLine(user *User, msg string) {
 	user.lastrcv = time.Now()
-	user.nextcheck = time.Now().Add(ping_time * time.Second)
+	user.nextcheck = time.Now().Add(config.PingTime * time.Second)
 	user.waiting = false
 	args := strings.Split(msg, " ")
 	checkme := strings.ToLower(args[0])

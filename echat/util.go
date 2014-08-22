@@ -119,16 +119,16 @@ func WildcardMatch(text string, pattern string) bool {
 
 func CloakIP6(text string) string {
 	stuff := strings.Split(text, ":")
-	stuff[len(stuff)-1] = CloakString(stuff[len(stuff)-1], configsalt)
-	stuff[len(stuff)-2] = CloakString(stuff[len(stuff)-2], configsalt)
+	stuff[len(stuff)-1] = CloakString(stuff[len(stuff)-1], config.Salt)
+	stuff[len(stuff)-2] = CloakString(stuff[len(stuff)-2], config.Salt)
 	text = strings.Join(stuff, ":")
 	return text
 }
 
 func CloakIP4(text string) string {
 	stuff := strings.Split(text, ".")
-	stuff[len(stuff)-1] = CloakString(stuff[len(stuff)-1], configsalt)
-	stuff[len(stuff)-2] = CloakString(stuff[len(stuff)-2], configsalt)
+	stuff[len(stuff)-1] = CloakString(stuff[len(stuff)-1], config.Salt)
+	stuff[len(stuff)-2] = CloakString(stuff[len(stuff)-2], config.Salt)
 	text = strings.Join(stuff, ".")
 	return text
 }
@@ -136,7 +136,7 @@ func CloakIP4(text string) string {
 func CloakHost(text string) string {
 	//hostname mode
 	stuff := strings.Split(text, ".")
-	stuff[0] = CloakString(stuff[0], configsalt)
+	stuff[0] = CloakString(stuff[0], config.Salt)
 	text = strings.Join(stuff, ".")
 	return text
 }

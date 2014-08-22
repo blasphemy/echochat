@@ -1,25 +1,67 @@
 package main
 
-const (
-	sname     = "test.net.local"
-	software  = "echochat"
-	softwarev = "v0.1"
-	//CONN_HOST           = "0.0.0.0"
-	//CONN_PORT           = "6667"
-	default_kick_reason = "Your behavior is not conductive of the desired environment."
-	ping_time           = 45   //something
-	ping_check_time     = 20   // time between the user's ping checks
-	resolvehosts        = true //Note: make forward confirmed reverse dns optional.
-	isupport            = "NAMESX CHANTYPES=#& PREFIX=(ov)@+"
-	default_cmode       = "nt"
-	stattime            = 30
-	debug               = true
-	configsalt          = "testing"
+import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+	"os"
+	"time"
 )
 
-var (
-	valid_chan_prefix = []string{"#", "&"}
-	global_bad_chars  = []string{":", "!", "@", "*", "(", ")", "<", ">", ",", "~", "/", "\\"}
-	listen_ports      = []string{"6667", "6668"}
-	listen_ips        = []string{"0.0.0.0"}
-)
+type configuration struct {
+	ServerName        string
+	DefaultKickReason string
+	PingTime          time.Duration
+	PingCheckTime     time.Duration
+	ResolveHosts      bool
+	DefaultCmode      string
+	StatTime          time.Duration
+	Debug             bool
+	Salt              string
+	ListenIps         []string
+	ListenPorts       []int
+}
+
+func SetupConfig() {
+	confile, err := ioutil.ReadFile(conf_file_name)
+	if err != nil {
+		log.Print("Error reading config file: " + err.Error())
+		SetupConfigDefault()
+		os.Exit(1)
+	} else {
+		err := json.Unmarshal(confile, &config)
+		if err != nil {
+			log.Print("Error parsing config file: " + err.Error())
+			os.Exit(1)
+		}
+	}
+}
+
+func SetupConfigDefault() {
+	log.Print("Creating default config file")
+	config = configuration{
+		ServerName:        "test.net.local",
+		DefaultKickReason: "Your behavior is not conductive of the desired environment.",
+		PingTime:          45,
+		PingCheckTime:     20,
+		ResolveHosts:      true,
+		DefaultCmode:      "nt",
+		StatTime:          30,
+		Debug:             true,
+		Salt:              "testing",
+		ListenIps:         []string{"0.0.0.0"},
+		ListenPorts:       []int{6667, 6668},
+	}
+	k, err := json.MarshalIndent(config, "", "\t")
+	if err != nil {
+		log.Print(err.Error())
+		os.Exit(1)
+	}
+	err = ioutil.WriteFile(conf_file_name, k, 0644)
+	if err != nil {
+		log.Print("Error writing config file: " + err.Error())
+		os.Exit(1)
+	}
+	log.Print("Config file created at: " + conf_file_name)
+	log.Print("It is highly recommended you edit this before proceeding...")
+}

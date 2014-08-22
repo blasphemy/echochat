@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -8,32 +9,21 @@ import (
 	"time"
 )
 
-var (
-	counter     int
-	userlist    map[int]*User
-	chanlist    map[string]*Channel
-	maxUsers    int
-	maxRoutines int
-	epoch       time.Time
-)
-
 func main() {
+	SetupConfig()
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	epoch = time.Now()
 	SetupNumerics()
-	userlist = make(map[int]*User)
-	chanlist = make(map[string]*Channel)
 	var listeners []net.Listener
 	// Listen for incoming connections.
-	for _, LISTENING_IP := range listen_ips {
-		for _, LISTENING_PORT := range listen_ports {
-			l, err := net.Listen("tcp", LISTENING_IP+":"+LISTENING_PORT)
+	for _, LISTENING_IP := range config.ListenIps {
+		for _, LISTENING_PORT := range config.ListenPorts {
+			l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", LISTENING_IP, LISTENING_PORT))
 			if err != nil {
 				log.Println("Error listening:", err.Error())
 				os.Exit(1)
 			} else {
 				listeners = append(listeners, l)
-				log.Println("Listening on " + LISTENING_IP + ":" + LISTENING_PORT)
+				log.Printf("Listening on %s:%d", LISTENING_IP, LISTENING_PORT)
 			}
 		}
 	}
@@ -80,7 +70,6 @@ func periodicStatusUpdate() {
 		log.Println("Status:", len(chanlist), "current channels")
 		log.Println("Status:", gor, "current Goroutines")
 		log.Println("Status:", maxRoutines, "max Goroutines")
-		time.Sleep(stattime * time.Second)
-
+		time.Sleep(config.StatTime * time.Second)
 	}
 }
