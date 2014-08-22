@@ -20,6 +20,7 @@ type configuration struct {
 	StatTime          time.Duration
 	Debug             bool
 	Cloaking          bool
+	OpersKickable     bool
 	Salt              string
 	ListenIPs         []string
 	ListenPorts       []int
@@ -55,6 +56,7 @@ func SetupConfigDefault() {
 		StatTime:          30,
 		Debug:             false,
 		Cloaking:          false,
+		OpersKickable:     false,
 		Salt:              "default",
 		ListenIPs:         []string{"0.0.0.0"},
 		ListenPorts:       []int{6667, 6668, 6669},

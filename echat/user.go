@@ -281,7 +281,7 @@ func (user *User) JoinHandler(args []string) {
 		channel = NewChannel(args[1])
 	}
 	if channel.HasMode("A") && !user.oper {
-		//TODO fire numeric for this
+		//TODO definitely fire numeric for this
 		return
 	}
 	if channel.HasUser(user) {
@@ -294,8 +294,8 @@ func (user *User) JoinHandler(args []string) {
 
 func (user *User) FireLusers() {
 	user.FireNumeric(RPL_LUSERCLIENT, len(userlist), 0, 1) //0 services and 1 servers for now
-	user.FireNumeric(RPL_LUSEROP, opercount)               //also 0 for now
-	user.FireNumeric(RPL_LUSERUNKNOWN, 0)                  //also 0...
+	user.FireNumeric(RPL_LUSEROP, opercount)
+	user.FireNumeric(RPL_LUSERUNKNOWN, 0) //also 0...
 	user.FireNumeric(RPL_LUSERCHANNELS, len(chanlist))
 	user.FireNumeric(RPL_LUSERME, len(userlist), 1)
 }
@@ -521,6 +521,9 @@ func (user *User) KickHandler(args []string) {
 	if !channel.HasUser(target) {
 		user.FireNumeric(ERR_USERNOTINCHANNEL, target.nick, channel.name)
 		return
+	}
+	if user.oper && !config.OpersKickable {
+		return // >:|
 	}
 	var reason string
 	if len(args) > 3 {
