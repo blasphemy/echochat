@@ -11,6 +11,8 @@ import (
 type configuration struct {
 	ServerName        string
 	DefaultKickReason string
+	DefaultQuitReason string
+	DefaultPartReason string
 	PingTime          time.Duration
 	PingCheckTime     time.Duration
 	ResolveHosts      bool
@@ -44,6 +46,8 @@ func SetupConfigDefault() {
 	config = configuration{
 		ServerName:        "test.net.local",
 		DefaultKickReason: "Your behavior is not conductive of the desired environment.",
+		DefaultQuitReason: "Leaving",
+		DefaultPartReason: "Leaving",
 		PingTime:          45,
 		PingCheckTime:     20,
 		ResolveHosts:      true,

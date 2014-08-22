@@ -64,7 +64,7 @@ func (user *User) QuitCommandHandler(args []string) {
 		}
 		reason = strings.TrimSpace(buffer.String())
 	} else {
-		reason = "Leaving"
+		reason = config.DefaultQuitReason
 	}
 	user.Quit(reason)
 	if user.oper {
@@ -312,11 +312,11 @@ func (user *User) PartHandler(args []string) {
 	}
 	channel := GetChannelByName(args[1])
 	if channel != nil {
-		channel.SendLinef(":%s PART %s :%s", user.GetHostMask(), channel.name, "Leaving")
+		channel.SendLinef(":%s PART %s :%s", user.GetHostMask(), channel.name, config.DefaultPartReason)
 		delete(channel.userlist, user.id)
 		delete(user.chanlist, channel.name)
 		delete(channel.usermodes, user)
-		log.Printf("User %s PART %s: %s", user.nick, channel.name, "Leaving")
+		log.Printf("User %s PART %s: %s", user.nick, channel.name, config.DefaultPartReason)
 		channel.ShouldIDie()
 	} //else?
 }
