@@ -108,7 +108,16 @@ func (user *User) SetConn(conn net.Conn) {
 	user.connection = conn
 	user.ip = GetIpFromConn(conn)
 	log.Println("New connection from", user.ip)
-	user.host = user.ip
+	user.realhost = user.ip
+	if !config.Cloaking {
+		user.host = user.ip
+	} else {
+		if DetermineConnectionType(user.ip) == "IP4" {
+			user.host = CloakIP4(user.ip)
+		} else {
+			user.host = CloakIP6(user.ip)
+		}
+	}
 	if config.ResolveHosts {
 		go user.UserHostLookup()
 	}
@@ -238,7 +247,12 @@ func (user *User) UserHostLookup() {
 	for _, k := range adds {
 		if user.ip == k {
 			addstring = strings.TrimSuffix(addstring, ".")
-			user.host = addstring
+			user.realhost = addstring
+			if config.Cloaking {
+				user.host = CloakHost(addstring)
+			} else {
+				user.host = addstring
+			}
 			user.SendLinef(":%s NOTICE %s :*** Found your hostname", config.ServerName, user.nick)
 			return
 		}

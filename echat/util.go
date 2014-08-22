@@ -25,9 +25,17 @@ func GetUserByNick(nick string) *User {
 	return nil
 }
 
+func DetermineConnectionType(ip string) string {
+	if !strings.HasPrefix(ip, "[") {
+		return "IP4"
+	} else {
+		return "IP6"
+	}
+}
+
 func GetIpFromConn(conn net.Conn) string {
 	ip := conn.RemoteAddr().String()
-	if !strings.HasPrefix(ip, "[") {
+	if DetermineConnectionType(ip) == "IP4" {
 		//IPV4
 		return strings.Split(ip, ":")[0]
 	} else {

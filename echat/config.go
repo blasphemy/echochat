@@ -17,6 +17,7 @@ type configuration struct {
 	DefaultCmode      string
 	StatTime          time.Duration
 	Debug             bool
+	Cloaking          bool
 	Salt              string
 	ListenIps         []string
 	ListenPorts       []int
@@ -48,6 +49,7 @@ func SetupConfigDefault() {
 		DefaultCmode:      "nt",
 		StatTime:          30,
 		Debug:             false,
+		Cloaking:          false,
 		Salt:              "default",
 		ListenIps:         []string{"0.0.0.0"},
 		ListenPorts:       []int{6667, 6668, 6669},
