@@ -70,6 +70,9 @@ func ProcessLine(user *User, msg string) {
 	case "oper":
 		user.FireIfRegistered(user.OperHandler, args)
 		break
+	case "rehash":
+		user.FireIfRegistered(user.RehashHandler, args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break

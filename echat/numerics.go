@@ -44,6 +44,7 @@ func SetupNumerics() {
 	NUM[ERR_ALREADYREGISTRED] = "You may not reregister"
 	NUM[ERR_CHANOPRIVSNEEDED] = "%s :You do not have the required status to perform this action"
 	NUM[RPL_YOUREOPER] = ":You are now an IRC operator"
+	NUM[RPL_REHASHING] = "%s :Rehashing"
 }
 
 const (
@@ -85,4 +86,5 @@ const (
 	ERR_CHANOPRIVSNEEDED  = 482
 	ERR_NOSUCHNICK        = 401
 	RPL_YOUREOPER         = 381
+	RPL_REHASHING         = 328
 )

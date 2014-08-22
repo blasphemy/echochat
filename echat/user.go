@@ -305,13 +305,13 @@ func (user *User) PartHandler(args []string) {
 		user.FireNumeric(ERR_NEEDMOREPARAMS, "PART")
 		return
 	}
-  var reason string
-  if len(args) > 2 {
-    args[2] = strings.TrimPrefix(args[2], ":")
-    reason = strings.Join(args[2:], " ")
-  } else {
-    reason = config.DefaultPartReason
-  }
+	var reason string
+	if len(args) > 2 {
+		args[2] = strings.TrimPrefix(args[2], ":")
+		reason = strings.Join(args[2:], " ")
+	} else {
+		reason = config.DefaultPartReason
+	}
 	channel := GetChannelByName(args[1])
 	if channel != nil {
 		channel.SendLinef(":%s PART %s :%s", user.GetHostMask(), channel.name, reason)
@@ -570,4 +570,14 @@ func (user *User) NamesHandler(args []string) {
 		return
 	}
 	channel.FireNames(user)
+}
+
+func (user *User) RehashHandler(args []string) {
+	if user.oper {
+		SetupConfig()
+		user.FireNumeric(RPL_REHASHING, conf_file_name)
+		log.Printf("OPER %s requested rehash...", user.nick)
+	} else {
+		user.CommandNotFound(args)
+	}
 }
