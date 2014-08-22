@@ -305,13 +305,20 @@ func (user *User) PartHandler(args []string) {
 		user.FireNumeric(ERR_NEEDMOREPARAMS, "PART")
 		return
 	}
+  var reason string
+  if len(args) > 2 {
+    args[2] = strings.TrimPrefix(args[2], ":")
+    reason = strings.Join(args[2:], " ")
+  } else {
+    reason = config.DefaultPartReason
+  }
 	channel := GetChannelByName(args[1])
 	if channel != nil {
-		channel.SendLinef(":%s PART %s :%s", user.GetHostMask(), channel.name, config.DefaultPartReason)
+		channel.SendLinef(":%s PART %s :%s", user.GetHostMask(), channel.name, reason)
 		delete(channel.userlist, user.id)
 		delete(user.chanlist, channel.name)
 		delete(channel.usermodes, user)
-		log.Printf("User %s PART %s: %s", user.nick, channel.name, config.DefaultPartReason)
+		log.Printf("User %s PART %s: %s", user.nick, channel.name, reason)
 		channel.ShouldIDie()
 	} //else?
 }
