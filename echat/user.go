@@ -542,12 +542,14 @@ func (user *User) ListHandler(args []string) {
 
 func (user *User) OperHandler(args []string) {
 	if len(args) < 3 {
-		user.FireNumeric(ERR_NEEDMOREPARAMS, "OPER")
+		user.CommandNotFound(args)
 		return
 	}
 	if config.Opers[args[1]] == args[2] {
 		user.oper = true
 		user.FireNumeric(RPL_YOUREOPER)
+	} else {
+		user.CommandNotFound(args)
 	}
 }
 
