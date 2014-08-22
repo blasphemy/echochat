@@ -19,4 +19,5 @@ var (
 	maxUsers          int
 	maxRoutines       int
 	epoch             = time.Now()
+	opercount         = 0
 )

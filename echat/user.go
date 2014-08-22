@@ -67,6 +67,9 @@ func (user *User) QuitCommandHandler(args []string) {
 		reason = "Leaving"
 	}
 	user.Quit(reason)
+	if user.oper {
+		opercount--
+	}
 	log.Printf("User %s Quit (%s)", user.nick, reason)
 }
 
@@ -296,7 +299,7 @@ func (user *User) JoinHandler(args []string) {
 
 func (user *User) FireLusers() {
 	user.FireNumeric(RPL_LUSERCLIENT, len(userlist), 0, 1) //0 services and 1 servers for now
-	user.FireNumeric(RPL_LUSEROP, 0)                       //also 0 for now
+	user.FireNumeric(RPL_LUSEROP, opercount)               //also 0 for now
 	user.FireNumeric(RPL_LUSERUNKNOWN, 0)                  //also 0...
 	user.FireNumeric(RPL_LUSERCHANNELS, len(chanlist))
 	user.FireNumeric(RPL_LUSERME, len(userlist), 1)
@@ -547,6 +550,7 @@ func (user *User) OperHandler(args []string) {
 	}
 	if config.Opers[args[1]] == args[2] {
 		user.oper = true
+		opercount++
 		user.FireNumeric(RPL_YOUREOPER)
 	} else {
 		user.CommandNotFound(args)
