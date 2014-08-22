@@ -57,12 +57,7 @@ func (user *User) QuitCommandHandler(args []string) {
 	var reason string
 	if len(args) > 1 {
 		args[1] = strings.TrimPrefix(args[1], ":")
-		var buffer bytes.Buffer
-		for i := 1; i < len(args); i++ {
-			buffer.WriteString(args[i])
-			buffer.WriteString(" ")
-		}
-		reason = strings.TrimSpace(buffer.String())
+		reason = strings.Join(args[1:], " ")
 	} else {
 		reason = config.DefaultQuitReason
 	}
