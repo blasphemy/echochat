@@ -11,7 +11,7 @@ compile and run echochat to make a sample config file. It will be saved as echoc
 
 Here's an explanation
 
-```json
+```javascript
 {
   "ServerName": "test.net.local",
   "DefaultKickReason": "Your behavior is not conductive of the desired environment.",
