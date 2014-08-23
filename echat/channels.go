@@ -130,6 +130,9 @@ func (channel *Channel) HasMode(mode string) bool {
 }
 
 func (channel *Channel) SetUmode(user *User, changing *User, mode string) {
+	if channel.CheckYourPrivlege(changing) {
+		return
+	}
 	if !strings.Contains(channel.usermodes[user], mode) {
 		channel.usermodes[user] = strcat(channel.usermodes[user], mode)
 		channel.SendLinef(":%s MODE %s +%s %s", changing.GetHostMask(), channel.name, mode, user.nick)
@@ -137,6 +140,9 @@ func (channel *Channel) SetUmode(user *User, changing *User, mode string) {
 }
 
 func (channel *Channel) UnsetUmode(user *User, changing *User, mode string) {
+	if channel.CheckYourPrivlege(changing) {
+		return
+	}
 	if strings.Contains(channel.usermodes[user], mode) {
 		channel.usermodes[user] = strings.Replace(channel.usermodes[user], mode, "", 1)
 		channel.SendLinef(":%s MODE %s -%s %s", changing.GetHostMask(), channel.name, mode, user.nick)
@@ -144,6 +150,9 @@ func (channel *Channel) UnsetUmode(user *User, changing *User, mode string) {
 }
 
 func (channel *Channel) SetMode(mode string, changing *User) {
+	if channel.CheckYourPrivlege(changing) {
+		return
+	}
 	if !strings.Contains(channel.cmodes, mode) {
 		channel.cmodes = strcat(channel.cmodes, mode)
 		channel.SendLinef(":%s MODE %s +%s", changing.GetHostMask(), channel.name, mode)
@@ -151,6 +160,9 @@ func (channel *Channel) SetMode(mode string, changing *User) {
 }
 
 func (channel *Channel) UnsetMode(mode string, changing *User) {
+	if channel.CheckYourPrivlege(changing) {
+		return
+	}
 	if strings.Contains(channel.cmodes, mode) {
 		channel.cmodes = strings.Replace(channel.cmodes, mode, "", 1)
 		channel.SendLinef(":%s MODE %s -%s", changing.GetHostMask(), channel.name, mode)
@@ -168,5 +180,15 @@ func (channel *Channel) HasUser(user *User) bool {
 func (channel *Channel) SendLinef(msg string, args ...interface{}) {
 	for _, k := range channel.userlist {
 		k.SendLine(fmt.Sprintf(msg, args...))
+	}
+}
+
+func (channel *Channel) CheckYourPrivlege(user *User) bool {
+	if channel.GetUserPriv(user) < 100 {
+		//SHITLORD!
+		user.FireNumeric(ERR_CHANOPRIVSNEEDED, channel.name)
+		return true //privlege successfully checked.
+	} else {
+		return false
 	}
 }
