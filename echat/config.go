@@ -60,7 +60,7 @@ func SetupConfigDefault() {
 		Salt:              "default",
 		ListenIPs:         []string{"0.0.0.0"},
 		ListenPorts:       []int{6667, 6668, 6669},
-		LogChannels:       []string{"#log", "&opers"},
+		LogChannels:       []string{"#log", "#opers"},
 		Opers:             map[string]string{"default": "password"},
 	}
 	k, err := json.MarshalIndent(config, "", "\t")

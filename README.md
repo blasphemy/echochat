@@ -53,7 +53,7 @@ Here's an explanation
     6669
   ],
   "LogChannels": [ //You can log to channels if you like. By default, these channels will have mode +A, so only opers can join
-    "#global",
+    "#opers",
     "#log"
   ],
   "Opers": { //List of opers. Takes a plaintext username/password combo.
