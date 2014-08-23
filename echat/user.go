@@ -360,7 +360,6 @@ func (user *User) PrivmsgHandler(args []string) {
 			}
 			return
 		} else {
-			//channel didnt exist but get channel by name makes one anyways, lets kill it...
 			user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
 			return
 		}
