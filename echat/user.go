@@ -401,10 +401,6 @@ func (user *User) ModeHandler(args []string) {
 			channel.FireModes(user)
 			log.Printf("User %s requested modes for %s", user.nick, channel.name)
 		} else {
-			if channel.GetUserPriv(user) < 100 {
-				user.FireNumeric(ERR_CHANOPRIVSNEEDED, channel.name)
-				return
-			}
 			s := args[2]
 			mode := 0
 			mcounter := 0
