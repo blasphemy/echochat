@@ -527,6 +527,9 @@ func (user *User) KickHandler(args []string) {
 		user.FireNumeric(ERR_USERNOTINCHANNEL, target.nick, channel.name)
 		return
 	}
+	if user.system {
+		return //This could be bad.
+	}
 	if user.oper && !config.OpersKickable {
 		return // >:|
 	}
