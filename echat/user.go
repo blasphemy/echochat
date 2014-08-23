@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"log"
 	"net"
 	"strings"
 	"time"
@@ -349,7 +348,9 @@ func (user *User) PrivmsgHandler(args []string) {
 					l.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg)
 				}
 			}
-			log.Printf("User %s CHANMSG %s: %s", user.nick, j.name, msg)
+			if !user.system {
+				log.Printf("User %s CHANMSG %s: %s", user.nick, j.name, msg)
+			}
 			return
 		} else {
 			//channel didnt exist but get channel by name makes one anyways, lets kill it...

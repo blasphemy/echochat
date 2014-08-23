@@ -36,4 +36,5 @@ var (
 		oper:       true,
 		system:     true,
 	}
+	log = &Elog{}
 )
