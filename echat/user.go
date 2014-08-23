@@ -329,6 +329,7 @@ func (user *User) PrivmsgHandler(args []string) {
 		user.FireNumeric(ERR_NEEDMOREPARAMS, "PRIVMSG")
 		return
 	}
+	//is ValidChanName even needed here anymore?
 	if ValidChanName(args[1]) { //TODO part of this should be sent to the channel "object"
 		//presumably a channel
 		j := GetChannelByName(args[1])
