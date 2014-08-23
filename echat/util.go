@@ -173,3 +173,10 @@ func Sha1String(text string) string {
 	result := fmt.Sprintf("%x", sha1.Sum(data))
 	return result
 }
+
+func SetupSytemUser() {
+	for _, k := range config.LogChannels {
+		SystemUser.JoinHandler([]string{"JOIN", k})
+		SystemUser.ModeHandler([]string{"MODE", k, "+A"})
+	}
+}

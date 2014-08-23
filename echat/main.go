@@ -13,6 +13,7 @@ func main() {
 	SetupConfig()
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	SetupNumerics()
+	SetupSytemUser()
 	var listeners []net.Listener
 	// Listen for incoming connections.
 	for _, LISTENING_IP := range config.ListenIPs {
