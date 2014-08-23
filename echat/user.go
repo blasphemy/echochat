@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	debuglog "log"
 	"net"
 	"strings"
 	"time"
@@ -135,7 +136,7 @@ func (user *User) SendLine(msg string) {
 		return
 	}
 	if config.Debug {
-		log.Printf("Send to %s: %s", user.nick, msg)
+		debuglog.Printf("Send to %s: %s", user.nick, msg)
 	}
 }
 
@@ -163,7 +164,7 @@ func (user *User) HandleRequests() {
 		}
 		line = strings.TrimSpace(line)
 		if config.Debug {
-			log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
+			debuglog.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
 		}
 		ProcessLine(user, line)
 	}
@@ -348,7 +349,13 @@ func (user *User) PrivmsgHandler(args []string) {
 					l.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg)
 				}
 			}
-			if !user.system {
+			var logchan bool
+			for _, testc := range config.LogChannels {
+				if GetChannelByName(testc) == j {
+					logchan = true
+				}
+			}
+			if !logchan {
 				log.Printf("User %s CHANMSG %s: %s", user.nick, j.name, msg)
 			}
 			return
