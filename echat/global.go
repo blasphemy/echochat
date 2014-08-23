@@ -13,11 +13,27 @@ var (
 	valid_chan_prefix = []string{"#", "&"}
 	global_bad_chars  = []string{":", "!", "@", "*", "(", ")", "<", ">", ",", "~", "/", "\\"}
 	config            configuration
-	counter           int
+	counter           = 1
 	userlist          = make(map[int]*User)
 	chanlist          = make(map[string]*Channel)
 	maxUsers          int
 	maxRoutines       int
 	epoch             = time.Now()
 	opercount         = 0
+	SystemUser        = &User{
+		nick:       "system",
+		user:       "system",
+		ident:      "system",
+		id:         0,
+		realname:   "system user",
+		userset:    true,
+		registered: true,
+		ip:         "127.0.0.1",
+		host:       "system",
+		realhost:   "localhost",
+		epoch:      time.Now(),
+		chanlist:   make(map[string]*Channel),
+		oper:       true,
+		system:     true,
+	}
 )

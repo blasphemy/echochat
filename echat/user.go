@@ -30,6 +30,7 @@ type User struct {
 	nextcheck  time.Time
 	chanlist   map[string]*Channel
 	oper       bool
+	system     bool
 }
 
 func (user *User) PingChecker() {
@@ -124,7 +125,7 @@ func (user *User) SetConn(conn net.Conn) {
 
 func (user *User) SendLine(msg string) {
 	msg = fmt.Sprintf("%s\n", msg)
-	if user.dead {
+	if user.dead || user.system {
 		return
 	}
 	_, err := user.connection.Write([]byte(msg))
