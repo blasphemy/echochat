@@ -45,6 +45,7 @@ func listenerthing(l net.Listener) {
 		} else {
 			user := NewUser()
 			user.SetConn(conn)
+			checkMaxUsers()
 			go user.HandleRequests()
 		}
 	}
@@ -61,16 +62,10 @@ func checkMaxUsers() {
 //only ran every 5 seconds or so, it may not be 100% accurate, but who cares
 func periodicStatusUpdate() {
 	for {
-		checkMaxUsers()
-		gor := runtime.NumGoroutine()
-		if gor > maxRoutines {
-			maxRoutines = gor
-		}
 		log.Printf("Status: %d current users", len(userlist))
 		log.Printf("Status: %d current channels", len(chanlist))
 		if config.Debug {
-			log.Printf("Status: %d current Goroutines", gor)
-			log.Printf("Status: %d max Goroutines", maxRoutines)
+			log.Printf("Status: %d current Goroutines", runtime.NumGoroutine())
 		}
 		time.Sleep(config.StatTime * time.Second)
 	}
