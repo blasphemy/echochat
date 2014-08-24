@@ -66,10 +66,10 @@ func periodicStatusUpdate() {
 		if gor > maxRoutines {
 			maxRoutines = gor
 		}
-		log.Println("Status:", len(userlist), "current users")
-		log.Println("Status:", len(chanlist), "current channels")
-		log.Println("Status:", gor, "current Goroutines")
-		log.Println("Status:", maxRoutines, "max Goroutines")
+		log.Printf("Status: %d current users", len(userlist))
+		log.Printf("Status: %d current channels", len(chanlist))
+		log.Printf("Status: %d current Goroutines", gor)
+		log.Printf("Status: %d max Goroutines", maxRoutines)
 		time.Sleep(config.StatTime * time.Second)
 	}
 }
