@@ -57,9 +57,6 @@ func checkMaxUsers() {
 	}
 }
 
-//periodicStatusUpdate shows information about the ircd every 5 seconds or so,
-//as well as updating the max users, and goroutines numbers. Since these are
-//only ran every 5 seconds or so, it may not be 100% accurate, but who cares
 func periodicStatusUpdate() {
 	for {
 		log.Printf("Status: %d current users", len(userlist))
