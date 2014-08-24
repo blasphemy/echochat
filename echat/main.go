@@ -68,8 +68,10 @@ func periodicStatusUpdate() {
 		}
 		log.Printf("Status: %d current users", len(userlist))
 		log.Printf("Status: %d current channels", len(chanlist))
-		log.Printf("Status: %d current Goroutines", gor)
-		log.Printf("Status: %d max Goroutines", maxRoutines)
+		if config.Debug {
+			log.Printf("Status: %d current Goroutines", gor)
+			log.Printf("Status: %d max Goroutines", maxRoutines)
+		}
 		time.Sleep(config.StatTime * time.Second)
 	}
 }
