@@ -73,6 +73,9 @@ func ProcessLine(user *User, msg string) {
 	case "rehash":
 		user.FireIfRegistered(user.RehashHandler, args)
 		break
+	case "kill":
+		user.FireIfRegistered(user.KillHandler, args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break

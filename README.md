@@ -34,6 +34,7 @@ Here's an explanation
 {
   "ServerName": "test.net.local",
   "DefaultKickReason": "Your behavior is not conductive of the desired environment.",
+  "DefaultKillReason": "Your behavior is not cunductive of the desired environment.",
   "DefaultQuitReason": "Leaving",
   "DefaultPartReason": "Leaving",
   "PingTime": 45, //Time between pings and disconnects due to ping timeouts.
