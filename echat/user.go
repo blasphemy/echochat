@@ -530,7 +530,7 @@ func (user *User) KickHandler(args []string) {
 	if user.system {
 		return //This could be bad.
 	}
-	if user.oper && !config.OpersKickable {
+	if target.oper && !config.OpersKickable {
 		return // >:|
 	}
 	var reason string
