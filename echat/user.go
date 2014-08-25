@@ -592,3 +592,29 @@ func (user *User) RehashHandler(args []string) {
 		user.CommandNotFound(args)
 	}
 }
+
+func (user *User) KillHandler(args []string) {
+	if user.oper {
+		if len(args) < 2 {
+			user.FireNumeric(ERR_NEEDMOREPARAMS, "KILL")
+			return
+		} else {
+			var reason string
+			bill := GetUserByNick(args[1])
+			if bill == nil {
+				user.FireNumeric(ERR_NOSUCHNICK, args[1])
+				return
+			} else {
+				if len(args) > 2 {
+					reason = strings.Join(args[2:], " ")
+					reason = strings.TrimPrefix(reason, ":")
+				} else {
+					reason = config.DefaultKillReason
+				}
+				bill.Quit(fmt.Sprintf("KILL: %s", reason))
+			}
+		}
+	} else {
+		user.CommandNotFound(args)
+	}
+}
