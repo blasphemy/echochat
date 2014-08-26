@@ -10,6 +10,7 @@ import (
 
 type configuration struct {
 	ServerName        string
+	ServerDescription string
 	DefaultKickReason string
 	DefaultQuitReason string
 	DefaultPartReason string
@@ -47,6 +48,7 @@ func SetupConfigDefault() {
 	log.Print("Creating default config file")
 	config = configuration{
 		ServerName:        "test.net.local",
+		ServerDescription: "A test server",
 		DefaultKickReason: "Your behavior is not conductive of the desired environment.",
 		DefaultKillReason: "Your behavior is not conductive of the desired environtment.",
 		DefaultQuitReason: "Leaving",
