@@ -1,0 +1,6 @@
+:presentday.notroll.me 311 trudat trudat ~k ipv6.atlanta.the-beach.co * :k
+:presentday.notroll.me 319 trudat trudat :#k
+:presentday.notroll.me 312 trudat trudat presentday.notroll.me :i'll ram ur node XD
+:presentday.notroll.me 379 trudat trudat :is using modes +i
+:presentday.notroll.me 378 trudat trudat :is connecting from *@ipv6.atlanta.the-beach.co 2604:180::d8f:be0e
+:presentday.notroll.me 318 trudat trudat :End of WHOIS list
