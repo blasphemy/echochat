@@ -612,6 +612,7 @@ func (user *User) KillHandler(args []string) {
 					reason = config.DefaultKillReason
 				}
 				bill.Quit(fmt.Sprintf("KILL: %s", reason))
+        log.Printf("oper %s killed %s (%s)", user.nick, bill.nick, reason)
 			}
 		}
 	} else {
