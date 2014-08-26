@@ -45,6 +45,7 @@ Here's an explanation
   "Debug": false, // Debug statements. You probably don't want this unless you're hacking on it
   "Cloaking": false, // Cloak hostnames
   "Salt": "default", // Salt, used for cloaking hostnames, and possibly any other cryptographic operations in the ircd.
+  "Privacy": true, //Don't log things like messages, could be considered a violation of privacy.
   "OpersKickable" : false, //Are you able to kick an OPER from a channel?
   "ListenIPs": [ // List of IPs to listen on
     "0.0.0.0"

@@ -356,7 +356,7 @@ func (user *User) PrivmsgHandler(args []string) {
 					logchan = true
 				}
 			}
-			if !logchan {
+			if !logchan && !config.Privacy {
 				log.Printf("User %s CHANMSG %s: %s", user.nick, j.name, msg)
 			}
 			return
@@ -370,7 +370,10 @@ func (user *User) PrivmsgHandler(args []string) {
 		if target != nil {
 			msg := FormatMessageArgs(args)
 			target.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), target.nick, msg)
-			log.Printf("User %s PRIVMSG %s: %s", user.nick, target.nick, msg)
+			if !config.Privacy {
+				log.Printf("User %s PRIVMSG %s: %s", user.nick, target.nick, msg)
+
+			}
 		}
 	}
 }
@@ -612,7 +615,7 @@ func (user *User) KillHandler(args []string) {
 					reason = config.DefaultKillReason
 				}
 				bill.Quit(fmt.Sprintf("KILL: %s", reason))
-        log.Printf("oper %s killed %s (%s)", user.nick, bill.nick, reason)
+				log.Printf("oper %s killed %s (%s)", user.nick, bill.nick, reason)
 			}
 		}
 	} else {

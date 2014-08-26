@@ -26,6 +26,7 @@ type configuration struct {
 	ListenPorts       []int
 	LogChannels       []string
 	Opers             map[string]string
+	Privacy           bool
 }
 
 func SetupConfig() {
@@ -64,6 +65,7 @@ func SetupConfigDefault() {
 		ListenPorts:       []int{6667, 6668, 6669},
 		LogChannels:       []string{"#log", "#opers"},
 		Opers:             map[string]string{"default": "password"},
+		Privacy:           false,
 	}
 	k, err := json.MarshalIndent(config, "", "\t")
 	if err != nil {
