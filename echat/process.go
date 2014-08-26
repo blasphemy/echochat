@@ -76,6 +76,9 @@ func ProcessLine(user *User, msg string) {
 	case "kill":
 		user.FireIfRegistered(user.KillHandler, args)
 		break
+	case "whois":
+		user.FireIfRegistered(user.WhoisHandler, args)
+		break
 	default:
 		user.CommandNotFound(args)
 		break

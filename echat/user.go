@@ -607,3 +607,7 @@ func (user *User) KillHandler(args []string) {
 		user.CommandNotFound(args)
 	}
 }
+
+func (user *User) WhoisHandler(args []string) {
+
+}
