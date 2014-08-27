@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net"
 	"os"
 	"runtime"
@@ -13,6 +12,7 @@ func main() {
 	SetupConfig()
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	SetupNumerics()
+	SetupSytemUser()
 	var listeners []net.Listener
 	// Listen for incoming connections.
 	for _, LISTENING_IP := range config.ListenIPs {
@@ -45,6 +45,7 @@ func listenerthing(l net.Listener) {
 		} else {
 			user := NewUser()
 			user.SetConn(conn)
+			checkMaxUsers()
 			go user.HandleRequests()
 		}
 	}
@@ -56,20 +57,13 @@ func checkMaxUsers() {
 	}
 }
 
-//periodicStatusUpdate shows information about the ircd every 5 seconds or so,
-//as well as updating the max users, and goroutines numbers. Since these are
-//only ran every 5 seconds or so, it may not be 100% accurate, but who cares
 func periodicStatusUpdate() {
 	for {
-		checkMaxUsers()
-		gor := runtime.NumGoroutine()
-		if gor > maxRoutines {
-			maxRoutines = gor
+		log.Printf("Status: %d current users", len(userlist))
+		log.Printf("Status: %d current channels", len(chanlist))
+		if config.Debug {
+			log.Printf("Status: %d current Goroutines", runtime.NumGoroutine())
 		}
-		log.Println("Status:", len(userlist), "current users")
-		log.Println("Status:", len(chanlist), "current channels")
-		log.Println("Status:", gor, "current Goroutines")
-		log.Println("Status:", maxRoutines, "max Goroutines")
 		time.Sleep(config.StatTime * time.Second)
 	}
 }

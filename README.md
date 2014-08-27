@@ -46,6 +46,8 @@ Here's an explanation
   "Debug": false, // Debug statements. You probably don't want this unless you're hacking on it
   "Cloaking": false, // Cloak hostnames
   "Salt": "default", // Salt, used for cloaking hostnames, and possibly any other cryptographic operations in the ircd.
+  "Privacy": true, //Don't log things like messages, could be considered a violation of privacy.
+  "OpersKickable" : false, //Are you able to kick an OPER from a channel?
   "ListenIPs": [ // List of IPs to listen on
     "0.0.0.0"
   ],
@@ -53,6 +55,10 @@ Here's an explanation
     6667,
     6668,
     6669
+  ],
+  "LogChannels": [ //You can log to channels if you like. By default, these channels will have mode +A, so only opers can join
+    "#opers",
+    "#log"
   ],
   "Opers": { //List of opers. Takes a plaintext username/password combo.
     "default": "password"

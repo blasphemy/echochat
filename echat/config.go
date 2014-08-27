@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"os"
 	"time"
 )
@@ -26,7 +25,9 @@ type configuration struct {
 	Salt              string
 	ListenIPs         []string
 	ListenPorts       []int
+	LogChannels       []string
 	Opers             map[string]string
+	Privacy           bool
 }
 
 func SetupConfig() {
@@ -64,7 +65,9 @@ func SetupConfigDefault() {
 		Salt:              "default",
 		ListenIPs:         []string{"0.0.0.0"},
 		ListenPorts:       []int{6667, 6668, 6669},
+		LogChannels:       []string{"#log", "#opers"},
 		Opers:             map[string]string{"default": "password"},
+		Privacy:           false,
 	}
 	k, err := json.MarshalIndent(config, "", "\t")
 	if err != nil {

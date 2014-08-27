@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"log"
+	debuglog "log"
 	"net"
 	"strings"
 	"time"
@@ -31,6 +31,7 @@ type User struct {
 	nextcheck  time.Time
 	chanlist   map[string]*Channel
 	oper       bool
+	system     bool
 	ConnType   string
 }
 
@@ -130,7 +131,7 @@ func (user *User) SetConn(conn net.Conn) {
 
 func (user *User) SendLine(msg string) {
 	msg = fmt.Sprintf("%s\n", msg)
-	if user.dead {
+	if user.dead || user.system {
 		return
 	}
 	_, err := user.connection.Write([]byte(msg))
@@ -141,7 +142,7 @@ func (user *User) SendLine(msg string) {
 		return
 	}
 	if config.Debug {
-		log.Printf("Send to %s: %s", user.nick, msg)
+		debuglog.Printf("Send to %s: %s", user.nick, msg)
 	}
 }
 
@@ -169,7 +170,7 @@ func (user *User) HandleRequests() {
 		}
 		line = strings.TrimSpace(line)
 		if config.Debug {
-			log.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
+			debuglog.Println("Receive from", fmt.Sprintf("%s:", user.nick), line)
 		}
 		ProcessLine(user, line)
 	}
@@ -334,6 +335,7 @@ func (user *User) PrivmsgHandler(args []string) {
 		user.FireNumeric(ERR_NEEDMOREPARAMS, "PRIVMSG")
 		return
 	}
+	//is ValidChanName even needed here anymore?
 	if ValidChanName(args[1]) { //TODO part of this should be sent to the channel "object"
 		//presumably a channel
 		j := GetChannelByName(args[1])
@@ -354,10 +356,17 @@ func (user *User) PrivmsgHandler(args []string) {
 					l.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg)
 				}
 			}
-			log.Printf("User %s CHANMSG %s: %s", user.nick, j.name, msg)
+			var logchan bool
+			for _, testc := range config.LogChannels {
+				if GetChannelByName(testc) == j {
+					logchan = true
+				}
+			}
+			if !logchan && !config.Privacy {
+				log.Printf("User %s CHANMSG %s: %s", user.nick, j.name, msg)
+			}
 			return
 		} else {
-			//channel didnt exist but get channel by name makes one anyways, lets kill it...
 			user.FireNumeric(ERR_NOSUCHCHANNEL, args[1])
 			return
 		}
@@ -367,7 +376,10 @@ func (user *User) PrivmsgHandler(args []string) {
 		if target != nil {
 			msg := FormatMessageArgs(args)
 			target.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), target.nick, msg)
-			log.Printf("User %s PRIVMSG %s: %s", user.nick, target.nick, msg)
+			if !config.Privacy {
+				log.Printf("User %s PRIVMSG %s: %s", user.nick, target.nick, msg)
+
+			}
 		}
 	}
 }
@@ -523,6 +535,9 @@ func (user *User) KickHandler(args []string) {
 	if !channel.HasUser(target) {
 		user.FireNumeric(ERR_USERNOTINCHANNEL, target.nick, channel.name)
 		return
+	}
+	if user.system {
+		return //This could be bad.
 	}
 	if target.oper && !config.OpersKickable {
 		return // >:|
