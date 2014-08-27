@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"fmt"
-	"net"
 	"strings"
 )
 
@@ -25,24 +24,17 @@ func GetUserByNick(nick string) *User {
 	return nil
 }
 
-func DetermineConnectionType(ip string) string {
+func SetUserIPInfo(user *User) {
+	ip := user.connection.RemoteAddr().String()
 	if !strings.HasPrefix(ip, "[") {
-		return "IP4"
+		//ipv4
+		user.ConnType = "IP4"
+		user.realip = strings.Split(ip, ":")[0]
 	} else {
-		return "IP6"
-	}
-}
-
-func GetIpFromConn(conn net.Conn) string {
-	ip := conn.RemoteAddr().String()
-	if DetermineConnectionType(ip) == "IP4" {
-		//IPV4
-		return strings.Split(ip, ":")[0]
-	} else {
-		//IPV6
+		user.ConnType = "IP6"
 		ip = strings.Split(ip, "]")[0]
 		ip = strings.TrimPrefix(ip, "[")
-		return ip
+		user.realip = ip
 	}
 }
 
