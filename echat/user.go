@@ -23,6 +23,7 @@ type User struct {
 	userset    bool
 	registered bool
 	ip         string
+	realip     string
 	host       string
 	realhost   string
 	epoch      time.Time
@@ -30,6 +31,7 @@ type User struct {
 	nextcheck  time.Time
 	chanlist   map[string]*Channel
 	oper       bool
+	ConnType   string
 }
 
 func (user *User) PingChecker() {
@@ -104,16 +106,20 @@ func NewUser() *User {
 
 func (user *User) SetConn(conn net.Conn) {
 	user.connection = conn
-	user.ip = GetIpFromConn(conn)
-	log.Println("New connection from", user.ip)
-	user.realhost = user.ip
+	SetUserIPInfo(user)
+	log.Println("New connection from", user.realip)
+	user.realhost = user.realip
 	if !config.Cloaking {
-		user.host = user.ip
+		user.host = user.realip
 	} else {
-		if DetermineConnectionType(user.ip) == "IP4" {
-			user.host = CloakIP4(user.ip)
+		if user.ConnType == "IP4" {
+			k := CloakIP4(user.realip)
+			user.host = k
+			user.ip = k
 		} else {
-			user.host = CloakIP6(user.ip)
+			k := CloakIP6(user.realip)
+			user.host = k
+			user.ip = k
 		}
 	}
 	if config.ResolveHosts {
