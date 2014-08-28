@@ -33,6 +33,7 @@ Here's an explanation
 ```javascript
 {
   "ServerName": "test.net.local",
+  "ServerDescription": "A test server", //Server description or note.
   "DefaultKickReason": "Your behavior is not conductive of the desired environment.",
   "DefaultKillReason": "Your behavior is not cunductive of the desired environment.",
   "DefaultQuitReason": "Leaving",

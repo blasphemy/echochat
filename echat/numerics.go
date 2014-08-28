@@ -16,6 +16,7 @@ func SetupNumerics() {
 	NUM[RPL_LUSERUNKNOWN] = "%d :unknown connection(s)"
 	NUM[RPL_LUSERCHANNELS] = "%d :channels formed"
 	NUM[RPL_LUSERME] = ":I have %d clients and %d servers"
+	NUM[RPL_WHOISUSER] = "%s %s %s * :%s"
 	NUM[RPL_ENDOFWHO] = "%s :End of WHO list"
 	NUM[RPL_LISTSTART] = "Channels :Users Name"
 	NUM[RPL_LIST] = "%s %d :%s"
@@ -45,6 +46,11 @@ func SetupNumerics() {
 	NUM[ERR_CHANOPRIVSNEEDED] = "%s :You do not have the required status to perform this action"
 	NUM[RPL_YOUREOPER] = ":You are now an IRC operator"
 	NUM[RPL_REHASHING] = "%s :Rehashing"
+	NUM[RPL_WHOISCHANNELS] = "%s :%s"
+	NUM[RPL_WHOISSERVER] = "%s %s :%s"
+	NUM[RPL_WHOISOPERATOR] = "%s :is an IRC operator"
+	NUM[RPL_WHOISHOST] = "%s :is connecting from *@%s %s"
+	NUM[RPL_ENDOFWHOIS] = "%s :End of WHOIS list"
 }
 
 const (
@@ -58,6 +64,7 @@ const (
 	RPL_LUSERUNKNOWN      = 253
 	RPL_LUSERCHANNELS     = 254
 	RPL_LUSERME           = 255
+	RPL_WHOISUSER         = 311
 	RPL_ENDOFWHO          = 315
 	RPL_LISTSTART         = 321
 	RPL_LIST              = 322
@@ -87,4 +94,9 @@ const (
 	ERR_NOSUCHNICK        = 401
 	RPL_YOUREOPER         = 381
 	RPL_REHASHING         = 328
+	RPL_WHOISCHANNELS     = 319
+	RPL_WHOISSERVER       = 312
+	RPL_WHOISOPERATOR     = 313
+	RPL_WHOISHOST         = 378
+	RPL_ENDOFWHOIS        = 318
 )

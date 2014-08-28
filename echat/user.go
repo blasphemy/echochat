@@ -628,3 +628,32 @@ func (user *User) KillHandler(args []string) {
 		user.CommandNotFound(args)
 	}
 }
+
+func (user *User) WhoisHandler(args []string) {
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "WHOIS")
+		return
+	}
+	target := GetUserByNick(args[1])
+	if target == nil {
+		user.FireNumeric(ERR_NOSUCHNICK, args[1])
+		return
+	}
+	var buf bytes.Buffer
+	for _, k := range target.chanlist {
+		buf.WriteString(k.name + " ")
+	}
+	chanstring := strings.TrimSpace(buf.String())
+	user.FireNumeric(RPL_WHOISUSER, target.nick, target.ident, target.host, target.realname)
+	user.FireNumeric(RPL_WHOISCHANNELS, target.nick, chanstring)
+	user.FireNumeric(RPL_WHOISSERVER, target.nick, config.ServerName, config.ServerDescription)
+	if target.oper {
+		user.FireNumeric(RPL_WHOISOPERATOR, target.nick)
+	}
+	if user.oper || user == target {
+		user.FireNumeric(RPL_WHOISHOST, target.nick, target.realhost, target.realip)
+	} else {
+		user.FireNumeric(RPL_WHOISHOST, target.nick, target.host, target.ip)
+	}
+	user.FireNumeric(RPL_ENDOFWHOIS, target.nick)
+}
