@@ -655,4 +655,5 @@ func (user *User) WhoisHandler(args []string) {
 	} else {
 		user.FireNumeric(RPL_WHOISHOST, target.nick, target.host, target.ip)
 	}
+	user.FireNumeric(RPL_ENDOFWHOIS, target.nick)
 }
