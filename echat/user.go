@@ -238,7 +238,7 @@ func (user *User) UserRegistrationFinished() {
 
 func (user *User) UserHostLookup() {
 	user.SendLinef(":%s NOTICE %s :*** Looking up your hostname...", config.ServerName, user.nick)
-	adds, err := net.LookupAddr(user.ip)
+	adds, err := net.LookupAddr(user.realip)
 	if err != nil {
 		user.SendLinef("%s NOTICE %s :*** Unable to resolve your hostname", config.ServerName, user.nick)
 		return
@@ -250,7 +250,7 @@ func (user *User) UserHostLookup() {
 		return
 	}
 	for _, k := range adds {
-		if user.ip == k {
+		if user.realip == k {
 			addstring = strings.TrimSuffix(addstring, ".")
 			user.realhost = addstring
 			if config.Cloaking {
