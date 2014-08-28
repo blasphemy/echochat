@@ -630,5 +630,14 @@ func (user *User) KillHandler(args []string) {
 }
 
 func (user *User) WhoisHandler(args []string) {
-
+	if len(args) < 2 {
+		user.FireNumeric(ERR_NEEDMOREPARAMS, "WHOIS")
+		return
+	}
+	target := GetUserByNick(args[1])
+	if target == nil {
+		user.FireNumeric(ERR_NOSUCHNICK, args[1])
+		return
+	}
+	user.FireNumeric(RPL_WHOISUSER, target.nick, target.ident, target.host, target.realname)
 }
