@@ -647,4 +647,7 @@ func (user *User) WhoisHandler(args []string) {
 	user.FireNumeric(RPL_WHOISUSER, target.nick, target.ident, target.host, target.realname)
 	user.FireNumeric(RPL_WHOISCHANNELS, target.nick, chanstring)
 	user.FireNumeric(RPL_WHOISSERVER, target.nick, config.ServerName, config.ServerDescription)
+	if target.oper {
+		user.FireNumeric(RPL_WHOISOPERATOR, target.nick)
+	}
 }

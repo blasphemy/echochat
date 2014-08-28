@@ -48,6 +48,7 @@ func SetupNumerics() {
 	NUM[RPL_REHASHING] = "%s :Rehashing"
 	NUM[RPL_WHOISCHANNELS] = "%s :%s"
 	NUM[RPL_WHOISSERVER] = "%s %s :%s"
+	NUM[RPL_WHOISOPERATOR] = "%s :is an IRC operator"
 }
 
 const (
@@ -93,4 +94,5 @@ const (
 	RPL_REHASHING         = 328
 	RPL_WHOISCHANNELS     = 319
 	RPL_WHOISSERVER       = 312
+	RPL_WHOISOPERATOR     = 313
 )
