@@ -650,4 +650,9 @@ func (user *User) WhoisHandler(args []string) {
 	if target.oper {
 		user.FireNumeric(RPL_WHOISOPERATOR, target.nick)
 	}
+	if user.oper || user == target {
+		user.FireNumeric(RPL_WHOISHOST, target.nick, target.realhost, target.realip)
+	} else {
+		user.FireNumeric(RPL_WHOISHOST, target.nick, target.host, target.ip)
+	}
 }

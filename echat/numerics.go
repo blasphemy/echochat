@@ -49,6 +49,7 @@ func SetupNumerics() {
 	NUM[RPL_WHOISCHANNELS] = "%s :%s"
 	NUM[RPL_WHOISSERVER] = "%s %s :%s"
 	NUM[RPL_WHOISOPERATOR] = "%s :is an IRC operator"
+	NUM[RPL_WHOISHOST] = "%s :is connecting from *@%s %s"
 }
 
 const (
@@ -95,4 +96,5 @@ const (
 	RPL_WHOISCHANNELS     = 319
 	RPL_WHOISSERVER       = 312
 	RPL_WHOISOPERATOR     = 313
+	RPL_WHOISHOST         = 378
 )
