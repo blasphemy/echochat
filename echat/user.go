@@ -646,4 +646,5 @@ func (user *User) WhoisHandler(args []string) {
 	chanstring := strings.TrimSpace(buf.String())
 	user.FireNumeric(RPL_WHOISUSER, target.nick, target.ident, target.host, target.realname)
 	user.FireNumeric(RPL_WHOISCHANNELS, target.nick, chanstring)
+	user.FireNumeric(RPL_WHOISSERVER, target.nick, config.ServerName, config.ServerDescription)
 }
