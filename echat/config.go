@@ -44,7 +44,19 @@ func SetupConfig() {
 			os.Exit(1)
 		}
 		if config.SystemUserName == "" {
-			config.SystemUserName = "system"
+			config.SystemUserName = DefaultConf.SystemUserName
+		}
+		if config.ServerName == "" {
+			config.ServerName = DefaultConf.ServerName
+		}
+		if config.ServerDescription == "" {
+			config.ServerDescription = DefaultConf.ServerDescription
+		}
+		if config.DefaultKickReason == "" {
+			config.DefaultKickReason = DefaultConf.DefaultKickReason
+		}
+		if config.DefaultKillReason == "" {
+			config.DefaultKillReason = DefaultConf.DefaultKillReason
 		}
 		SystemUser.nick = config.SystemUserName
 		SystemUser.host = config.ServerName
@@ -54,30 +66,7 @@ func SetupConfig() {
 
 func SetupConfigDefault() {
 	log.Print("Creating default config file")
-	config = configuration{
-		ServerName:        "test.net.local",
-		ServerDescription: "A test server",
-		DefaultKickReason: "Your behavior is not conductive of the desired environment.",
-		DefaultKillReason: "Your behavior is not conductive of the desired environtment.",
-		DefaultQuitReason: "Leaving",
-		DefaultPartReason: "Leaving",
-		PingTime:          45,
-		PingCheckTime:     20,
-		ResolveHosts:      true,
-		DefaultCmode:      "nt",
-		StatTime:          30,
-		Debug:             false,
-		Cloaking:          false,
-		OpersKickable:     false,
-		Salt:              "default",
-		ListenIPs:         []string{"0.0.0.0"},
-		ListenPorts:       []int{6667, 6668, 6669},
-		LogChannels:       []string{"#log", "#opers"},
-		Opers:             map[string]string{"default": "password"},
-		Privacy:           false,
-		SystemUserName:    "system",
-	}
-	k, err := json.MarshalIndent(config, "", "\t")
+	k, err := json.MarshalIndent(DefaultConf, "", "\t")
 	if err != nil {
 		log.Print(err.Error())
 		os.Exit(1)

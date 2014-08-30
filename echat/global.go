@@ -12,7 +12,7 @@ const (
 var (
 	valid_chan_prefix = []string{"#", "&"}
 	global_bad_chars  = []string{":", "!", "@", "*", "(", ")", "<", ">", ",", "~", "/", "\\"}
-	config            configuration
+	config            *configuration
 	counter           = 1
 	userlist          = make(map[int]*User)
 	chanlist          = make(map[string]*Channel)
@@ -33,6 +33,29 @@ var (
 		chanlist:   make(map[string]*Channel),
 		oper:       true,
 		system:     true,
+	}
+	DefaultConf = &configuration{
+		ServerName:        "test.net.local",
+		ServerDescription: "A test server",
+		DefaultKickReason: "Your behavior is not conductive of the desired environment.",
+		DefaultKillReason: "Your behavior is not conductive of the desired environtment.",
+		DefaultQuitReason: "Leaving",
+		DefaultPartReason: "Leaving",
+		PingTime:          45,
+		PingCheckTime:     20,
+		ResolveHosts:      true,
+		DefaultCmode:      "nt",
+		StatTime:          30,
+		Debug:             false,
+		Cloaking:          false,
+		OpersKickable:     false,
+		Salt:              "default",
+		ListenIPs:         []string{"0.0.0.0"},
+		ListenPorts:       []int{6667, 6668, 6669},
+		LogChannels:       []string{"#log", "#opers"},
+		Opers:             map[string]string{"default": "password"},
+		Privacy:           false,
+		SystemUserName:    "system",
 	}
 	log = &Elog{}
 )
