@@ -16,6 +16,9 @@ func strcat(s1 string, s2 string) string {
 
 func GetUserByNick(nick string) *User {
 	nick = strings.ToLower(nick)
+	if nick == strings.ToLower(SystemUser.nick) {
+		return SystemUser
+	}
 	for _, k := range userlist {
 		if strings.ToLower(k.nick) == nick {
 			return k

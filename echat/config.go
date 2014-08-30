@@ -28,6 +28,7 @@ type configuration struct {
 	LogChannels       []string
 	Opers             map[string]string
 	Privacy           bool
+	SystemUserName    string
 }
 
 func SetupConfig() {
@@ -42,6 +43,12 @@ func SetupConfig() {
 			log.Print("Error parsing config file: " + err.Error())
 			os.Exit(1)
 		}
+		if config.SystemUserName == "" {
+			config.SystemUserName = "system"
+		}
+		SystemUser.nick = config.SystemUserName
+		SystemUser.host = config.ServerName
+		SystemUser.realhost = config.ServerName
 	}
 }
 
@@ -68,6 +75,7 @@ func SetupConfigDefault() {
 		LogChannels:       []string{"#log", "#opers"},
 		Opers:             map[string]string{"default": "password"},
 		Privacy:           false,
+		SystemUserName:    "system",
 	}
 	k, err := json.MarshalIndent(config, "", "\t")
 	if err != nil {

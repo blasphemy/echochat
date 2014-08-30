@@ -21,7 +21,6 @@ var (
 	epoch             = time.Now()
 	opercount         = 0
 	SystemUser        = &User{
-		nick:       "system",
 		user:       "system",
 		ident:      "system",
 		id:         0,
@@ -29,8 +28,7 @@ var (
 		userset:    true,
 		registered: true,
 		ip:         "127.0.0.1",
-		host:       "system",
-		realhost:   "localhost",
+		realip:     "127.0.0.1",
 		epoch:      time.Now(),
 		chanlist:   make(map[string]*Channel),
 		oper:       true,
