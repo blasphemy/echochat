@@ -58,6 +58,24 @@ func SetupConfig() {
 		if config.DefaultKillReason == "" {
 			config.DefaultKillReason = DefaultConf.DefaultKillReason
 		}
+		if config.DefaultPartReason == "" {
+			config.DefaultPartReason = DefaultConf.DefaultPartReason
+		}
+		if config.DefaultQuitReason == "" {
+			config.DefaultQuitReason = DefaultConf.DefaultQuitReason
+		}
+		if config.PingTime < 5 || config.PingTime > 500 {
+			log.Print("You have a ridiculous ping time, setting it to the default of ", DefaultConf.PingTime*time.Second)
+			config.PingTime = DefaultConf.PingTime
+		}
+		if config.PingCheckTime > config.PingTime || config.PingCheckTime < 2 {
+			newtime := config.PingTime / 2
+			log.Print("Your ping check time does not make senese, setting it to ", newtime*time.Second)
+			config.PingCheckTime = newtime
+		}
+		if config.StatTime < 1 {
+			config.StatTime = DefaultConf.StatTime
+		}
 		SystemUser.nick = config.SystemUserName
 		SystemUser.host = config.ServerName
 		SystemUser.realhost = config.ServerName
