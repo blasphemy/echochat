@@ -34,12 +34,7 @@ func ProcessLine(user *User, msg string) {
 	case "pong":
 		break //lol nothing
 	case "lusers":
-		user.FireLusers()
-		if user.registered {
-			user.FireLusers()
-		} else {
-			user.FireNumeric(ERR_NOTREGISTERED)
-		}
+		user.FireIfRegistered(user.LusersHandler, args)
 		break
 	case "part":
 		user.FireIfRegistered(user.PartHandler, args)

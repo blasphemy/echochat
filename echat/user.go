@@ -233,7 +233,7 @@ func (user *User) UserRegistrationFinished() {
 	user.FireNumeric(RPL_CREATED, epoch)
 	//TODO fire RPL_MYINFO when we actually have enough stuff to do it
 	user.FireNumeric(RPL_ISUPPORT, isupport)
-	user.FireLusers()
+	user.LusersHandler([]string{})
 }
 
 func (user *User) UserHostLookup() {
@@ -299,7 +299,7 @@ func (user *User) JoinHandler(args []string) {
 	log.Printf("User %s joined %s", user.nick, channel.name)
 }
 
-func (user *User) FireLusers() {
+func (user *User) LusersHandler(args []string) {
 	user.FireNumeric(RPL_LUSERCLIENT, len(userlist), 0, 1) //0 services and 1 servers for now
 	user.FireNumeric(RPL_LUSEROP, opercount)
 	user.FireNumeric(RPL_LUSERUNKNOWN, 0) //also 0...
