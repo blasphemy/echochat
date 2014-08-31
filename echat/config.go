@@ -8,28 +8,29 @@ import (
 )
 
 type configuration struct {
-	ServerName        string
-	ServerDescription string
-	DefaultKickReason string
-	DefaultQuitReason string
-	DefaultPartReason string
-	DefaultKillReason string
-	PingTime          time.Duration
-	PingCheckTime     time.Duration
-	ResolveHosts      bool
-	DefaultCmode      string
-	StatTime          time.Duration
-	Debug             bool
-	Cloaking          bool
-	OpersKickable     bool
-	Salt              string
-	ListenIPs         []string
-	ListenPorts       []int
-	LogChannels       []string
-	Opers             map[string]string
-	Privacy           bool
-	SystemUserName    string
-	AutoJoin          []string
+	ServerName         string
+	ServerDescription  string
+	DefaultKickReason  string
+	DefaultQuitReason  string
+	DefaultPartReason  string
+	DefaultKillReason  string
+	PingTime           time.Duration
+	PingCheckTime      time.Duration
+	ResolveHosts       bool
+	DefaultCmode       string
+	StatTime           time.Duration
+	Debug              bool
+	Cloaking           bool
+	OpersKickable      bool
+	Salt               string
+	ListenIPs          []string
+	ListenPorts        []int
+	LogChannels        []string
+	Opers              map[string]string
+	Privacy            bool
+	SystemUserName     string
+	SystemJoinChannels bool
+	AutoJoin           []string
 }
 
 func SetupConfig() {

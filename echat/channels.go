@@ -37,10 +37,28 @@ func NewChannel(newname string) *Channel {
 	return chann
 }
 
+func (channel *Channel) len() int {
+	k := len(channel.userlist)
+	var check bool
+	for _, k := range config.LogChannels {
+		if channel == GetChannelByName(k) {
+			check = true
+			break
+		}
+	}
+	if channel.HasUser(SystemUser) && !check {
+		k--
+	}
+	return k
+}
+
 func (channel *Channel) JoinUser(user *User) {
 	channel.userlist[user.id] = user
-	if len(channel.userlist) == 1 {
+	if channel.len() == 1 {
 		channel.usermodes[user] = "o"
+		if config.SystemJoinChannels {
+			SystemUser.JoinHandler([]string{"JOIN", channel.name})
+		}
 	}
 	channel.SendLinef(":%s JOIN %s", user.GetHostMask(), channel.name)
 	if len(channel.topic) > 0 {
@@ -109,7 +127,10 @@ func (channel *Channel) GetUserPriv(user *User) int {
 }
 
 func (channel *Channel) ShouldIDie() {
-	if len(channel.userlist) < 1 {
+	if channel.len() < 1 {
+		if channel.HasUser(SystemUser) {
+			SystemUser.PartHandler([]string{"PART", channel.name})
+		}
 		delete(chanlist, strings.ToLower(channel.name))
 		log.Printf("Channel %s has no users, destroying\n", channel.name)
 	}
