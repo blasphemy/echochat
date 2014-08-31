@@ -62,6 +62,10 @@ Here's an explanation
   ],
   "Opers": { //List of opers. Takes a plaintext username/password combo.
     "default": "password"
-  }
+  },
+  "AutoJoin": [ //List of channels to join a user to on connect. 
+    "#default",
+    "#home"
+  ]
 }
 ```
