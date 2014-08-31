@@ -56,6 +56,7 @@ var (
 		Opers:             map[string]string{"default": "password"},
 		Privacy:           false,
 		SystemUserName:    "system",
+		AutoJoin:          []string{"#default"},
 	}
 	log = &Elog{}
 )

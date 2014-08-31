@@ -234,6 +234,9 @@ func (user *User) UserRegistrationFinished() {
 	//TODO fire RPL_MYINFO when we actually have enough stuff to do it
 	user.FireNumeric(RPL_ISUPPORT, isupport)
 	user.LusersHandler([]string{})
+	for _, k := range config.AutoJoin {
+		user.JoinHandler([]string{"JOIN", k})
+	}
 }
 
 func (user *User) UserHostLookup() {

@@ -29,6 +29,7 @@ type configuration struct {
 	Opers             map[string]string
 	Privacy           bool
 	SystemUserName    string
+	AutoJoin          []string
 }
 
 func SetupConfig() {
