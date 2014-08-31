@@ -47,7 +47,8 @@ Here's an explanation
   "Cloaking": false, // Cloak hostnames
   "Salt": "default", // Salt, used for cloaking hostnames, and possibly any other cryptographic operations in the ircd.
   "Privacy": true, //Don't log things like messages, could be considered a violation of privacy.
-  "OpersKickable" : false, //Are you able to kick an OPER from a channel?
+  "OpersKickable", : false, //Are you able to kick an OPER from a channel?
+  "SystemJoinChannels": true, //Joins the "system" user to all channels.
   "ListenIPs": [ // List of IPs to listen on
     "0.0.0.0"
   ],
