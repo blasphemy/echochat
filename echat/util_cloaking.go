@@ -32,9 +32,9 @@ func CloakHost(text string) string {
 
 func CloakString(text string, salt string) string {
 	var r string
-	r = Sha1String(strcat(text, salt))
+	r = Sha1String(text + salt)
 	for len(r) < len(text) {
-		r = strcat(r, Sha1String(r))
+		r = r + Sha1String(r)
 	}
 	side := true
 	for len(r) > len(text) {

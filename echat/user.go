@@ -90,7 +90,7 @@ func (user *User) Quit(reason string) {
 }
 
 func (user *User) FireNumeric(numeric int, args ...interface{}) {
-	msg := strcat(fmt.Sprintf(":%s %.3d %s ", config.ServerName, numeric, user.nick), fmt.Sprintf(NUM[numeric], args...))
+	msg := fmt.Sprintf(":%s %.3d %s ", config.ServerName, numeric, user.nick) + fmt.Sprintf(NUM[numeric], args...)
 	user.SendLine(msg)
 }
 
@@ -505,7 +505,7 @@ func (user *User) WhoHandler(args []string) {
 		k := GetChannelByName(args[1])
 		args[1] = k.name
 		for _, j := range k.userlist {
-			h := strcat("H", k.GetUserPrefix(j))
+			h := "H" + k.GetUserPrefix(j)
 			user.FireNumeric(RPL_WHOREPLY, k.name, j.ident, j.host, config.ServerName, j.nick, h, ":0", j.realname)
 		}
 	} else if whotype == 2 {

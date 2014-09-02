@@ -154,7 +154,7 @@ func (channel *Channel) SetUmode(user *User, changing *User, mode string) {
 		return
 	}
 	if !strings.Contains(channel.usermodes[user], mode) {
-		channel.usermodes[user] = strcat(channel.usermodes[user], mode)
+		channel.usermodes[user] = channel.usermodes[user] + mode
 		channel.SendLinef(":%s MODE %s +%s %s", changing.GetHostMask(), channel.name, mode, user.nick)
 	}
 }
@@ -174,7 +174,7 @@ func (channel *Channel) SetMode(mode string, changing *User) {
 		return
 	}
 	if !strings.Contains(channel.cmodes, mode) {
-		channel.cmodes = strcat(channel.cmodes, mode)
+		channel.cmodes = channel.cmodes + mode
 		channel.SendLinef(":%s MODE %s +%s", changing.GetHostMask(), channel.name, mode)
 	}
 }
