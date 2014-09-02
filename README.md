@@ -1,7 +1,8 @@
 echochat
 ========
 
-[![Build Status](https://travis-ci.org/blasphemy/echochat.svg?branch=master)](https://travis-ci.org/blasphemy/echochat)
+[![Build Status](https://travis-ci.org/blasphemy/echochat.svg?branch=master)](https://travis-ci.org/blasphemy/echochat)[![Project Stats](https://www.openhub.net/p/echochat-ircd/widgets/project_thin_badge.gif)](https://www.openhub.net/p/echochat-ircd)
+
 
 A simple ircd written in Go.
 
