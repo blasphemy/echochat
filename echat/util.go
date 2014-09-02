@@ -38,10 +38,11 @@ func GetChannelByName(name string) *Channel {
 func SendToMany(msg string, list []*User) {
 	users := make(map[*User]int)
 	for _, j := range list {
-		users[j] = 0
-	}
-	for j, _ := range users {
-		j.SendLine(msg)
+		if users[j] != 1 {
+			j.SendLine(msg)
+		} else {
+			users[j] = 1
+		}
 	}
 }
 
