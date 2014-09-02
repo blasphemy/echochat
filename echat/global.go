@@ -1,6 +1,8 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	software       = "echochat"
@@ -58,6 +60,7 @@ var (
 		SystemUserName:     "system",
 		AutoJoin:           []string{"#default"},
 		SystemJoinChannels: false,
+		Logfile:            "echochat.log",
 	}
 	log = &Elog{}
 )

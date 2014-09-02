@@ -3,24 +3,16 @@ package main
 import oldlog "log"
 import "strings"
 import "fmt"
+import "io/ioutil"
 
 type Elog struct {
-	//fucking nothing
+	//nothing
 }
 
 func (elog *Elog) Printf(msg string, args ...interface{}) {
 	oldlog.Printf(msg, args...)
+	WriteToLogFile(msg, args...)
 	SendLineToLogChannels(fmt.Sprintf(msg, args...))
-}
-
-func (elog *Elog) Print(args ...interface{}) {
-	oldlog.Print(args...)
-	SendLineToLogChannels(fmt.Sprint(args...))
-}
-
-func (elog *Elog) Println(args ...interface{}) {
-	oldlog.Println(args...)
-	SendLineToLogChannels(fmt.Sprint(args...))
 }
 
 func SendLineToLogChannels(msg string) {
@@ -29,5 +21,14 @@ func SendLineToLogChannels(msg string) {
 		sender := []string{"PRIVMSG", k}
 		sender = append(sender, msg2...)
 		SystemUser.PrivmsgHandler(sender)
+	}
+}
+
+func WriteToLogFile(msg string, args ...interface{}) {
+	if config.Logfile != "" {
+		err := ioutil.WriteFile(config.Logfile, []byte(fmt.Sprintf(msg, args...)), 0644)
+		if err != nil {
+			oldlog.Printf("Error writing to Logfile %s, disabling file logging", config.Logfile)
+		}
 	}
 }

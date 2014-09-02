@@ -108,7 +108,7 @@ func NewUser() *User {
 func (user *User) SetConn(conn net.Conn) {
 	user.connection = conn
 	SetUserIPInfo(user)
-	log.Println("New connection from", user.realip)
+	log.Printf("New connection from " + user.realip)
 	user.realhost = user.realip
 	if !config.Cloaking {
 		user.host = user.realip
@@ -158,7 +158,7 @@ func (user *User) HandleRequests() {
 		}
 		line, err := b.ReadString('\n')
 		if err != nil {
-			log.Println("Error reading:", err.Error())
+			log.Printf("Error reading: " + err.Error())
 			user.dead = true
 			user.Quit("Error")
 			return

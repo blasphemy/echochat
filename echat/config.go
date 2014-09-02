@@ -31,18 +31,19 @@ type configuration struct {
 	SystemUserName     string
 	SystemJoinChannels bool
 	AutoJoin           []string
+	Logfile            string
 }
 
 func SetupConfig() {
 	confile, err := ioutil.ReadFile(conf_file_name)
 	if err != nil {
-		log.Print("Error reading config file: " + err.Error())
+		log.Printf("Error reading config file: " + err.Error())
 		SetupConfigDefault()
 		os.Exit(1)
 	} else {
 		err := json.Unmarshal(confile, &config)
 		if err != nil {
-			log.Print("Error parsing config file: " + err.Error())
+			log.Printf("Error parsing config file: " + err.Error())
 			os.Exit(1)
 		}
 		if config.SystemUserName == "" {
@@ -67,12 +68,12 @@ func SetupConfig() {
 			config.DefaultQuitReason = DefaultConf.DefaultQuitReason
 		}
 		if config.PingTime < 5 || config.PingTime > 500 {
-			log.Print("You have a ridiculous ping time, setting it to the default of ", DefaultConf.PingTime*time.Second)
+			log.Printf("You have a ridiculous ping time, setting it to the default of %s", DefaultConf.PingTime*time.Second)
 			config.PingTime = DefaultConf.PingTime
 		}
 		if config.PingCheckTime > config.PingTime || config.PingCheckTime < 2 {
 			newtime := config.PingTime / 2
-			log.Print("Your ping check time does not make senese, setting it to ", newtime*time.Second)
+			log.Printf("Your ping check time does not make senese, setting it to " + string(newtime*time.Second))
 			config.PingCheckTime = newtime
 		}
 		if config.StatTime < 1 {
@@ -90,17 +91,17 @@ func SetupConfig() {
 }
 
 func SetupConfigDefault() {
-	log.Print("Creating default config file")
+	log.Printf("Creating default config file")
 	k, err := json.MarshalIndent(DefaultConf, "", "\t")
 	if err != nil {
-		log.Print(err.Error())
+		log.Printf(err.Error())
 		os.Exit(1)
 	}
 	err = ioutil.WriteFile(conf_file_name, k, 0644)
 	if err != nil {
-		log.Print("Error writing config file: " + err.Error())
+		log.Printf("Error writing config file: " + err.Error())
 		os.Exit(1)
 	}
-	log.Print("Config file created at: " + conf_file_name)
-	log.Print("It is highly recommended you edit this before proceeding...")
+	log.Printf("Config file created at: " + conf_file_name)
+	log.Printf("It is highly recommended you edit this before proceeding...")
 }

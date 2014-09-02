@@ -19,7 +19,7 @@ func main() {
 		for _, LISTENING_PORT := range config.ListenPorts {
 			l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", LISTENING_IP, LISTENING_PORT))
 			if err != nil {
-				log.Println("Error listening:", err.Error())
+				log.Printf("Error listening: " + err.Error())
 				os.Exit(1)
 			} else {
 				listeners = append(listeners, l)
@@ -41,7 +41,7 @@ func listenerthing(l net.Listener) {
 	for {
 		conn, err := l.Accept()
 		if err != nil {
-			log.Println("Error accepting: ", err.Error())
+			log.Printf("Error accepting: " + err.Error())
 		} else {
 			user := NewUser()
 			user.SetConn(conn)
