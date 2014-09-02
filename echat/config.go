@@ -87,6 +87,15 @@ func SetupConfig() {
 				SystemUser.JoinHandler([]string{"JOIN", k.name})
 			}
 		}
+		if config.Logfile != "" {
+			f, err := os.Create(config.Logfile)
+			if err != nil {
+				config.Logfile = ""
+			} else {
+				LoggingFile = f
+				defer LoggingFile.Close()
+			}
+		}
 	}
 }
 

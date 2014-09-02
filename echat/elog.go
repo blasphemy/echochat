@@ -3,7 +3,6 @@ package main
 import oldlog "log"
 import "strings"
 import "fmt"
-import "io/ioutil"
 
 type Elog struct {
 	//nothing
@@ -26,9 +25,11 @@ func SendLineToLogChannels(msg string) {
 
 func WriteToLogFile(msg string, args ...interface{}) {
 	if config.Logfile != "" {
-		err := ioutil.WriteFile(config.Logfile, []byte(fmt.Sprintf(msg, args...)), 0644)
+		_, err := LoggingFile.WriteString(fmt.Sprintf(msg+"\n", args...))
 		if err != nil {
-			oldlog.Printf("Error writing to Logfile %s, disabling file logging", config.Logfile)
+			config.Logfile = ""
+			log.Printf("ERROR: %s", err.Error())
+			log.Printf("Error writing to Logfile %s, disabling file logging", config.Logfile)
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"time"
 )
 
@@ -62,5 +63,6 @@ var (
 		SystemJoinChannels: false,
 		Logfile:            "echochat.log",
 	}
-	log = &Elog{}
+	log         = &Elog{}
+	LoggingFile *os.File
 )
