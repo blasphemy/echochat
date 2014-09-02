@@ -88,13 +88,16 @@ func SetupConfig() {
 			}
 		}
 		if config.Logfile != "" {
-			f, err := os.Create(config.Logfile)
+			f, err := os.OpenFile(config.Logfile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 			if err != nil {
+				k := config.Logfile
 				config.Logfile = ""
+				log.Printf("Error opening log file %s, disabling file logging", k)
 			} else {
 				LoggingFile = f
-				defer LoggingFile.Close()
 			}
+		} else {
+			log.Printf("No log file specified, disabling file logging")
 		}
 	}
 }

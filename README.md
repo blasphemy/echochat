@@ -49,6 +49,7 @@ Here's an explanation
   "Privacy": true, //Don't log things like messages, could be considered a violation of privacy.
   "OpersKickable", : false, //Are you able to kick an OPER from a channel?
   "SystemJoinChannels": true, //Joins the "system" user to all channels.
+  "Logfile": "echochat.log", //File to write logs to
   "ListenIPs": [ // List of IPs to listen on
     "0.0.0.0"
   ],
