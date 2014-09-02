@@ -62,8 +62,7 @@ func ValidChanName(name string) bool {
 //validity does not depend on leading ":", I don't care that much
 func FormatMessageArgs(args []string) string {
 	msg := strings.Join(args[2:], " ")
-	msg = strings.TrimPrefix(msg, ":")
-	return msg
+	return strings.TrimPrefix(msg, ":")
 }
 
 func NickHasBadChars(nick string) bool {

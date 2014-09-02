@@ -81,6 +81,11 @@ func SetupConfig() {
 		SystemUser.nick = config.SystemUserName
 		SystemUser.host = config.ServerName
 		SystemUser.realhost = config.ServerName
+		if config.SystemJoinChannels {
+			for _, k := range chanlist {
+				SystemUser.JoinHandler([]string{"JOIN", k.name})
+			}
+		}
 	}
 }
 
