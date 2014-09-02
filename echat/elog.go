@@ -24,7 +24,7 @@ func SendLineToLogChannels(msg string) {
 }
 
 func WriteToLogFile(msg string, args ...interface{}) {
-	if config.Logfile != "" {
+	if config.Logfile != "" && LoggingFile != nil {
 		_, err := LoggingFile.WriteString(fmt.Sprintf(msg+"\n", args...))
 		if err != nil {
 			config.Logfile = ""
