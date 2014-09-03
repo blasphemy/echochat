@@ -292,13 +292,16 @@ func (user *User) JoinHandler(args []string) {
 	}
 	if channel.HasMode("A") && !user.oper {
 		//TODO definitely fire numeric for this
+		log.Printf("User %s tried to join %s while +A was set.", user.nick, channel.name)
 		return
 	}
 	if channel.HasUser(user) {
+		log.Printf("User %s tried to join %s while already joined.", user.nick, channel.name)
 		return //should this silently fail?
 	}
 	if channel.IsUserBanned(user) && !user.oper {
 		user.FireNumeric(RPL_BANNEDFROMCHAN, channel.name)
+		log.Printf("User %s tried to join %s while banned.", user.nick, channel.name)
 		return
 	}
 	channel.JoinUser(user)
