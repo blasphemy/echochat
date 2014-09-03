@@ -228,3 +228,13 @@ func (channel *Channel) SetBan(m string, user *User) {
 func (channel *Channel) UnsetBan(m string, user *User) {
 
 }
+
+func (channel *Channel) IsUserBanned(user *User) bool {
+	hm := user.GetHostMask()
+	for _, k := range channel.banlist {
+		if WildcardMatch(hm, k.mask) {
+			return true
+		}
+	}
+	return false
+}
