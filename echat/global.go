@@ -13,7 +13,7 @@ const (
 )
 
 var (
-  incomplete = true
+	incomplete        = true
 	valid_chan_prefix = []string{"#", "&"}
 	global_bad_chars  = []string{":", "!", "@", "*", "(", ")", "<", ">", ",", "~", "/", "\\"}
 	config            *configuration

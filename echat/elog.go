@@ -16,10 +16,10 @@ func (elog *Elog) Printf(msg string, args ...interface{}) {
 }
 
 func SendLineToLogChannels(msg string) {
-  if incomplete {
-    return
-  }
-  msg2 := strings.Split(msg, " ")
+	if incomplete {
+		return
+	}
+	msg2 := strings.Split(msg, " ")
 	for _, k := range config.LogChannels {
 		sender := []string{"PRIVMSG", k}
 		sender = append(sender, msg2...)
