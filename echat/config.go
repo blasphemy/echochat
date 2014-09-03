@@ -82,11 +82,14 @@ func SetupConfig() {
 		SystemUser.nick = config.SystemUserName
 		SystemUser.host = config.ServerName
 		SystemUser.realhost = config.ServerName
-		if config.SystemJoinChannels {
-			for _, k := range chanlist {
-				SystemUser.JoinHandler([]string{"JOIN", k.name})
-			}
-		}
+		//TODO refactor this.
+		/*
+		    if config.SystemJoinChannels {
+					for _, k := range chanlist {
+						SystemUser.JoinHandler([]string{"JOIN", k.name})
+					}
+		    }
+		*/
 		if config.Logfile != "" {
 			f, err := os.OpenFile(config.Logfile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 			if err != nil {
