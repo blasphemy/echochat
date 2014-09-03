@@ -216,7 +216,7 @@ func (channel *Channel) CheckYourPrivlege(user *User) bool {
 }
 
 func (channel *Channel) SetBan(m string, user *User) {
-	if CheckIfBanExists(channel, m) {
+	if GetBanByMask(channel, m) != nil {
 		return
 	}
 	hm := user.GetHostMask()
@@ -226,7 +226,11 @@ func (channel *Channel) SetBan(m string, user *User) {
 }
 
 func (channel *Channel) UnsetBan(m string, user *User) {
-
+	ban := GetBanByMask(channel, m)
+	if ban != nil {
+		delete(channel.banlist, ban.id)
+		channel.SendLinef(":%s MODE %s -b %s", user.GetHostMask(), channel.name, ban.mask)
+	}
 }
 
 func (channel *Channel) IsUserBanned(user *User) bool {
