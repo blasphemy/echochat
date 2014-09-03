@@ -16,7 +16,10 @@ func (elog *Elog) Printf(msg string, args ...interface{}) {
 }
 
 func SendLineToLogChannels(msg string) {
-	msg2 := strings.Split(msg, " ")
+  if incomplete {
+    return
+  }
+  msg2 := strings.Split(msg, " ")
 	for _, k := range config.LogChannels {
 		sender := []string{"PRIVMSG", k}
 		sender = append(sender, msg2...)
@@ -25,6 +28,9 @@ func SendLineToLogChannels(msg string) {
 }
 
 func WriteToLogFile(msg string, args ...interface{}) {
+	if config == nil {
+		return
+	}
 	if config.Logfile != "" && LoggingFile != nil {
 		logstr := fmt.Sprintf("%s %s\n", time.Now().Format(time.RFC1123), fmt.Sprintf(msg, args...))
 		_, err := LoggingFile.WriteString(logstr)

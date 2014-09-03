@@ -99,6 +99,7 @@ func SetupConfig() {
 		} else {
 			log.Printf("No log file specified, disabling file logging")
 		}
+    incomplete = false
 	}
 }
 

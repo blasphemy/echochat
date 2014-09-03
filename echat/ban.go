@@ -25,3 +25,12 @@ func NewBan(bmask string, bwhoset string) *Ban {
 		id:     bid,
 	}
 }
+
+func CheckIfBanExists(channel *Channel, b string) bool {
+	for _, k := range channel.banlist {
+		if k.mask == b {
+			return true
+		}
+	}
+	return false
+}
