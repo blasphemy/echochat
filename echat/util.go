@@ -109,9 +109,16 @@ func WildcardMatch(text string, pattern string) bool {
 	return true
 }
 
-func SetupSytemUser() {
+func SetupSystemUser() {
 	for _, k := range config.LogChannels {
 		SystemUser.JoinHandler([]string{"JOIN", k})
 		SystemUser.ModeHandler([]string{"MODE", k, "+A"})
+	}
+	if !config.SystemJoinChannels {
+		for _, k := range SystemUser.chanlist {
+			if !k.IsLogChan() {
+				SystemUser.PartHandler([]string{"PART", k.name})
+			}
+		}
 	}
 }

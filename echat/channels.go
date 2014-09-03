@@ -256,12 +256,12 @@ func (channel *Channel) FireBanlist(user *User) {
 	user.FireNumeric(RPL_ENDOFBANLIST, channel.name)
 }
 
-func (channel *Channel) IsLogChan(user *User) bool {
-  me := strings.ToLower(channel.name)
-  for _, k := range config.LogChannels {
-    if me == strings.ToLower(k) {
-      return true
-    }
-  }
-  return false
+func (channel *Channel) IsLogChan() bool {
+	me := strings.ToLower(channel.name)
+	for _, k := range config.LogChannels {
+		if me == strings.ToLower(k) {
+			return true
+		}
+	}
+	return false
 }
