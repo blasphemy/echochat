@@ -297,10 +297,10 @@ func (user *User) JoinHandler(args []string) {
 	if channel.HasUser(user) {
 		return //should this silently fail?
 	}
-  if channel.IsUserBanned(user) {
-    //TODO fix this
-    return
-  }
+	if channel.IsUserBanned(user) && !user.oper {
+		user.FireNumeric(RPL_BANNEDFROMCHAN, channel.name)
+		return
+	}
 	channel.JoinUser(user)
 	user.chanlist[channel.name] = channel
 	log.Printf("User %s joined %s", user.nick, channel.name)

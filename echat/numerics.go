@@ -51,6 +51,7 @@ func SetupNumerics() {
 	NUM[RPL_WHOISOPERATOR] = "%s :is an IRC operator"
 	NUM[RPL_WHOISHOST] = "%s :is connecting from *@%s %s"
 	NUM[RPL_ENDOFWHOIS] = "%s :End of WHOIS list"
+	NUM[RPL_BANNEDFROMCHAN] = "%s :You're banned"
 }
 
 const (
@@ -99,4 +100,5 @@ const (
 	RPL_WHOISOPERATOR     = 313
 	RPL_WHOISHOST         = 378
 	RPL_ENDOFWHOIS        = 318
+	RPL_BANNEDFROMCHAN    = 474
 )
