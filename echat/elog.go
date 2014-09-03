@@ -16,7 +16,7 @@ func (elog *Elog) Printf(msg string, args ...interface{}) {
 }
 
 func SendLineToLogChannels(msg string) {
-	if incomplete {
+	if StartupIncomplete {
 		return
 	}
 	msg2 := strings.Split(msg, " ")

@@ -13,7 +13,7 @@ const (
 )
 
 var (
-	incomplete        = true
+	StartupIncomplete = true //used to determine if the ircd is up and running yet
 	valid_chan_prefix = []string{"#", "&"}
 	global_bad_chars  = []string{":", "!", "@", "*", "(", ")", "<", ">", ",", "~", "/", "\\"}
 	config            *configuration
