@@ -350,11 +350,16 @@ func (user *User) PrivmsgHandler(args []string) {
 		//presumably a channel
 		j := GetChannelByName(args[1])
 		if j != nil {
-			if j.HasMode("n") && !user.IsIn(j) {
+			if j.HasMode("n") && !user.IsIn(j) && !user.oper {
 				user.FireNumeric(ERR_CANNOTSENDTOCHAN, j.name)
 				return
 			}
-			if j.HasMode("m") && j.GetUserPriv(user) < 10 {
+			userpriv := j.GetUserPriv(user)
+			if j.HasMode("m") && userpriv < 10 && !user.oper {
+				user.FireNumeric(ERR_CANNOTSENDTOCHAN, j.name)
+				return
+			}
+			if j.IsUserBanned(user) && userpriv < 10 && !user.oper {
 				user.FireNumeric(ERR_CANNOTSENDTOCHAN, j.name)
 				return
 			}
