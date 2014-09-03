@@ -3,6 +3,7 @@ package main
 import oldlog "log"
 import "strings"
 import "fmt"
+import "time"
 
 type Elog struct {
 	//nothing
@@ -25,7 +26,8 @@ func SendLineToLogChannels(msg string) {
 
 func WriteToLogFile(msg string, args ...interface{}) {
 	if config.Logfile != "" && LoggingFile != nil {
-		_, err := LoggingFile.WriteString(fmt.Sprintf(msg+"\n", args...))
+		logstr := fmt.Sprintf("%s %s\n", time.Now().Format(time.RFC1123), fmt.Sprintf(msg, args...))
+		_, err := LoggingFile.WriteString(logstr)
 		if err != nil {
 			config.Logfile = ""
 			log.Printf("ERROR: %s", err.Error())
