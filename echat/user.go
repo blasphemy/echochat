@@ -463,6 +463,21 @@ func (user *User) ModeHandler(args []string) {
 						break
 					}
 					break
+				case 'b':
+					if len(targs)-1 < mcounter {
+						user.FireNumeric(ERR_NEEDMOREPARAMS, "MODE")
+						break
+					}
+					if mode == 2 {
+						channel.SetBan(targs[mcounter], user)
+						mcounter++
+						break
+					}
+					if mode == 1 {
+						channel.UnsetBan(targs[mcounter], user)
+						mcounter++
+						break
+					}
 				case 't', 'n', 'm', 'A':
 					if mode == 2 {
 						channel.SetMode(string(k), user)

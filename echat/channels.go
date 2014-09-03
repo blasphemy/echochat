@@ -214,3 +214,11 @@ func (channel *Channel) CheckYourPrivlege(user *User) bool {
 		return false
 	}
 }
+
+func (channel *Channel) SetBan(m string, user *User) {
+
+}
+
+func (channel *Channel) UnsetBan(m string, user *User) {
+
+}
