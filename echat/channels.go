@@ -14,6 +14,7 @@ type Channel struct {
 	epoch     time.Time
 	userlist  map[int]*User
 	usermodes map[*User]string
+	banlist   map[int]*Ban
 	cmodes    string
 	topic     string
 	topichost string
@@ -31,6 +32,7 @@ func NewChannel(newname string) *Channel {
 	chann := &Channel{name: newname, epoch: time.Now()}
 	chann.userlist = make(map[int]*User)
 	chann.usermodes = make(map[*User]string)
+	chann.banlist = make(map[int]*Ban)
 	chanlist[strings.ToLower(chann.name)] = chann
 	chann.cmodes = config.DefaultCmode
 	log.Printf("Channel %s created", chann.name)
