@@ -216,6 +216,9 @@ func (channel *Channel) CheckYourPrivlege(user *User) bool {
 }
 
 func (channel *Channel) SetBan(m string, user *User) {
+	if channel.CheckYourPrivlege(user) {
+		return
+	}
 	if GetBanByMask(channel, m) != nil {
 		return
 	}
@@ -226,6 +229,9 @@ func (channel *Channel) SetBan(m string, user *User) {
 }
 
 func (channel *Channel) UnsetBan(m string, user *User) {
+	if channel.CheckYourPrivlege(user) {
+		return
+	}
 	ban := GetBanByMask(channel, m)
 	if ban != nil {
 		delete(channel.banlist, ban.id)
@@ -241,4 +247,11 @@ func (channel *Channel) IsUserBanned(user *User) bool {
 		}
 	}
 	return false
+}
+
+func (channel *Channel) FireBanlist(user *User) {
+	for _, b := range channel.banlist {
+		user.FireNumeric(RPL_BANLIST, channel.name, b.mask, b.whoset, b.ts.Unix())
+	}
+	user.FireNumeric(RPL_ENDOFBANLIST, channel.name)
 }

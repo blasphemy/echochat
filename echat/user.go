@@ -477,7 +477,7 @@ func (user *User) ModeHandler(args []string) {
 					break
 				case 'b':
 					if len(targs)-1 < mcounter {
-						user.FireNumeric(ERR_NEEDMOREPARAMS, "MODE")
+						channel.FireBanlist(user)
 						break
 					}
 					if mode == 2 {
