@@ -25,6 +25,8 @@ go build
 
 That's it. You should also be able to do it the normal way using ```go get```. To run it, just do ```./echat```, or ```echat.exe``` on windows. Configuration explained below.
 
+If you'd like to use ```gccgo```, there is a *very* simple build script that might work as well. Just run ```build.sh```.
+
 Configuration
 =============
 compile and run echochat to make a sample config file. It will be saved as echochat.json.
