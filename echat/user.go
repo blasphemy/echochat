@@ -213,12 +213,7 @@ func (user *User) UserHandler(args []string) {
 	}
 	user.ident = args[1]
 	args[4] = strings.TrimPrefix(args[4], ":")
-	var buffer bytes.Buffer
-	for i := 4; i < len(args); i++ {
-		buffer.WriteString(args[i])
-		buffer.WriteString(" ")
-	}
-	user.realname = strings.TrimSpace(buffer.String())
+	user.realname = strings.TrimSpace(strings.Join(args[4:], " "))
 	user.userset = true
 	if !user.registered && user.nickset {
 		user.UserRegistrationFinished()
