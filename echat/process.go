@@ -68,6 +68,9 @@ func ProcessLine(user *User, msg string) {
 	case "rehash":
 		user.FireIfRegistered(user.RehashHandler, args)
 		break
+	case "shutdown":
+		user.FireIfRegistered(user.ShutdownHandler, args)
+		break
 	case "kill":
 		user.FireIfRegistered(user.KillHandler, args)
 		break

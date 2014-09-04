@@ -6,6 +6,7 @@ import (
 	"fmt"
 	debuglog "log"
 	"net"
+	"os"
 	"strings"
 	"time"
 )
@@ -622,6 +623,18 @@ func (user *User) RehashHandler(args []string) {
 		SetupConfig()
 		user.FireNumeric(RPL_REHASHING, conf_file_name)
 		log.Printf("OPER %s requested rehash...", user.nick)
+	} else {
+		user.CommandNotFound(args)
+	}
+}
+
+func (user *User) ShutdownHandler(args []string) {
+	if user.oper {
+		log.Printf("Shutdown requested by OPER %s", user.nick)
+		for _, k := range userlist {
+			k.Quit(fmt.Sprintf("Server is being shutdown by %s", user.nick))
+		}
+		os.Exit(0)
 	} else {
 		user.CommandNotFound(args)
 	}
