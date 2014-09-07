@@ -8,6 +8,7 @@ import (
 )
 
 type configuration struct {
+	ServerID           string
 	ServerName         string
 	ServerDescription  string
 	DefaultKickReason  string

@@ -63,6 +63,7 @@ var (
 		AutoJoin:           []string{"#default"},
 		SystemJoinChannels: false,
 		Logfile:            "echochat.log",
+		ServerID:           "A",
 	}
 	log         = &Elog{}
 	LoggingFile *os.File
