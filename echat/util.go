@@ -40,7 +40,7 @@ func SendToMany(msg string, list []*User) {
 	for _, j := range list {
 		users[j] = 0
 	}
-	for j, _ := range users {
+	for j := range users {
 		j.SendLine(msg)
 	}
 }
