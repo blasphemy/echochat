@@ -124,6 +124,10 @@ func (user *User) SetConn(conn net.Conn) {
 			user.ip = k
 		}
 	}
+	if config.MaxUsers > 0 && len(userlist) > config.MaxUsers {
+		user.Quit(fmt.Sprintf("Max amount of connections reached (%d)", config.MaxUsers))
+		return
+	}
 	if config.ResolveHosts {
 		go user.UserHostLookup()
 	}

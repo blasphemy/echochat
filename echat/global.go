@@ -64,6 +64,7 @@ var (
 		SystemJoinChannels: false,
 		Logfile:            "echochat.log",
 		ServerID:           "A",
+		MaxUsers:           0,
 	}
 	log         = &Elog{}
 	LoggingFile *os.File

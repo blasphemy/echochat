@@ -33,6 +33,7 @@ type configuration struct {
 	SystemJoinChannels bool
 	AutoJoin           []string
 	Logfile            string
+	MaxUsers           int
 }
 
 func SetupConfig() {
