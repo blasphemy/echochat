@@ -11,6 +11,11 @@ import (
 func main() {
 	SetupNumerics()
 	SetupConfig()
+	SetupListeners()
+	periodicStatusUpdate()
+}
+
+func SetupListeners() {
 	var listeners []net.Listener
 	// Listen for incoming connections.
 	for _, LISTENING_IP := range config.ListenIPs {
@@ -33,6 +38,7 @@ func main() {
 		go listenerthing(l)
 	}
 	periodicStatusUpdate()
+
 }
 
 func listenerthing(l net.Listener) {

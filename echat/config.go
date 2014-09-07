@@ -34,6 +34,7 @@ type configuration struct {
 	AutoJoin           []string
 	Logfile            string
 	MaxUsers           int
+	LinkPassword       string
 }
 
 func SetupConfig() {

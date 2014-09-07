@@ -65,6 +65,7 @@ var (
 		Logfile:            "echochat.log",
 		ServerID:           "A",
 		MaxUsers:           0,
+		LinkPassword:       "secure",
 	}
 	log         = &Elog{}
 	LoggingFile *os.File
