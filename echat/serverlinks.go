@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"net"
+	"strings"
 )
 
 type ServerLink struct {
 	connection net.Conn
+	users      map[string]string
 }
 
 var (
@@ -26,11 +29,11 @@ func SetupLinkListeners() {
 		defer l.Close()
 	}
 	for _, l := range listeners {
-		StartHandlingLinkRequests(l)
+		StartHandlingLinkConnections(l)
 	}
 }
 
-func StartHandlingLinkRequests(l net.Listener) {
+func StartHandlingLinkConnections(l net.Listener) {
 	for {
 		conn, err := l.Accept()
 		if err != nil {
@@ -38,6 +41,17 @@ func StartHandlingLinkRequests(l net.Listener) {
 		} else {
 			link := &ServerLink{connection: conn}
 			links = append(links, link)
+			go link.HandleRequests()
 		}
+	}
+}
+
+func (link *ServerLink) HandleRequests() {
+	b := bufio.NewReader(link.connection)
+	pw, _ := b.ReadString('n')
+	if strings.Split(pw, " ")[0] != "PW" {
+		log.Printf("Attempted server connection has incorrect password, disconnectiong")
+		link.connection.Close()
+		return
 	}
 }

@@ -34,6 +34,7 @@ type User struct {
 	oper       bool
 	system     bool
 	ConnType   string
+	remote     bool
 }
 
 func (user *User) PingChecker() {

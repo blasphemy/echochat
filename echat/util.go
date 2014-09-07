@@ -4,6 +4,9 @@ import (
 	"strings"
 )
 
+/*
+	Add "remote" property to users, so that we can return a temporary user
+*/
 func GetUserByNick(nick string) *User {
 	nick = strings.ToLower(nick)
 	if nick == strings.ToLower(SystemUser.nick) {
@@ -12,6 +15,13 @@ func GetUserByNick(nick string) *User {
 	for _, k := range userlist {
 		if strings.ToLower(k.nick) == nick {
 			return k
+		}
+	}
+	for _, j := range links {
+		for _, k := range j.users {
+			if strings.ToLower(k) == nick {
+				//return a temporary user
+			}
 		}
 	}
 	return nil
