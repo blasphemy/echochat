@@ -35,6 +35,7 @@ type configuration struct {
 	Logfile            string
 	MaxUsers           int
 	LinkPassword       string
+	LinkAddresses      []string
 }
 
 func SetupConfig() {
