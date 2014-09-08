@@ -50,14 +50,14 @@ func (link *ServerLink) Registration() {
 	link.name = strings.Split(l, " ")[0]
 	link.id = strings.Split(l, " ")[1]
 	links[link.id] = link
-	link.connection.Write([]byte(fmt.Sprintf("%s %s", config.ServerName, config.ServerID)))
+	link.SendLine(fmt.Sprintf("%s %s", config.ServerName, config.ServerID))
 	l, _ = b.ReadString('\n')
 	if strings.Split(l, " ")[0] != "PW" {
 		log.Printf("Attempted server connection has incorrect password, disconnectiong")
 		link.connection.Close()
 		return
 	}
-	link.connection.Write([]byte("OK"))
+	link.SendLine("OK")
 	link.HandleRequests()
 }
 
@@ -91,19 +91,26 @@ func (link *ServerLink) SendToUserHandler(args []string) {
 
 //TODO error checking
 func FormOutgoingLink(address string) {
+	log.Printf("Forming outbound link to %s", address)
 	conn, _ := net.Dial("tcp", address)
 	link := &ServerLink{connection: conn}
 	b := bufio.NewReader(conn)
-	conn.Write([]byte(fmt.Sprintf("%s %s", config.ServerName, config.ServerID)))
+	link.SendLine(fmt.Sprintf("%s %s", config.ServerName, config.ServerID))
 	l, _ := b.ReadString('\n')
 	link.name = strings.Split(l, " ")[0]
 	link.id = strings.Split(l, " ")[1]
-	conn.Write([]byte(fmt.Sprintf("PW %s", config.LinkPassword)))
+	link.SendLine(fmt.Sprint("PW %s", config.LinkPassword))
 	l, _ = b.ReadString('\n')
 	if l == "OK" {
+		log.Printf("Server %s linked", link.name)
 		links[link.id] = link
 		link.HandleRequests()
 	} else {
+		log.Printf("Link to %s failed", address)
 		conn.Close()
 	}
+}
+
+func (link *ServerLink) SendLine(msg string) {
+	link.connection.Write([]byte(msg + "\n"))
 }
