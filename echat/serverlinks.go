@@ -91,6 +91,9 @@ func (link *ServerLink) route(msg string) {
 	case "USERS":
 		link.HandleUsersLine(msg)
 		break
+	case "SENDUSERS":
+		link.SendUsers()
+		break
 	default:
 		break
 	}
