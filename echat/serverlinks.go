@@ -9,6 +9,7 @@ import (
 type ServerLink struct {
 	connection net.Conn
 	users      map[string]string
+	name       string
 }
 
 var (
@@ -48,8 +49,10 @@ func StartHandlingLinkConnections(l net.Listener) {
 
 func (link *ServerLink) HandleRequests() {
 	b := bufio.NewReader(link.connection)
-	pw, _ := b.ReadString('n')
-	if strings.Split(pw, " ")[0] != "PW" {
+	l, _ := b.ReadString('\n')
+	link.name = l
+	l, _ = b.ReadString('\n')
+	if strings.Split(l, " ")[0] != "PW" {
 		log.Printf("Attempted server connection has incorrect password, disconnectiong")
 		link.connection.Close()
 		return
