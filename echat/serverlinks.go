@@ -159,6 +159,7 @@ func (user *RemoteUser) ToReal() *User {
 		realip:   user.Realip,
 		realhost: user.Realhost,
 		realname: user.Realname,
+		remote:   true,
 	}
 	return new
 }
