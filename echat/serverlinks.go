@@ -53,7 +53,7 @@ func (link *ServerLink) Registration() {
 	links[link.id] = link
 	link.SendLine(fmt.Sprintf("%s %s", config.ServerName, config.ServerID))
 	l, _ = b.ReadString('\n')
-	if strings.Split(l, " ")[0] != "PW" && strings.Split(l, " ")[1] != config.LinkPassword {
+	if strings.Split(l, " ")[0] != "PW" && strings.Split(l, " ")[1] != Sha1String(config.LinkPassword) {
 		log.Printf("Attempted server connection has incorrect password, disconnectiong")
 		link.SendLine("DIE")
 		link.connection.Close()
@@ -101,7 +101,7 @@ func FormOutgoingLink(address string) {
 	l, _ := b.ReadString('\n')
 	link.name = strings.Split(l, " ")[0]
 	link.id = strings.Split(l, " ")[1]
-	link.SendLine(fmt.Sprint("PW %s", config.LinkPassword))
+	link.SendLine(fmt.Sprint("PW %s", Sha1String(config.LinkPassword)))
 	l, _ = b.ReadString('\n')
 	if l == "OK" {
 		log.Printf("Server %s linked", link.name)
