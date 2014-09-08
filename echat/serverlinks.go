@@ -49,18 +49,25 @@ func StartHandlingLinkConnections(l net.Listener) {
 func (link *ServerLink) Registration() {
 	b := bufio.NewReader(link.connection)
 	l, _ := b.ReadString('\n')
-	link.name = strings.Split(l, " ")[0]
-	link.id = strings.Split(l, " ")[1]
-	links[link.id] = link
+	args := strings.Split(l, " ")
+	if len(args) < 2 {
+		link.connection.Close()
+		return
+	}
+	link.name = args[0]
+	link.id = args[1]
 	link.SendLine(fmt.Sprintf("%s %s", config.ServerName, config.ServerID))
 	l, _ = b.ReadString('\n')
-	if strings.Split(l, " ")[0] != "PW" && strings.Split(l, " ")[1] != Sha1String(config.LinkPassword) {
+	args = strings.Split(l, " ")
+	if args[0] != "PW" /* && args[1] != Sha1String(config.LinkPassword) */ {
 		log.Printf("Attempted server connection has incorrect password, disconnectiong")
 		link.SendLine("DIE")
 		link.connection.Close()
 		return
 	}
+	links[link.id] = link
 	link.SendLine("OK")
+	link.SendUsers()
 	link.HandleRequests()
 }
 
@@ -80,6 +87,9 @@ func (link *ServerLink) route(msg string) {
 	switch strings.ToLower(args[0]) {
 	case "SEND_TO_USER":
 		link.SendToUserHandler(args)
+		break
+	case "USERS":
+		link.HandleUsersLine(msg)
 		break
 	default:
 		break
@@ -107,6 +117,7 @@ func FormOutgoingLink(address string) {
 	if l == "OK" {
 		log.Printf("Server %s linked", link.name)
 		links[link.id] = link
+		link.SendUsers()
 		link.HandleRequests()
 	} else {
 		log.Printf("Link to %s failed", address)
