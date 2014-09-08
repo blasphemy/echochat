@@ -233,7 +233,7 @@ func (user *User) UserHandler(args []string) {
 
 func (user *User) UserRegistrationFinished() {
 	user.registered = true
-	log.Printf("User %d finished registration", user.id)
+	log.Printf("User %s finished registration", user.id)
 	user.FireNumeric(RPL_WELCOME, user.nick, user.ident, user.host)
 	user.FireNumeric(RPL_YOURHOST, config.ServerName, software, softwarev)
 	user.FireNumeric(RPL_CREATED, epoch)
