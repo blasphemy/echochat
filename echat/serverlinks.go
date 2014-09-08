@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"net"
 	"strings"
@@ -115,4 +116,31 @@ func FormOutgoingLink(address string) {
 
 func (link *ServerLink) SendLine(msg string) {
 	link.connection.Write([]byte(msg + "\n"))
+}
+
+func (link *ServerLink) SendUsers() {
+	lol := make(map[string]RemoteUser)
+	for _, k := range userlist {
+		lol[k.id] = RemoteUser{
+			Nick:     k.nick,
+			Id:       k.id,
+			Ip:       k.ip,
+			Realip:   k.realip,
+			Host:     k.host,
+			Realhost: k.realhost,
+			Realname: k.realname,
+		}
+	}
+	lol2, _ := json.Marshal(lol)
+	link.SendLine(fmt.Sprintf("USERS %s", string(lol2)))
+}
+
+type RemoteUser struct {
+	Nick     string
+	Id       string
+	Ip       string
+	Realip   string
+	Host     string
+	Realhost string
+	Realname string
 }

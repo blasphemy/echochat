@@ -15,7 +15,6 @@ func ProcessLine(user *User, msg string) {
 	user.nextcheck = time.Now().Add(config.PingTime * time.Second)
 	user.waiting = false
 	user.mutex.Unlock()
-
 	args := strings.Split(msg, " ")
 	checkme := strings.ToLower(args[0])
 	switch checkme {
