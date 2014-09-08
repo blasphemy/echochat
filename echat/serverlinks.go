@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"net"
 	"strings"
 )
@@ -49,6 +50,7 @@ func (link *ServerLink) Registration() {
 	link.name = strings.Split(l, " ")[0]
 	link.id = strings.Split(l, " ")[1]
 	links[link.id] = link
+	link.connection.Write([]byte(fmt.Sprintf("%s %s", config.ServerName, config.ServerID)))
 	l, _ = b.ReadString('\n')
 	if strings.Split(l, " ")[0] != "PW" {
 		log.Printf("Attempted server connection has incorrect password, disconnectiong")
@@ -84,4 +86,17 @@ func (link *ServerLink) route(msg string) {
 func (link *ServerLink) SendToUserHandler(args []string) {
 	user := userlist[args[1]]
 	user.SendLine(strings.Join(args[2:], " "))
+}
+
+func FormOutgoingLink(address string) {
+	conn, _ := net.Dial("tcp", address)
+	link := &ServerLink{connection: conn}
+	b := bufio.NewReader(conn)
+	conn.Write([]byte(fmt.Sprintf("%s %s", config.ServerName, config.ServerID)))
+	l, _ := b.ReadString('\n')
+	link.name = strings.Split(l, " ")[0]
+	link.id = strings.Split(l, " ")[1]
+	conn.Write([]byte(fmt.Sprintf("PW %s", config.LinkPassword)))
+	links[link.id] = link
+	link.HandleRequests()
 }
