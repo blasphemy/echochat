@@ -57,6 +57,7 @@ func (link *ServerLink) Registration() {
 		link.connection.Close()
 		return
 	}
+	link.connection.Write([]byte("OK"))
 	link.HandleRequests()
 }
 
@@ -88,6 +89,7 @@ func (link *ServerLink) SendToUserHandler(args []string) {
 	user.SendLine(strings.Join(args[2:], " "))
 }
 
+//TODO error checking
 func FormOutgoingLink(address string) {
 	conn, _ := net.Dial("tcp", address)
 	link := &ServerLink{connection: conn}
@@ -97,6 +99,11 @@ func FormOutgoingLink(address string) {
 	link.name = strings.Split(l, " ")[0]
 	link.id = strings.Split(l, " ")[1]
 	conn.Write([]byte(fmt.Sprintf("PW %s", config.LinkPassword)))
-	links[link.id] = link
-	link.HandleRequests()
+	l, _ = b.ReadString('\n')
+	if l == "OK" {
+		links[link.id] = link
+		link.HandleRequests()
+	} else {
+		conn.Close()
+	}
 }
