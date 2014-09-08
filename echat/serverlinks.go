@@ -38,12 +38,12 @@ func StartHandlingLinkConnections(l net.Listener) {
 			log.Printf("Error accepting link connection: " + err.Error())
 		} else {
 			link := &ServerLink{connection: conn}
-			go link.HandleRequests()
+			go link.Registration()
 		}
 	}
 }
 
-func (link *ServerLink) HandleRequests() {
+func (link *ServerLink) Registration() {
 	b := bufio.NewReader(link.connection)
 	l, _ := b.ReadString('\n')
 	link.name = strings.Split(l, " ")[0]
@@ -55,10 +55,16 @@ func (link *ServerLink) HandleRequests() {
 		link.connection.Close()
 		return
 	}
+	link.HandleRequests()
+}
+
+func (link *ServerLink) HandleRequests() {
 	//Relevant information has been exchanged (not really, but this could change)
+	b := bufio.NewReader(link.connection)
+
 	for {
 		//All the magic happens here
-		l, _ = b.ReadString('\n')
+		l, _ := b.ReadString('\n')
 		link.route(l)
 	}
 }
