@@ -20,7 +20,7 @@ func GetUserByNick(nick string) *User {
 	for _, j := range links {
 		for _, k := range j.users {
 			if strings.ToLower(k.Nick) == nick {
-				//return a temporary user
+				return k.ToReal()
 			}
 		}
 	}

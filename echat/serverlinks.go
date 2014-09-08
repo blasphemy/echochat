@@ -136,8 +136,8 @@ func (link *ServerLink) SendUsers() {
 }
 
 func (link *ServerLink) HandleUsersLine(line string) {
-  line = strings.TrimPrefix(line, "USERS ")
-  json.Unmarshal([]byte(line), link.users)
+	line = strings.TrimPrefix(line, "USERS ")
+	json.Unmarshal([]byte(line), link.users)
 }
 
 type RemoteUser struct {
@@ -151,5 +151,14 @@ type RemoteUser struct {
 }
 
 func (user *RemoteUser) ToReal() *User {
-  
+	new := &User{
+		nick:     user.Nick,
+		id:       user.Id,
+		ip:       user.Ip,
+		host:     user.Host,
+		realip:   user.Realip,
+		realhost: user.Realhost,
+		realname: user.Realname,
+	}
+	return new
 }
