@@ -12,7 +12,7 @@ import (
 type Channel struct {
 	name      string
 	epoch     time.Time
-	userlist  map[int]*User
+	userlist  map[string]*User
 	usermodes map[*User]string
 	banlist   map[int]*Ban
 	cmodes    string
@@ -30,7 +30,7 @@ func (channel *Channel) SetTopic(newtopic string, hostmask string) {
 
 func NewChannel(newname string) *Channel {
 	chann := &Channel{name: newname, epoch: time.Now()}
-	chann.userlist = make(map[int]*User)
+	chann.userlist = make(map[string]*User)
 	chann.usermodes = make(map[*User]string)
 	chann.banlist = make(map[int]*Ban)
 	chanlist[strings.ToLower(chann.name)] = chann

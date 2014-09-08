@@ -79,5 +79,5 @@ func (link *ServerLink) route(msg string) {
 //SEND_TO_USER USERID STUFF STUFF STUFF
 func (link *ServerLink) SendToUserHandler(args []string) {
 	user := userlist[args[1]]
-	user.SendLine(args[2:])
+	user.SendLine(strings.Join(args[2:], " "))
 }

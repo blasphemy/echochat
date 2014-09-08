@@ -19,7 +19,7 @@ type User struct {
 	nickset    bool
 	waiting    bool
 	connection net.Conn
-	id         int
+	id         string
 	realname   string
 	userset    bool
 	registered bool
@@ -98,7 +98,7 @@ func (user *User) FireNumeric(numeric int, args ...interface{}) {
 
 func NewUser() *User {
 	counter = counter + 1
-	user := &User{id: counter, nick: "*"}
+	user := &User{id: fmt.Sprintf("%s%d", config.ServerID, counter), nick: "*"}
 	user.chanlist = make(map[string]*Channel)
 	user.epoch = time.Now()
 	user.lastrcv = time.Now()

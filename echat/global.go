@@ -18,7 +18,7 @@ var (
 	global_bad_chars  = []string{":", "!", "@", "*", "(", ")", "<", ">", ",", "~", "/", "\\"}
 	config            *configuration
 	counter           = 1
-	userlist          = make(map[int]*User)
+	userlist          = make(map[string]*User)
 	chanlist          = make(map[string]*Channel)
 	maxUsers          int
 	maxRoutines       int
@@ -27,7 +27,6 @@ var (
 	SystemUser        = &User{
 		user:       "system",
 		ident:      "system",
-		id:         0,
 		realname:   "system user",
 		userset:    true,
 		registered: true,

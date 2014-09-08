@@ -86,6 +86,7 @@ func SetupConfig() {
 		SystemUser.nick = config.SystemUserName
 		SystemUser.host = config.ServerName
 		SystemUser.realhost = config.ServerName
+		SystemUser.id = config.ServerID + "0"
 		SetupSystemUser()
 		if config.Logfile != "" {
 			f, err := os.OpenFile(config.Logfile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
