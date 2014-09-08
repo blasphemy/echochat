@@ -16,16 +16,16 @@ type ServerLink struct {
 
 func SetupLinkListeners() {
 	var listeners []net.Listener
-	for _, LISTEN_STRING := range config.LinkAddresses {
+	log.Printf("test")
+	for _, LISTEN_STRING := range config.LinkAdds {
+		log.Printf("Attempting to listen for links at %s", LISTEN_STRING)
 		l, err := net.Listen("tcp", LISTEN_STRING)
 		if err != nil {
 			log.Printf("Error Listening on Linking API: " + err.Error())
 		} else {
 			listeners = append(listeners, l)
+			log.Printf("Listening at %s", LISTEN_STRING)
 		}
-	}
-	for _, l := range listeners {
-		defer l.Close()
 	}
 	for _, l := range listeners {
 		StartHandlingLinkConnections(l)
@@ -33,6 +33,7 @@ func SetupLinkListeners() {
 }
 
 func StartHandlingLinkConnections(l net.Listener) {
+	defer l.Close()
 	for {
 		conn, err := l.Accept()
 		if err != nil {
