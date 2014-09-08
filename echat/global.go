@@ -68,4 +68,5 @@ var (
 	}
 	log         = &Elog{}
 	LoggingFile *os.File
+	links       = make(map[string]*ServerLink)
 )

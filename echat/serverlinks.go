@@ -10,11 +10,8 @@ type ServerLink struct {
 	connection net.Conn
 	users      map[string]string
 	name       string
+	id         string
 }
-
-var (
-	links []*ServerLink
-)
 
 func SetupLinkListeners() {
 	var listeners []net.Listener
@@ -41,7 +38,6 @@ func StartHandlingLinkConnections(l net.Listener) {
 			log.Printf("Error accepting link connection: " + err.Error())
 		} else {
 			link := &ServerLink{connection: conn}
-			links = append(links, link)
 			go link.HandleRequests()
 		}
 	}
@@ -50,7 +46,9 @@ func StartHandlingLinkConnections(l net.Listener) {
 func (link *ServerLink) HandleRequests() {
 	b := bufio.NewReader(link.connection)
 	l, _ := b.ReadString('\n')
-	link.name = l
+	link.name = strings.Split(l, " ")[0]
+	link.id = strings.Split(l, " ")[1]
+	links[link.id] = link
 	l, _ = b.ReadString('\n')
 	if strings.Split(l, " ")[0] != "PW" {
 		log.Printf("Attempted server connection has incorrect password, disconnectiong")
