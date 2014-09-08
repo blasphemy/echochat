@@ -53,8 +53,9 @@ func (link *ServerLink) Registration() {
 	links[link.id] = link
 	link.SendLine(fmt.Sprintf("%s %s", config.ServerName, config.ServerID))
 	l, _ = b.ReadString('\n')
-	if strings.Split(l, " ")[0] != "PW" {
+	if strings.Split(l, " ")[0] != "PW" && strings.Split(l, " ")[1] != config.LinkPassword {
 		log.Printf("Attempted server connection has incorrect password, disconnectiong")
+		link.SendLine("DIE")
 		link.connection.Close()
 		return
 	}

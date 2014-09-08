@@ -8,6 +8,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -35,6 +36,7 @@ type User struct {
 	system     bool
 	ConnType   string
 	remote     bool
+	timemutex  *sync.Mutex
 }
 
 func (user *User) PingChecker() {
@@ -42,6 +44,7 @@ func (user *User) PingChecker() {
 		if user.dead {
 			return
 		}
+		user.timemutex.Lock()
 		if time.Now().After(user.nextcheck) {
 			if user.waiting {
 				since := time.Since(user.lastrcv).Seconds()
@@ -54,6 +57,7 @@ func (user *User) PingChecker() {
 				log.Printf("Sent user %s ping", user.nick)
 			}
 		}
+		user.timemutex.Unlock()
 		time.Sleep(config.PingCheckTime * time.Second)
 	}
 }
@@ -104,6 +108,7 @@ func NewUser() *User {
 	user.lastrcv = time.Now()
 	user.nextcheck = time.Now().Add(config.PingTime * time.Second)
 	userlist[user.id] = user
+	user.timemutex = &sync.Mutex{}
 	return user
 }
 
