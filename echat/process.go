@@ -11,10 +11,11 @@ type Handler func([]string)
 //takes a line and a user and processes it.
 func ProcessLine(user *User, msg string) {
 	user.lastrcv = time.Now()
-	user.timemutex.Lock()
+	user.mutex.Lock()
 	user.nextcheck = time.Now().Add(config.PingTime * time.Second)
-	user.timemutex.Unlock()
 	user.waiting = false
+	user.mutex.Unlock()
+
 	args := strings.Split(msg, " ")
 	checkme := strings.ToLower(args[0])
 	switch checkme {
