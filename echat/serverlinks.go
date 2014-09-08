@@ -57,4 +57,27 @@ func (link *ServerLink) HandleRequests() {
 		link.connection.Close()
 		return
 	}
+	//Relevant information has been exchanged (not really, but this could change)
+	for {
+		//All the magic happens here
+		l, _ = b.ReadString('\n')
+		link.route(l)
+	}
+}
+
+func (link *ServerLink) route(msg string) {
+	args := strings.Split(msg, " ")
+	switch strings.ToLower(args[0]) {
+	case "SEND_TO_USER":
+		link.SendToUserHandler(args)
+		break
+	default:
+		break
+	}
+}
+
+//SEND_TO_USER USERID STUFF STUFF STUFF
+func (link *ServerLink) SendToUserHandler(args []string) {
+	user := userlist[args[1]]
+	user.SendLine(args[2:])
 }

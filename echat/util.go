@@ -27,6 +27,10 @@ func GetUserByNick(nick string) *User {
 	return nil
 }
 
+func GetUserByID(id string) *User {
+	return userlist[id]
+}
+
 func SetUserIPInfo(user *User) {
 	ip := user.connection.RemoteAddr().String()
 	if !strings.HasPrefix(ip, "[") {
