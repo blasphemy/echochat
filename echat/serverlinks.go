@@ -10,7 +10,7 @@ import (
 
 type ServerLink struct {
 	connection net.Conn
-	users      map[string]string
+	users      map[string]*RemoteUser
 	name       string
 	id         string
 }
@@ -135,6 +135,11 @@ func (link *ServerLink) SendUsers() {
 	link.SendLine(fmt.Sprintf("USERS %s", string(lol2)))
 }
 
+func (link *ServerLink) HandleUsersLine(line string) {
+  line = strings.TrimPrefix(line, "USERS ")
+  json.Unmarshal([]byte(line), link.users)
+}
+
 type RemoteUser struct {
 	Nick     string
 	Id       string
@@ -143,4 +148,8 @@ type RemoteUser struct {
 	Host     string
 	Realhost string
 	Realname string
+}
+
+func (user *RemoteUser) ToReal() *User {
+  
 }
