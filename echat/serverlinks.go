@@ -60,7 +60,7 @@ func (link *ServerLink) Registration() {
 	l, _ = b.ReadString('\n')
 	args = strings.Split(l, " ")
 	if args[0] != "PW" /* && args[1] != Sha1String(config.LinkPassword) */ {
-		log.Printf("Attempted server connection has incorrect password, disconnectiong")
+		log.Printf("Attempted server connection has incorrect password, disconnecting")
 		link.SendLine("DIE")
 		link.connection.Close()
 		return
@@ -98,7 +98,7 @@ func (link *ServerLink) route(msg string) {
 		link.SendToUserHandler(args)
 		break
 	case "users":
-		link.HandleUsersLine(msg)
+		link.HandleUsersLine()
 		break
 	case "sendusers":
 		link.SendUsers()
@@ -158,13 +158,19 @@ func (link *ServerLink) SendUsers() {
 		}
 	}
 	lol2, _ := json.Marshal(lol)
-	link.SendLine(fmt.Sprintf("USERS %s", string(lol2)))
+	link.SendLine("USERS")
+	link.connection.Write(append(lol2, '\n'))
 }
 
-func (link *ServerLink) HandleUsersLine(line string) {
-	line = strings.TrimPrefix(line, "USERS ")
+func (link *ServerLink) HandleUsersLine() {
 	newmap := map[string]*RemoteUser{}
-	err := json.Unmarshal([]byte(line), newmap)
+	b := bufio.NewReader(link.connection)
+	line, err := b.ReadBytes('\n')
+	if err != nil {
+		log.Printf("ERROR %s, %s", link.name, err.Error())
+		return
+	}
+	err = json.Unmarshal(line, newmap)
 	if err != nil {
 		log.Printf("Error unmarshaling users from %s", link.name)
 	} else {
