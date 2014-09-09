@@ -68,33 +68,45 @@ func (link *ServerLink) Registration() {
 	links[link.id] = link
 	link.SendLine("OK")
 	link.SendUsers()
-	link.HandleRequests()
+	for {
+		l, _ = b.ReadString('\n')
+		if config.Debug {
+			log.Printf("LINK %s: %s", link.name, l)
+		}
+		link.route(l)
+	}
 }
 
 func (link *ServerLink) HandleRequests() {
 	//Relevant information has been exchanged (not really, but this could change)
 	b := bufio.NewReader(link.connection)
-
 	for {
 		//All the magic happens here
 		l, _ := b.ReadString('\n')
+		if config.Debug {
+			log.Printf("LINK %s: %s", link.name, l)
+		}
 		link.route(l)
 	}
 }
 
 func (link *ServerLink) route(msg string) {
 	args := strings.Split(msg, " ")
-	switch strings.ToLower(args[0]) {
-	case "SEND_TO_USER":
+	checkme := strings.TrimSpace(strings.ToLower(args[0]))
+	switch checkme {
+	case "send_to_user":
 		link.SendToUserHandler(args)
 		break
-	case "USERS":
+	case "users":
 		link.HandleUsersLine(msg)
 		break
-	case "SENDUSERS":
+	case "sendusers":
 		link.SendUsers()
 		break
+	case "wat":
+		break
 	default:
+		link.SendLine("WAT")
 		break
 	}
 }
@@ -151,7 +163,13 @@ func (link *ServerLink) SendUsers() {
 
 func (link *ServerLink) HandleUsersLine(line string) {
 	line = strings.TrimPrefix(line, "USERS ")
-	json.Unmarshal([]byte(line), link.users)
+	newmap := map[string]*RemoteUser{}
+	err := json.Unmarshal([]byte(line), newmap)
+	if err != nil {
+		log.Printf("Error unmarshaling users from %s", link.name)
+	} else {
+		link.users = newmap
+	}
 }
 
 type RemoteUser struct {
