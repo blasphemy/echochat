@@ -39,16 +39,25 @@ type User struct {
 	mutex      *sync.Mutex
 }
 
+func (user *User) Lock() {
+	user.mutex.Lock()
+}
+
+func (user *User) Unlock() {
+	user.mutex.Unlock()
+}
+
 func (user *User) PingChecker() {
 	for {
 		if user.dead {
 			return
 		}
-		user.mutex.Lock()
+		user.Lock()
 		if time.Now().After(user.nextcheck) {
 			if user.waiting {
 				since := time.Since(user.lastrcv).Seconds()
 				user.Quit(fmt.Sprintf("Ping Timeout: %.0f seconds", since))
+				user.Unlock()
 				return
 			} else {
 				user.SendLine(fmt.Sprintf("PING :%s", config.ServerName))
@@ -57,7 +66,7 @@ func (user *User) PingChecker() {
 				log.Printf("Sent user %s ping", user.nick)
 			}
 		}
-		user.mutex.Unlock()
+		user.Unlock()
 		time.Sleep(config.PingCheckTime * time.Second)
 	}
 }
