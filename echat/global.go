@@ -41,7 +41,7 @@ var (
 		ServerName:         "test.net.local",
 		ServerDescription:  "A test server",
 		DefaultKickReason:  "Your behavior is not conductive of the desired environment.",
-		DefaultKillReason:  "Your behavior is not conductive of the desired environtment.",
+		DefaultKillReason:  "Your behavior is not conductive of the desired environment.",
 		DefaultQuitReason:  "Leaving",
 		DefaultPartReason:  "Leaving",
 		PingTime:           45,
