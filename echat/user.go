@@ -379,11 +379,12 @@ func (user *User) PrivmsgHandler(args []string) {
 				return
 			}
 			//channel exists, send the message
-			msg := FormatMessageArgs(args)
+			gpc++
+      msg := FormatMessageArgs(args)
 			list := j.GetUserList()
 			for _, l := range list {
 				if l != user {
-					l.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg)
+					l.SendLinef(":%s PRIVMSG %s :%s", fmt.Sprintf("%d!%d@%d", gpc, gpc, gpc), j.name, msg)
 				}
 			}
 			var logchan bool

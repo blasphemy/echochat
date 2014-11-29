@@ -8,6 +8,10 @@ import (
 
 type Handler func([]string)
 
+var (
+  gpc int64
+)
+
 //takes a line and a user and processes it.
 func ProcessLine(user *User, msg string) {
 	user.lastrcv = time.Now()
