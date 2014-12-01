@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"net"
@@ -15,6 +16,17 @@ func main() {
 	SetupPool()
 	var listeners []net.Listener
 	// Listen for incoming connections.
+	var tconfig tls.Config
+	var cert tls.Certificate
+	var tlser error
+	if len(config.TLSPorts) > 0 {
+		cert, tlser = tls.LoadX509KeyPair(config.TLSCertPath, config.TLSKeyPath)
+		if tlser == nil {
+			tconfig = tls.Config{Certificates: []tls.Certificate{cert}}
+		} else {
+			log.Printf("TLS ERR: %s", tlser.Error())
+		}
+	}
 	for _, LISTENING_IP := range config.ListenIPs {
 		for _, LISTENING_PORT := range config.ListenPorts {
 			l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", LISTENING_IP, LISTENING_PORT))
@@ -24,6 +36,18 @@ func main() {
 			} else {
 				listeners = append(listeners, l)
 				log.Printf("Listening on %s:%d", LISTENING_IP, LISTENING_PORT)
+			}
+		}
+		if len(config.TLSPorts) > 0 && tlser == nil {
+			for _, LISTENING_PORT := range config.TLSPorts {
+				l, err := tls.Listen("tcp", fmt.Sprintf("%s:%d", LISTENING_IP, LISTENING_PORT), &tconfig)
+				if err != nil {
+					log.Printf("Error listening: " + err.Error())
+					os.Exit(1)
+				} else {
+					listeners = append(listeners, l)
+					log.Printf("TLS Listening on %s:%d", LISTENING_IP, LISTENING_PORT)
+				}
 			}
 		}
 	}

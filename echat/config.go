@@ -25,6 +25,7 @@ type configuration struct {
 	Salt               string
 	ListenIPs          []string
 	ListenPorts        []int
+	TLSPorts           []int
 	LogChannels        []string
 	Opers              map[string]string
 	Privacy            bool
@@ -35,6 +36,8 @@ type configuration struct {
 	RedisHost          string
 	RedisPort          int
 	RedisPassword      string
+	TLSCertPath        string
+	TLSKeyPath         string
 }
 
 func SetupConfig() {
