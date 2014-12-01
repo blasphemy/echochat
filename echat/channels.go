@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/garyburd/redigo/redis"
 	"strings"
 	"time"
 )
@@ -264,4 +265,14 @@ func (channel *Channel) IsLogChan() bool {
 		}
 	}
 	return false
+}
+
+func (channel *Channel) GetCount() (int64, error) {
+	p := RedisPool.Get()
+	c, err := redis.Int64(p.Do("INCR", fmt.Sprintf("echochat:counter:%s", channel.name)))
+	if err != nil {
+		return 0, err
+	} else {
+		return c, nil
+	}
 }

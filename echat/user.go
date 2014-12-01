@@ -361,10 +361,15 @@ func (user *User) PrivmsgHandler(args []string) {
 			}
 			//channel exists, send the message
 			msg := FormatMessageArgs(args)
+			c, _ := j.GetCount()
 			list := j.GetUserList()
 			for _, l := range list {
 				if l != user {
-					l.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg)
+					if j.HasMode("4") {
+						l.SendLinef(":%s PRIVMSG %s :%s", fmt.Sprintf("%d!%d@%d", c, c, c), j.name, msg)
+					} else {
+						l.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg)
+					}
 				}
 			}
 			var logchan bool
@@ -486,7 +491,7 @@ func (user *User) ModeHandler(args []string) {
 						mcounter++
 						break
 					}
-				case 't', 'n', 'm', 'A':
+				case 't', 'n', 'm', 'A', '4':
 					if mode == 2 {
 						channel.SetMode(string(k), user)
 					} else if mode == 1 {

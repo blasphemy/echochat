@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/garyburd/redigo/redis"
 	"os"
 	"time"
 )
@@ -13,6 +14,7 @@ const (
 )
 
 var (
+	RedisPool         *redis.Pool
 	StartupIncomplete = true //used to determine if the ircd is up and running yet
 	valid_chan_prefix = []string{"#", "&"}
 	global_bad_chars  = []string{":", "!", "@", "*", "(", ")", "<", ">", ",", "~", "/", "\\"}
@@ -48,7 +50,7 @@ var (
 		PingTime:           45,
 		PingCheckTime:      20,
 		ResolveHosts:       true,
-		DefaultCmode:       "nt",
+		DefaultCmode:       "nt4",
 		StatTime:           30,
 		Debug:              false,
 		Cloaking:           false,
@@ -63,6 +65,8 @@ var (
 		AutoJoin:           []string{"#default"},
 		SystemJoinChannels: false,
 		Logfile:            "echochat.log",
+		RedisHost:          "127.0.0.1",
+		RedisPort:          6379,
 	}
 	log         = &Elog{}
 	LoggingFile *os.File

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/garyburd/redigo/redis"
 	"net"
 	"os"
 	"runtime"
@@ -11,6 +12,7 @@ import (
 func main() {
 	SetupNumerics()
 	SetupConfig()
+	SetupPool()
 	var listeners []net.Listener
 	// Listen for incoming connections.
 	for _, LISTENING_IP := range config.ListenIPs {
@@ -63,5 +65,22 @@ func periodicStatusUpdate() {
 			log.Printf("Status: %d current Goroutines", runtime.NumGoroutine())
 		}
 		time.Sleep(config.StatTime * time.Second)
+	}
+}
+
+func SetupPool() {
+	RedisPool = &redis.Pool{
+		MaxIdle: 10,
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", fmt.Sprintf("%s:%d", config.RedisHost, config.RedisPort))
+			if err != nil {
+				return nil, err
+			}
+			if _, err := c.Do("AUTH", config.RedisPassword); err != nil {
+				c.Close()
+				return nil, err
+			}
+			return c, nil
+		},
 	}
 }

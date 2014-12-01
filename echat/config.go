@@ -32,6 +32,9 @@ type configuration struct {
 	SystemJoinChannels bool
 	AutoJoin           []string
 	Logfile            string
+	RedisHost          string
+	RedisPort          int
+	RedisPassword      string
 }
 
 func SetupConfig() {
