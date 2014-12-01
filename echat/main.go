@@ -38,7 +38,7 @@ func main() {
 				log.Printf("Listening on %s:%d", LISTENING_IP, LISTENING_PORT)
 			}
 		}
-		if len(config.TLSPorts) > 0 && tlser == nil {
+		if tlser == nil {
 			for _, LISTENING_PORT := range config.TLSPorts {
 				l, err := tls.Listen("tcp", fmt.Sprintf("%s:%d", LISTENING_IP, LISTENING_PORT), &tconfig)
 				if err != nil {
