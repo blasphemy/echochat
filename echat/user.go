@@ -362,6 +362,7 @@ func (user *User) PrivmsgHandler(args []string) {
 			//channel exists, send the message
 			msg := FormatMessageArgs(args)
 			c, _ := j.GetCount()
+			AddToMode4Cache(user, c, j)
 			list := j.GetUserList()
 			for _, l := range list {
 				if l != user {
