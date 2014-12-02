@@ -1,8 +1,10 @@
 package main
 
 import (
+	"container/list"
 	"github.com/garyburd/redigo/redis"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -13,7 +15,15 @@ const (
 	conf_file_name = "echochat.json"
 )
 
+type Mode4CacheItem struct {
+	user    *User
+	number  int64
+	channel *Channel
+}
+
 var (
+	Mode4CacheMutex   = &sync.Mutex{}
+	Mode4Cache        = list.New()
 	RedisPool         *redis.Pool
 	StartupIncomplete = true //used to determine if the ircd is up and running yet
 	valid_chan_prefix = []string{"#", "&"}

@@ -366,7 +366,23 @@ func (user *User) PrivmsgHandler(args []string) {
 			for _, l := range list {
 				if l != user {
 					if j.HasMode("4") {
-						l.SendLinef(":%s PRIVMSG %s :%s", fmt.Sprintf("%d!%d@%d", c, c, c), j.name, msg)
+						Mode4CacheMutex.Lock()
+						var h bool
+						var num int64
+						for e := Mode4Cache.Front(); e != nil; e = e.Next() {
+							ci := e.Value.(Mode4CacheItem)
+							if ci.channel == j && strings.Contains(msg, fmt.Sprintf("%d", ci.number)) && ci.user == l {
+								h = true
+								num = ci.number
+								break
+							}
+						}
+						Mode4CacheMutex.Unlock()
+						if h {
+							l.SendLinef(":%s PRIVMSG %s :%s", fmt.Sprintf("%d!%d@%d", c, c, c), j.name, strings.Replace(msg, fmt.Sprintf("%d", num), l.nick, -1))
+						} else {
+							l.SendLinef(":%s PRIVMSG %s :%s", fmt.Sprintf("%d!%d@%d", c, c, c), j.name, msg)
+						}
 					} else {
 						l.SendLinef(":%s PRIVMSG %s :%s", user.GetHostMask(), j.name, msg)
 					}
@@ -699,4 +715,19 @@ func (user *User) WhoisHandler(args []string) {
 		user.FireNumeric(RPL_WHOISHOST, target.nick, target.host, target.ip)
 	}
 	user.FireNumeric(RPL_ENDOFWHOIS, target.nick)
+}
+
+func AddToMode4Cache(user *User, number int64, channel *Channel) {
+	Mode4CacheMutex.Lock()
+	defer Mode4CacheMutex.Unlock()
+	if Mode4Cache.Len() > 1000 {
+		for i := 0; i < 500; i++ {
+			Mode4Cache.Remove(Mode4Cache.Back())
+		}
+	}
+	k := Mode4CacheItem{}
+	k.user = user
+	k.number = number
+	k.channel = channel
+	Mode4Cache.PushFront(k)
 }
