@@ -2,15 +2,24 @@ package main
 
 import (
 	"crypto/tls"
+	_ "expvar"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"net"
 	"os"
 	"runtime"
 	"time"
+  "net/http"
 )
 
 func main() {
+	e1, err := net.Listen("tcp", "0.0.0.0:8123")
+	if err != nil {
+		log.Printf("Error starting http server")
+	} else {
+		log.Printf("Http Server Started on port 8123")
+		go http.Serve(e1, nil)
+	}
 	SetupNumerics()
 	SetupConfig()
 	SetupPool()
